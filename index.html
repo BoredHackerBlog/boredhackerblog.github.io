@@ -124,6 +124,8 @@ Error message and password prompt
 
 <li>$:/DefaultTiddlers</li>
 
+<li>$:/Import</li>
+
 <li>$:/isEncrypted</li>
 
 <li>$:/palette</li>
@@ -152,7 +154,15 @@ Error message and password prompt
 
 <li>$:/themes/tiddlywiki/vanilla</li>
 
+<li>1. Basic Concepts</li>
+
+<li>2. System Architecture - Part 1</li>
+
+<li>3. System Architecture - Part 2</li>
+
 <li>About</li>
+
+<li>Windows Internals Notes</li>
 
 </ul>
 </p>
@@ -8431,6 +8441,17 @@ Error message and password prompt
 <div created="20180424234229236" modified="20180424234800984" title="$:/DefaultTiddlers">
 <pre>About</pre>
 </div>
+<div plugin-type="import" status="pending" title="$:/Import" type="application/json">
+<pre>{
+    &quot;tiddlers&quot;: {
+        &quot;image.png&quot;: {
+            &quot;title&quot;: &quot;image.png&quot;,
+            &quot;type&quot;: &quot;image/png&quot;,
+            &quot;text&quot;: &quot;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jdcECBAgsFgCTQXX888/n1555ZWBcBdK+3F3n+fQOnfu3OD2335tvU+AAAECiyPQVHBl1knCS2gtzhfQSAgQIDCtQHPBlQEeFF5Ca9qviPYECBBYLIFmfx0+h1feclDlR94+++yzwS9uuD044PAPAgQILKVAs8GVV2Ov8BJaS/k9NWgCBAgMBZq8VTic3a7bhkJrVMY+AQIEllOg6SuubknylVf+j4ZzcB09erR72zMBAgQILKHASgRXXpccXFHbDz/8kO7cuTMot7Ozk27fvj0s/cUXXwz37RAgQIBAvMDKBFcEXfc3CEf/HuH333+fPvjgg2H59957b7j/7bffpo2NjeFrOwQIECAwu0DzP+OaneiXCk899dTgL8PnP/n02GOPpV6vlx555JH0+OOPp8OHDw9uReagyrckH3300eGfiPqlgj0CBAgQmFXAFdcUgvn/s+X/tTUFmKYECBAoIOCKqwCqkgQIECBQTkBwlbNVmQABAgQKCAiuAqhKEiBAgEA5AcFVzlZlAgQIECgg0Dt//nyBskoSIECAAIEyAmv9fr9fprSqBAgQIEAgXsCtwnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCggOAqiKs0AQIECMQLCK54UxUJECBAoKCA4CqIqzQBAgQIxAsIrnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCggOAqiKs0AQIECMQLCK54UxUJECBAoKCA4CqIqzQBAgQIxAsIrnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCggOAqiKs0AQIECMQLCK54UxUJECBAoKCA4CqIqzQBAgQIxAsIrnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCggOAqiKs0AQIECMQLCK54UxUJECBAoKCA4CqIqzQBAgQIxAsIrnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCggOAqiKs0AQIECMQLCK54UxUJECBAoKCA4CqIqzQBAgQIxAsIrnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCggOAqiKs0AQIECMQLCK54UxUJECBAoKCA4CqIqzQBAgQIxAsIrnhTFQkQIECgoIDgKoirNAECBAjECwiueFMVCRAgQKCgQO/q1aszl9/c3Jy5xqQFIsY7aV/aESBAYBaBmufGWca5bMf2jh07NvGY+/1+6h47OzuD/W+++Wbi46MabmxspLW1tbS+vj54zvv5YSNAgMA8BLrzYn6e57lxHnOfR5+9w4cP79tvXoTRrVucvDA5KPLzPLYcWKOPvYJLkM1jZfRJYDUEZjk3XrlyJX3yySdLC3X8+PF06tSpuY6/1+v1xg6gW6T83IXWPIMhh9ahQ4fuC688kXmOayykBgQINCVwkHNjDq3XXnttaR3efffdxQ6ublGycN7PjxwaP/7441wDIodWF1z5ubviGg2t0f2l/YYYOAECCykwy7mxO5cu5MQmGNTo3CdoXqRJL5/4H7R1g+ywR28Pju4/qEb0ZzmUdl91deGV+xJa0eLqESCwW+Cg58buXLq73rK87uY9z/H2cgCM2zro0QHn0Jrk2HG1D/J57rcLr7zfvR4Nr4PUdQwBAgSmETjouXH0XDpNf9r+JDA2uDJwDoRugfJh3XvzROxCandw5THlz2wECBAoKdCdB6c9N462Lzm+UrXz+Oe99Q5yku9C4yDHRkx4d/97vY7oRw0CBAhMI7D7XLTXsYJrL5Xp3ht7n7ALp93P03VTrvXouLav/CW99cc/pK2trbT11j/Sfy6+nba23k7/uj1N/zfTX7e20tsXt8ccNGm7MWUm+rhmXxMNSCMCKy8weu7JGN3rSWC68Cr7vJ3+9rs30qt/vjm8Y7Z3fzfTn159I/3+79tj2v30C3qTzK90m7FXXHmieUHy8+iW35tmoUaPnXV/z753/p3++f5/051f/Sb99uyJdPTIr9PG/24OulpLeayT9vpzw7Hzm7TdpP0+qF3Nvh40Dp8RINAJHPTc2IVHV6fcc3fOHhc4/TRo+fNvjo8bz+4sGNe+xOf/B+ury3J+E7XbAAAAAElFTkSuQmCC&quot;
+        }
+    }
+}</pre>
+</div>
 <div title="$:/isEncrypted">
 <pre>no</pre>
 </div>
@@ -8443,13 +8464,13 @@ Error message and password prompt
 <div created="20180424234151841" modified="20180424234208261" title="$:/SiteTitle">
 <pre>BoredHackerBlog Notes</pre>
 </div>
-<div created="20180424234704663" modified="20180424234704663" title="$:/state/showeditpreview">
+<div created="20180424234704663" modified="20180516191840582" title="$:/state/showeditpreview">
 <pre>yes</pre>
 </div>
 <div created="20180425011450510" modified="20180425011451988" title="$:/state/tab--1963855381">
 <pre>$:/core/ui/ControlPanel/Palette</pre>
 </div>
-<div created="20180424234739344" modified="20180425011447457" title="$:/state/tab--2112689675">
+<div created="20180424234739344" modified="20180516172503498" title="$:/state/tab--2112689675">
 <pre>$:/core/ui/ControlPanel/Basics</pre>
 </div>
 <div created="20180424234743983" modified="20180425011543107" title="$:/state/tab-1749438307">
@@ -8461,7 +8482,7 @@ Error message and password prompt
 <div created="20180424234616405" modified="20180425011433943" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Open</pre>
 </div>
-<div list="About" title="$:/StoryList">
+<div created="20180516191342865" list="About [[Windows Internals Notes]] [[3. System Architecture - Part 2]] [[2. System Architecture - Part 1]] [[1. Basic Concepts]]" modified="20180516191345433" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8619,9 +8640,196 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div created="20180424234251670" modified="20180424234723570" tags="" title="About" type="text/html">
-<pre>This page contains random notes. &lt;/br&gt; &lt;/br&gt;
-Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;</pre>
+<div created="20180516170908987" modified="20180516180849933" tags="" title="1. Basic Concepts">
+<pre>Code (thread) executing on Windows executes as either user mode or kernel mode. 
+
+User mode doesn't allow access to critical code, data, or hardware. User mode can only crash the running process but no the whole OS. 
+
+Kernel mode is privileged. Allows access to anything on the whole system. Able to cause system crash (example: BSOD).
+
+User mode can use an API, which can execute code in kernel mode. 
+
+Process is a manager/container. Threads run. Process has virtual address space, executable file, private table of handles, security context/ID/token, threads. Threads execute the actual code. 
+
+Processes have Process ID's. Threads have Thread ID's. Process/Thread ID's come from the same pool. Process also contains ID of parent process. If parent process dies, it does not affect child process. Also, another process can't launch with process ID of a killed parent process, if that parent proccesses child process is still alive. For example: if PID XYZ created PID ABC and PID XYZ dies, another process can't use process ID XYZ since PID ABC is still alive.
+
+Explorer.exe is started by userinit.exe (when log-in is conducted) and userinit.exe dies. Explorer.exe is usually parentless.
+
+Thread contains: state of CPU registers, current access mode (kernel or user), two stacks (user space and kernel space), Thread local storage, optional security token but usually runs under process security context, optional message queue, priority # (lowest 0-31 highest) for scheduling, and thread state (running, ready, waiting).
+
+Thread can assume diff ID using impersonation. 
+
+Virtual memory:
+Virtual memory can be mapped to physical memory (RAM) or be stored to disk as a page file. Processes can access virtual memory, regardless of where memory is (RAM or Disk). Kernel code can access physical memory address though.
+
+Chunks of memory used by processes are called pages, which are 4kilobytes big. Two processes can share pages. 
+
+32-bit processes can allocate up to 2GB of memory(low addresses). other 2GB is used for system space (kernel, drivers, etc). (high addresses)
+
+64-bit processes can allocate up to 8TB of memory(low addresses). 6TB for system space (high addresses)
+
+Objects and handles: some examples of objects: process, mutex, event, desktop, file, and etc. objects can be accessed by kernel code directly. User mode code has to use handles to access objects. </pre>
+</div>
+<div created="20180516180855059" modified="20180516191145694" tags="" title="2. System Architecture - Part 1">
+<pre>Windows Design Goals:
+Seperate address space per process, protect the kernel, multithreading/multitasking/multiprocessing, unicode (utf-16) standard (every char is 2bytes), security(objects are protected), networking, NTFS (protection, compression, and encryption), run 16-bit and DOS apps (ntvdm.exe), portable across processors, client/server OS. 
+
+handle = CreateFileA(name, access(write), sharing, security attributes, creation disposition, flags, template files)
+
+CloseHandel(handle)
+
+CreateFileA uses ASCII and CreateFileW uses unicode, wide. Making string Unicode can be done by adding L. Example L&quot;My string&quot;. _T&quot;my string&quot; will do unicode and ascii. Use unicode when possible. 
+
+Dependency Walker (depends.exe) shows DLL exports for DLL's. 
+
+TCHAR can be ASCII or Unicode. TCHAR name[10];
+
+Windows Version information can be gotten from GetVersionEX(pointer to osversioninfoex) or RtlGetVersion. 
+
+General Architecture:
+
+User Application (User Mode)
+
+Subsystem DLL (User Mode)
+
+NTDLL.DLL (User Mode/lowest level of user mode) 
+
+Executive (Kernel Mode)
+
+Graphics | Device Drivers | Kernel (Kernel Mode)
+
+Hardware Abstraction Layer (HAL) (Kernel Mode)
+
+User Mode also has System Processes, Services, and Environment Subsystem. Subsystem's have their own DLL's.
+
+NTFS is case sensitive. CreateFile actually ignores case. 
+
+Function Call Flow: User Mode: call fread (app) -&gt; call ReadFile (msvcrt.dll) -&gt; call NTReadFile (kernel32.dll) -&gt; sysenter/syscall (ntdll.dll) -&gt; Kernel mode: NTReadFile (ntoskrnl.exe) -&gt; NTReadFile call driver (NTOskrnl.exe) -&gt; initiate I/O (driver.sys). 
+
+
+WinDbg: NTSD, CBD, KD are also debuggers. They use DbgEng.dll. NTSD and CBD are command line and User mode debuggers. KD is kernel mode debugger. WinDbg Can be either User Mode or Kernel Mode. It's GUI. 
+
+When using WinDbg, use symbols to make it easier to look at functions. 
+
+lm = loaded modules. 
+
+~ for looking at threads. Prints ID's. PID.ThreadID. 
+
+g, for continue executing. 
+
+~0s  = switch to thread 0.
+
+k = call stack(?) first call at bottom, recent call at top.
+
+bp kernel32!CreateFileW = breakpoint when kernel32 CreateFileW is called. 
+
+bl = list breakpoints.
+
+u address= unassemble. 
+
+p or f10 to step. 
+
+dd address= display double words
+
+dds address = display symbols</pre>
+</div>
+<div created="20180516191147105" modified="20180516202359168" tags="" title="3. System Architecture - Part 2">
+<pre>Core System Files:
+
+ntoskrnl.exe - kernel for 64-bit
+
+ntkrnlpa.exe - kernel for 32-bit
+
+Hal.dll - Hardware Abstraction Layer. There are multiple Hal files and the best one is selected during OS installation.
+
+Win32k.sys - Kernel component. Used for Graphics/windows/GDI.
+
+Ntdll.dll - Communicates with kernel mode. Backend API basically(?) that user doesn't directly interact with.
+
+Kernel32.dll, user32.dll, gdi32.dll, advapi32.dll. - Documented, official DLL's for Windows subsystem. They talk to Ntdll or sometimes bypass Ntdll. 
+
+CSRSS.exe - Client Server Runtime SubSystem. Manages Windows subsystem. Always running. Killing it will cause BSOD. 
+
+MSVCRT.dll = Microsoft's C library. Provides C functions. (?)
+
+Symmetric multiprocessing (SMP): all CPU must be the same and share main memory and have equal access to devices. 
+
+Processor group: can contain 64 cores. 
+
+Some API functions use Advanced Local Procedure Call (ALPC) to notify CSRSS of relevant events.
+
+Subsystem is loaded on demand. 
+
+Subsystem info is in the registry HKLM\System\CurrentControlSet\Control\session Management\SubSystem. 
+
+Subsystem DLL's: expose an API. 
+Every image(PE file?) belongs to exactly one subsystem, determined by PE header. Windows loader makes decisions based on that.
+
+Some images have no subsystem. They're call native images. They use the native API (ntdll.dll). ntdll.dll contains support functions (sprintf and etc) which can be used by native images. 
+
+Rtl = Run Time Library. Used in naming functions. 
+
+Subsystem types: GUI, Console, Native and so on (? not sure if they're more tbh). Notepad.exe has GUI as subsystem, which has a GUI. SMSS.exe is using Native subsystem, which only uses NTDLL.dll.
+
+System Processes: Idle process, system process, session manager (smss.exe), Windows subsystem (csrss.exe), Logon process (winlogon.exe), service control manager (SCM) (services.exe), Local security auth server (lsass.exe), local session manager (lsm.exe)
+
+Idle process: PID of 0. not a real process. one thread per core. It runs when CPU/core doesn't have a thread to run.
+
+System process: PID of 4. kernel address space and resources. System threads (kernel, device drivers(pscreatesystemthread is used by drivers)).
+
+Session manager: smss.exe, user mode. creates system env vars, launches subsystems (normally csrss.exe). loads winlogon and csrss. 
+
+winlogon: handles logons and logoffs. if process killed then user session logs out. Responsible for Secure Attention Sequence (SAS), which is Control Alt Delete. When user login is required, logonui.exe is launched which allows username/password input. UN/PW are sent to LSASS. If correct UN/PW, token is created for the user. 
+
+LSASS: responsible for auth. 
+
+Service control manager (SCM): responsible for interacting(start/stop,etc) with services. Services are normal executables that interact with SCM. Services can run under special accounts (LocalSystem, NetworkSErvice, LocalService). 
+
+Local Session Manager (lsm.exe, lsm.dll): manages terminal sessions (RDP?). 
+
+Services: Startup types: Manual = something has to be called or tool has to be used, automatic = when windows starts up, automatic delay = service doesn't have to start as soon as the machine boots, disabled = disabled. Tigger start = start when some condition is met. 
+
+Wow64 (Windows on Windows): Allows execution of 32-bit binaries on 64-bit systems. IsWow64Process can check if it's running 64-bit system or not. For user mode only. 
+
+Device drivers are not supported by Wow64, they must be 64-bit. 
+
+windows\system32 contains 64-bit images(PE files)
+
+windows\syswow64 contains 32-bit images(PE files)
+
+Wow64 architecture: 32-bit exe, dll's -&gt; 32-bit ntdll.dll -&gt; wow64Cpu.dll -&gt; wow64.dll, wow64win.dll -&gt; 64 bit ntdll.dll -&gt; ntoskrnl.exe,win32k.sys.
+
+Wow64 restrictions: 64-bit process can't load 32-bit dll or vice versa. (except resource-only dll), some API's are not supposed by Wow64 processes because the functions assume 64-bit. 
+
+Wow64 does file system redirection. System32 is redirected to syswow64. 32-bit applications are installed in \program files (x86). 64-bit apps are installed in \program files. 
+
+Wow64 also does registry redirection. There is a subkey called wow6432node in some registry locations. </pre>
+</div>
+<div created="20180424234251670" modified="20180516191550011" tags="" title="About">
+<pre>This page contains random notes.
+Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
+
+Notes:
+
+[[Windows Internals Notes]]</pre>
+</div>
+<div created="20180516170408208" modified="20180516202507514" tags="" title="Windows Internals Notes">
+<pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
+
+You can find them here: https://www.pluralsight.com/courses/windows-internals
+
+There are also Windows Internals books on Amazon. Here's one of them:
+https://www.amazon.com/Windows-Internals-Part-architecture-management/dp/0735684189/
+
+My notes will contain information from viewing the PluralSight course. I'll try to be as accurate as I can be in my notes but I wouldn't be surprised if there are inaccuracies. 
+
+[[1. Basic Concepts]]
+
+[[2. System Architecture - Part 1]]
+
+[[3. System Architecture - Part 2]]
+
+Viewing the course is recommended. </pre>
 </div>
 
 </div>
