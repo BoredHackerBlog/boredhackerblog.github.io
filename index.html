@@ -120,6 +120,8 @@ Error message and password prompt
 
 <p>This <a class="tc-tiddlylink-external" href="https://tiddlywiki.com" rel="noopener noreferrer" target="_blank">TiddlyWiki</a> contains the following tiddlers:</p><p><ul>
 
+<li>$:/config/RelinkOnRename</li>
+
 <li>$:/core</li>
 
 <li>$:/DefaultTiddlers</li>
@@ -168,6 +170,8 @@ Error message and password prompt
 
 <li>About</li>
 
+<li>PentesterLab Notes - Unix Badge</li>
+
 <li>Windows Internals Notes</li>
 
 </ul>
@@ -180,6 +184,9 @@ Error message and password prompt
 <!--~~ Ordinary tiddlers ~~-->
 
 <div id="storeArea" style="display:none;">
+<div created="20180519181419479" modified="20180519181419479" title="$:/config/RelinkOnRename">
+<pre>yes</pre>
+</div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="" description="TiddlyWiki5 core" list="readme" plugin-priority="0" plugin-type="plugin" title="$:/core" type="application/json" version="5.1.15">
 <pre>{
     &quot;tiddlers&quot;: {
@@ -8488,7 +8495,7 @@ Error message and password prompt
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[6. Processes and Threads - Part 3]] [[Windows Internals Notes]] [[5. Processes and Threads - Part 2]] [[4. Processes and Threads - Part 1]] About" title="$:/StoryList">
+<div list="[[PentesterLab Notes - Unix Badge]] About" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8870,13 +8877,100 @@ thread pools: repository of threads managed (created/destoryed).
 
 jobs: kernel objects. allow manging set of processes as a unit. (for example, managing bunch of notepad processes)</pre>
 </div>
-<div created="20180424234251670" modified="20180516191550011" tags="" title="About">
+<div created="20180424234251670" modified="20180519181431309" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
 Notes:
 
-[[Windows Internals Notes]]</pre>
+[[Windows Internals Notes]]
+
+[[PentesterLab Notes - Unix Badge]]</pre>
+</div>
+<div created="20180519151923785" modified="20180519181421757" tags="" title="PentesterLab Notes - Unix Badge">
+<pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
+
+find DIR_LOCATION -name FILENAME
+
+find LOCATION -name FILENAME -exec COMMAND {} \;
+
+check /etc/passwd for location of user home directories.
+
+grep -A 1 (one line after) -B 1 (one line before) '^passwd' (match line starting with passwd'
+
+ls -ld /tmp
+
+drwxrwxrwt   1 root root   4096 Mar 12 12:54 tmp
+
+d = directory, r = read, w = write, x = execute, t = sticky bit (only allow the directory owner to modify this file)
+
+tar -zxvf file.tgz
+
+tar -jxvf file.tbz
+
+bzip2 -d file.bz2
+
+cronjobs can be in /etc/cron.daily (different systems store cronjobs in different locations)
+
+Encrypt: openssl enc -k KEY -in INPUT_FILE(cleartext) -out OUTPUT_FILE(encrypted)
+
+Decrypt: openssl enc -d -k KEY -in INPUT_FILE(encrypted) -out OUTPUT_FILE(cleartext)
+
+john shadowfile --format=descrypt (or md5crypt, etc)
+
+Shadow file password prefix: $1$ = md5, $2$ or $2a$ = blowfish, $5$ = SHA-256, $6$ = SHA-512.
+
+this is very useful: http://pentestmonkey.net/cheat-sheet/john-the-ripper-hash-formats
+
+Tomcat admin password can be in tomcat installation directory or /etc/tomcat*. File name is tomcat-users.xml
+
+mysql: mysql -u root (connect as root user), -p for getting input prompt for password
+
+show databases; show list of databases
+
+use database_name; use a database
+
+show tables; show tables in the database you're using
+
+/var/lib/mysql/mysql/user.MYD contains mysql user information.
+
+reading files using mysql: select load_file('filename')
+
+postgres: psql to start postgres CLI. psql -h IP -p PORT -U username -W password prompt
+
+ \list = list databases, \c database = use database, \d = list tables.
+
+reading files using postgres: 
+
+create table demo(t text);
+
+copy demo from 'filename';
+
+select * from demo;
+
+drop table demo;
+
+sqlite3: sqlite3 filename, .tables = show tables.
+
+sudo -l = list privs
+
+executing bash using find: find /bin/bash -wholename /bin/bash -exec {} \;
+
+executing bash using vim: :!/bin/bash
+
+executing bash using less: !/bin/bash
+
+executing bash using awk: awk 'BEGIN {system(&quot;/bin/bash&quot;)}' or to print a file: awk '{print $1}' filename
+
+setuid/setgid: ls -l file, output will have s for setuid (instead of x). chmod +xs (make executable with setuid bit)
+
+executing bash with perl: perl -e 'system(&quot;/bin/bash&quot;)'
+
+executing bash with python: python -c &quot;from subprocess import call; call('/bin/bash')&quot;
+
+executing commands with ruby: /usr/bin/ruby -e 'require &quot;irb&quot; ; IRB.start(__FILE__)', command format (backtick) command (backtick) 
+
+executing commands using node: /usr/local/bin/node -e &quot;var exec = require('child_process').exec; exec('COMMAND', function (error, stdOut, stdErr) {console.log(stdOut);});&quot;</pre>
 </div>
 <div created="20180516170408208" modified="20180517213603036" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
