@@ -170,7 +170,13 @@ Error message and password prompt
 
 <li>About</li>
 
+<li>PentesterLab Notes</li>
+
+<li>PentesterLab Notes - Essential Badge</li>
+
 <li>PentesterLab Notes - Unix Badge</li>
+
+<li>PentesterLab Notes - White Badge</li>
 
 <li>Windows Internals Notes</li>
 
@@ -8495,7 +8501,7 @@ Error message and password prompt
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[PentesterLab Notes - Unix Badge]] About" title="$:/StoryList">
+<div list="[[PentesterLab Notes - Essential Badge]] About" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8877,7 +8883,7 @@ thread pools: repository of threads managed (created/destoryed).
 
 jobs: kernel objects. allow manging set of processes as a unit. (for example, managing bunch of notepad processes)</pre>
 </div>
-<div created="20180424234251670" modified="20180519181431309" tags="" title="About">
+<div created="20180424234251670" modified="20180520170013983" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -8885,12 +8891,56 @@ Notes:
 
 [[Windows Internals Notes]]
 
-[[PentesterLab Notes - Unix Badge]]</pre>
+[[PentesterLab Notes]]</pre>
 </div>
-<div created="20180519151923785" modified="20180519181421757" tags="" title="PentesterLab Notes - Unix Badge">
+<div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
 
-find DIR_LOCATION -name FILENAME
+No write-ups are allowed for some of the exercises. I'll be posting resources in those cases.
+
+Here's a referral link if you want to sign up for PentesterLab:  https://pentesterlab.com/referral/tlPg8xrzkPjVFg 
+
+[[PentesterLab Notes - Unix Badge]]
+
+[[PentesterLab Notes - Essential Badge]]
+
+[[PentesterLab Notes - White Badge]]</pre>
+</div>
+<div created="20180520165112246" modified="20180520191744890" tags="" title="PentesterLab Notes - Essential Badge">
+<pre>There isn't much to note here since most of the exercise involve messing with HTTP requests and parameters. 
+
+Use Burp and advanced scope with .*libcurl.so as the host.
+
+Things to look for: case sensitivity, how trailing space or spaces is handled, check pages with redirection.
+
+does changing random numbers in GET or POST requests give more access than it should?
+
+For ruby on rails, you maybe able to access .json data by modifying the URL.
+
+general command injection info: https://www.blackhat.com/docs/eu-15/materials/eu-15-Stasinopoulos-Commix-Detecting-And-Exploiting-Command-Injection-Flaws.pdf &amp; https://www.acunetix.com/websitesecurity/introduction-web-shells/
+
+php code exec: https://www.owasp.org/index.php/Code_Injection &amp; https://www.owasp.org/index.php/Direct_Dynamic_Code_Evaluation_(%27Eval_Injection%27)
+
+&quot;.system('uname -a'); $dummy=&quot;
+
+&quot;.system('uname -a');# 
+
+&quot;.system('uname -a');/ / (no space between slashes. tiddlywiki doesnt like me putting two slashes together)
+
+(# and ; need to be URL encoded)
+
+PCRE_REPALCE_EVAL http://www.madirish.net/402
+
+Ruby on rails requires backticks around commands. same with perl.
+
+python command exec: os.popen('ls').read() or os.system('ls') or (underscore underscore)import(underscore underscore)('os').system('ls') (actually add underscores and dont use ())
+
+for command injection: backticks around command, ;command, and $(command) can be used. 
+
+</pre>
+</div>
+<div created="20180519151923785" modified="20180520165814532" tags="" title="PentesterLab Notes - Unix Badge">
+<pre>find DIR_LOCATION -name FILENAME
 
 find LOCATION -name FILENAME -exec COMMAND {} \;
 
@@ -8971,6 +9021,9 @@ executing bash with python: python -c &quot;from subprocess import call; call('/
 executing commands with ruby: /usr/bin/ruby -e 'require &quot;irb&quot; ; IRB.start(__FILE__)', command format (backtick) command (backtick) 
 
 executing commands using node: /usr/local/bin/node -e &quot;var exec = require('child_process').exec; exec('COMMAND', function (error, stdOut, stdErr) {console.log(stdOut);});&quot;</pre>
+</div>
+<div created="20180520165327363" modified="20180520165918871" tags="" title="PentesterLab Notes - White Badge">
+<pre></pre>
 </div>
 <div created="20180516170408208" modified="20180517213603036" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
