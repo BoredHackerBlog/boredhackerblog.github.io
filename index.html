@@ -168,6 +168,8 @@ Error message and password prompt
 
 <li>6. Processes and Threads - Part 3</li>
 
+<li>7. Object Management</li>
+
 <li>About</li>
 
 <li>PentesterLab Notes</li>
@@ -8501,7 +8503,7 @@ Error message and password prompt
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[PentesterLab Notes - Essential Badge]] About" title="$:/StoryList">
+<div list="[[Windows Internals Notes]] [[7. Object Management]] About" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8883,6 +8885,34 @@ thread pools: repository of threads managed (created/destoryed).
 
 jobs: kernel objects. allow manging set of processes as a unit. (for example, managing bunch of notepad processes)</pre>
 </div>
+<div created="20180523141315761" modified="20180523153512279" tags="" title="7. Object Management">
+<pre>Object Manager: part of the executive (upper layer of kernel).  responsible for creating, deleting, and tracking objects. objects are stored in tree-like struct. WinObj tool helps view objects. User mode can obtain handles to objects. Kernel can use handles or direct connection to objects. 
+
+Object Manager namespace (viewered via WinObj): ObjectTypes: lists existing kernel object types(mutex(called mutant), process, File, etc). Global??: contains symbolic links. Sessions: sessions running right now (related to users/login/auth?). 
+
+Object Structure: Object is owned by Object Manager and Executive. Executive object can hold kernel object. Object manager keeps: object name (name not required), object directory, security description, open handle count, open handle list, pointer count, and object type.
+
+Object types exposed by windows api:
+process, thread, job, file mapping, file, token, mutex, event, semaphore, timer, i/o completion port, window station, desktop, and there are more... 
+
+Objects and Handles: when process create or opens an object, it receieves a handle to the object. The objects can be shared but handle # (to the object) for each process will be different. each process has a private handle table. 
+
+Handle usage: Ways to get handles: create* or open* functions. CloseHandle to close the handle after done using. If process terminates, all handles will automatically close. 
+
+sharing objects: Process handle inheritance = create new process and copy handles from existing process to new process. open object by name = open object by name. duplicating handle = provide duplicated value(using DuplicateHandle). 
+
+Handle entry layout: Pointer to object header, Access mask(what can the handle do), inheritance bit (I), Audit on close (A), is locked (L).
+
+Object names and sessions: each session has it's own objects. object manager creates sessions directory with session id directory (can be viewed by WinObj tool). Processes can create global session objects by adding &quot;Global\&quot; prefix to the object name. 
+
+User and GDI objects: User and GDI objects are managed by win32k.sys. user32.dll and gdi32.dll api fucntions dont go through ntdll.dll. they use sysenter/syscall instead. 
+
+User objects: Windows(HWND), menus(HMENU), and hooks(HHOOK). 
+
+User object handles: no reference/handle count, private to window station(part of session, contains desktops, contains clipboard).
+
+GDI object handles: no reference/handle count, private to process, can't be shared.</pre>
+</div>
 <div created="20180424234251670" modified="20180520170013983" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
@@ -9025,7 +9055,7 @@ executing commands using node: /usr/local/bin/node -e &quot;var exec = require('
 <div created="20180520165327363" modified="20180520165918871" tags="" title="PentesterLab Notes - White Badge">
 <pre></pre>
 </div>
-<div created="20180516170408208" modified="20180517213603036" tags="" title="Windows Internals Notes">
+<div created="20180516170408208" modified="20180523153524503" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
 
 You can find them here: https://www.pluralsight.com/courses/windows-internals
@@ -9046,6 +9076,8 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 [[5. Processes and Threads - Part 2]]
 
 [[6. Processes and Threads - Part 3]]
+
+[[7. Object Management]]
 
 Viewing the course is recommended. </pre>
 </div>
