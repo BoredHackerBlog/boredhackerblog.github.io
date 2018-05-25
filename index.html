@@ -120,6 +120,8 @@ Error message and password prompt
 
 <p>This <a class="tc-tiddlylink-external" href="https://tiddlywiki.com" rel="noopener noreferrer" target="_blank">TiddlyWiki</a> contains the following tiddlers:</p><p><ul>
 
+<li>.NET and Java malware analysis</li>
+
 <li>$:/config/RelinkOnRename</li>
 
 <li>$:/core</li>
@@ -170,6 +172,8 @@ Error message and password prompt
 
 <li>7. Object Management</li>
 
+<li>8. Memory Management - Part 1</li>
+
 <li>About</li>
 
 <li>PentesterLab Notes</li>
@@ -194,6 +198,59 @@ Error message and password prompt
 <!--~~ Ordinary tiddlers ~~-->
 
 <div id="storeArea" style="display:none;">
+<div created="20180525192712483" modified="20180525205955074" tags="" title=".NET and Java malware analysis">
+<pre>Notes for PluralSight course named: Analyzing Malware for .NET and Java Binaries by Josh Stroschein. Link: https://app.pluralsight.com/library/courses/dotnet-java-binaries-analyzing-malware/table-of-contents
+
+compiled = source -&gt; machine code
+
+interpreted = source -&gt; bytecode -&gt; JIT compiler -&gt; machine code
+
+Obfuscation: string manupulation/nonsensical naming, encoding or encryption, unnecesarry code, and anti-analysis (defeat manual/automated analysis)
+
+Analyzing .NET binaries: Components: Source (C#, F#, VB, etc) -&gt; compiler -&gt; Common Lang Infrastructure (CLI) (Bytecode -&gt; Cmmon Lang Runtime (CLR) -&gt; Machine code)
+
+.NET Core for cross-platform (linux, os x, windows)
+
+Mono - cross platform open source .net framework implementation.
+
+.NET bytecode: called: CIL/IL/MSIL sometimes. PE file format is still used.
+
+CIL is stack-based. ldloc = load local var to stack, stloc - pop value from stack to local var.
+
+x64: mul eax, ecx
+
+CIL: ldloc.0; ldloc.1; mul; stloc.0
+
+CIL is object oriented as well.
+
+Tools: ILdasm (CIL disassembler), ILasm (CIL to binary), dnSpy (decompiler).
+
+Main method is the entry point. 
+
+dnSpy gives you original name of the project (when compiling was done). 
+
+Debugger: 
+
+step into: one instruction at a time
+
+step over: execute instruction or full function
+
+continue: continue running
+
+.ctor() = constructor. Called when an object is created.
+
+MSDN has info regarding different functions/methods.
+
+Analyzing Java Binaries: JRE = Java Runtime Env. JDK = Java dev kit. Executable java output: java class library, java archive file (JAR). JVM = java virtual machine. 
+
+source code (.java) -&gt; compiler -&gt; javabyte code (.class) -&gt; interpreter -&gt; machine code.
+
+JavaPoly - invoke java through javascript.
+
+java bytecode: Instruction Set Architecture (ISA). bytecode has one byte opcode and operands. 
+
+Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
+</div>
 <div created="20180519181419479" modified="20180519181419479" title="$:/config/RelinkOnRename">
 <pre>yes</pre>
 </div>
@@ -8505,7 +8562,7 @@ Error message and password prompt
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="About [[Ubuntu docker container with web shell]]" title="$:/StoryList">
+<div list="[[.NET and Java malware analysis]] [[8. Memory Management - Part 1]] About [[Windows Internals Notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8915,7 +8972,34 @@ User object handles: no reference/handle count, private to window station(part o
 
 GDI object handles: no reference/handle count, private to process, can't be shared.</pre>
 </div>
-<div created="20180424234251670" modified="20180524153703785" tags="" title="About">
+<div created="20180525180918343" modified="20180525192645981" tags="" title="8. Memory Management - Part 1">
+<pre>Memory Manager: Each process has virtual address space 2GB(32-bit) and 8TB(64-bit), tasks: mapping virtual addresses to physical addresses, page file management.
+
+memory is managed by chunks/Pages. Page size is based on CPU type. Windows supports two page sizes. Memory allocation,de-allocation, and other operations are per page. Page sizes: 32-bit: small: 4KB, large: 2MB(PAE),4MB(no PAE). 64-bit is same as 32-bit without 4MB. 
+
+Virtual Page states: free = unallocated, any access will cause access violation. Commited = allocated, can be accessed, may be backed up to disk (pagefile). Reserved = uallocated, access will cause access violation, this range will not be used unless commit is done.
+
+Vmmap (sysinternals tool) used for looking at memory usage for a process. 
+
+Page sharing: example: dll is mapped to physical memory and shared between multiple processes. Code pages are usually shared. Data pages are shared at first until the data page is written to. They get copied when write occurs (Copy-on-write). 
+
+virtual address space layout: 32-bit: 00000000-7FFFFFFF (aplication code, user mode), 80000000-BFFFFFFF (kernel, executive, HAL, drivers), C0000000-C07FFFFF (process page tables), C0800000-FFFFFFFF(system cache, paged pool, non paged pool). 
+
+Virtual Address Translation: Virtual address (virtual page number, byte within page) -&gt; physical page number, byte within page.
+
+Address translation is done by the processor/cpu. 
+
+CPU real mode = addresses are physical. 
+
+For translation, CPU needs a page directory (one for each process), page tables, translation lookaside buffer (TLB, cache for recently translated pages). 
+
+page directory (one per process): 1024 entries. address to page directory is known to the OS. PDE (inside of page directory) points to page table (can have 1024 entries), PTE (inside page table) points to page start location in physical memory. 
+
+Physical Address Extension (PAE), allows accessing more than 4GB of memory. 
+
+Page fault: invalid PTE/PDE. (data being accessed not in physical memory). OS needs to handle page fault exception. OS should get page from disk and fix PTE/PDE info and tell CPU to access data again. </pre>
+</div>
+<div created="20180424234251670" modified="20180525210005968" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -8925,7 +9009,9 @@ Notes:
 
 [[PentesterLab Notes]]
 
-[[Ubuntu docker container with web shell]]</pre>
+[[Ubuntu docker container with web shell]]
+
+[[.NET and Java malware analysis]]</pre>
 </div>
 <div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
@@ -9096,7 +9182,7 @@ docker run -td --rm -p 8080:3000 IMAGE_NAME
 Accessing the container: http://YOUR_IP:8080/ login: test/test
 </pre>
 </div>
-<div created="20180516170408208" modified="20180523153524503" tags="" title="Windows Internals Notes">
+<div created="20180516170408208" modified="20180525181001205" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
 
 You can find them here: https://www.pluralsight.com/courses/windows-internals
@@ -9119,6 +9205,8 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 [[6. Processes and Threads - Part 3]]
 
 [[7. Object Management]]
+
+[[8. Memory Management - Part 1]]
 
 Viewing the course is recommended. </pre>
 </div>
