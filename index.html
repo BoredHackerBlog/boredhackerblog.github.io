@@ -176,6 +176,8 @@ Error message and password prompt
 
 <li>About</li>
 
+<li>Malicious document analysis</li>
+
 <li>PentesterLab Notes</li>
 
 <li>PentesterLab Notes - Essential Badge</li>
@@ -8562,7 +8564,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[.NET and Java malware analysis]] [[8. Memory Management - Part 1]] About [[Windows Internals Notes]]" title="$:/StoryList">
+<div list="About [[Malicious document analysis]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8999,7 +9001,7 @@ Physical Address Extension (PAE), allows accessing more than 4GB of memory.
 
 Page fault: invalid PTE/PDE. (data being accessed not in physical memory). OS needs to handle page fault exception. OS should get page from disk and fix PTE/PDE info and tell CPU to access data again. </pre>
 </div>
-<div created="20180424234251670" modified="20180525210005968" tags="" title="About">
+<div created="20180424234251670" modified="20180527172456772" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9011,7 +9013,102 @@ Notes:
 
 [[Ubuntu docker container with web shell]]
 
-[[.NET and Java malware analysis]]</pre>
+[[.NET and Java malware analysis]]
+
+[[Malicious document analysis]]</pre>
+</div>
+<div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
+<pre>Notes from viewing &quot;Performing Malware Analysis on Malicious Documents&quot; presented by Tyler Hudak. It's on PluralSight here: https://www.pluralsight.com/courses/malware-analysis-malicious-documents-performing
+
+When doing analysis look for: URL's(IP's domains etc), commands, file names, and file sigs. 
+
+Pattern/signature analysis: Tool: Yara. sig repository: https://github.com/Yara-Rules/rules
+
+yara commands: yara rules filename. 
+
+-w warnings off. -g print tags. -m print metadata. -s print matched strings.
+
+office files (.*x, docx, pptx...) are zip files.
+
+zipdump can run yara rules on zip or .*x files. 
+
+zipdump command: zipdump -y sig.yar doc.docx
+
+metadata: datetime, language, author info, software version/name, etc...
+
+tool: exiftool for metadata extraction. Apache Tika can do the same.
+
+tool: xorsearch filename stringtosearch, -p for embedded executables.
+
+PDF format: Header %PDF-#.
+
+PDF's have objects: 1 0 obj (object ID #, object revision #)
+
+Catalog object, may contain OpenAction keyword. Stream object contain data. 
+
+PDF keywords: 
+
+/OpenAction /AA - open or execute something
+
+/JavaScript /JS - contains javascript.
+
+/Names - to refer to objects with names (?)
+
+/EmbeddedFile - embeded files...
+
+/URI /SubmitForm - url may be accessed when form is loaded or something is clicked
+
+/Launch - similar to openaction. Something is launched when PDF is opened.
+
+Names or keywords are case sensitive but can be encoded with hex. Start of hex byte is # sign.
+
+Strings can be encoded with hex, octal encoding, or mix of both, and white space can be added without any effects. 
+
+/Filter /ASCIIHexDecode OR [/ASCIIHexDecode/LZWDecode] (filter keyword) can be used to decode data from stream. LZWDecode comes first and then ASCIIHexDecode happens.
+
+Filter keywords: ASCIIHexDecode, LZWDecode, FlateDecode, ASCII85Decode, Crypt. There are more filters...
+
+Tools: pdfid: ID objects and filters. 
+
+pdf-parser: parse, search, and extract.
+
+peepdf: combination of pdfid and pdf-parser
+
+Javascript analysis: Code Beautification, remove extra code (variables used once for example), replace values that are obfuscated, and replace variable names.
+
+Tool: Spidermonkey
+
+pee-pdf js_analyze is also useful.
+
+Office documents:
+
+office document based attacks: macros, features(Dynamic Data Exchange (DDE)), Vulns. 
+
+Office formats: Office Open XML Format (zip file with XML), Structured Storage Format (binary format)
+
+Structured storage format header: 0xd0ccf11e. Contains Root storage object, storage objects, and stream objects. 
+
+Tools: oletools, olebrowse, oletimes, oleid, olevba. 
+
+Office Open XML Format: word\vbaproject.bin is present if macro is present. 
+
+.docm = word doc with macro.
+
+Tools: exiftool, zipdump, olevba.
+
+VBA Functions: AutoOpen, AutoExec = executed when doc is opened.
+
+Autoclose = executed when doc is closed.
+
+Shell = execute programs
+
+Private Declare Function can be used to load API from DLL's. 
+
+Tools: vipermonkey.
+
+Some functions to monitor: CreateFile, WriteFile, InternetCrackURL, HTTPCrackURL, CreateProcess.
+
+Tool: Lazy Office Analyzer</pre>
 </div>
 <div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
