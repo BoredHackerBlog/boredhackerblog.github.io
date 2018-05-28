@@ -178,6 +178,10 @@ Error message and password prompt
 
 <li>About</li>
 
+<li>Go Programming notes</li>
+
+<li>Go Programming notes - 2</li>
+
 <li>Malicious document analysis</li>
 
 <li>PentesterLab Notes</li>
@@ -187,6 +191,8 @@ Error message and password prompt
 <li>PentesterLab Notes - Unix Badge</li>
 
 <li>PentesterLab Notes - White Badge</li>
+
+<li>Programming notes</li>
 
 <li>Ubuntu docker container with web shell</li>
 
@@ -8566,7 +8572,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[9. Memory Management - Part 2]] About [[Windows Internals Notes]]" title="$:/StoryList">
+<div list="[[Programming notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9014,7 +9020,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20180527172456772" tags="" title="About">
+<div created="20180424234251670" modified="20180528171722789" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9028,7 +9034,213 @@ Notes:
 
 [[.NET and Java malware analysis]]
 
-[[Malicious document analysis]]</pre>
+[[Malicious document analysis]]
+
+[[Programming notes]]</pre>
+</div>
+<div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
+<pre>Notes taken while viewing The Go Programming Language
+ by John Sonmez. https://www.pluralsight.com/courses/go 
+
+import can use local packages or remote packages.
+
+Go workspace: bin, pkg, src. 
+
+Hello World:
+
+```
+package main
+
+import &quot;fmt&quot;
+
+func main() {
+        fmt.Println(&quot;Hello World&quot;)
+}
+```
+
+Package main and func main() are required. fmt is the library/package being imported. 
+
+Functions starting with uppercase (Println) are exported, functions starting with lowercase are not exported. 
+
+Running code: go run filename.go
+
+Building: go build filename.go
+
+Types: bool, string, int, uint (unsigned), uintptr, byte (same as uint8), rune (same as int32, like char), float32, float64, complex64, complex128(imaginary #'s/complex numbers). 
+
+Other types: array, slice(like list or vector, can grow), struct (collection of other types), pointer, function (can be like variable), interface, map (like dictionary, key-value), and channel.
+
+To declare variable: 
+
+```
+String: 
+var message string
+message = &quot;test&quot;
+
+OR
+
+var message string = &quot;test&quot; 
+
+OR
+
+var message = &quot;test&quot;
+
+OR
+
+message := &quot;test&quot;
+
+Int:
+var a,b, c int
+
+OR
+
+var a,b,c int = 1, 2, 3
+
+OR 
+
+var a, b, c = 1, 2, 3
+
+OR
+
+a, b, c := 1, 2, 3
+```
+
+Println can be supplied with multiple args: fmt.Println(message, a, b, c)
+
+pointer (a type of variable) that contains memory address for another variable.
+
+Passing data to functions: Passing value means passing a copy of the variable. Passing pointer means passing direct access to the location where variable is stored. 
+
+Creating pointer:
+
+```
+message := &quot;hello&quot;
+var mypointer *string = &amp;message
+
+fmt.Println(message, mypointer, *mypointer)
+
+OUTPUT: hello 0xc82000a2a0 hello
+
+*mypointer = &quot;yo&quot; 
+```
+
+&amp;variable gets location of the variable, not the content. *mypointer gets content from the location where mypointer is pointing at.
+
+Making new types:
+
+```
+type mynewtype string
+
+in main:
+
+var message mynewtype = &quot;hello&quot;
+```
+
+structs:
+
+```
+type mystruct struct {
+        name string
+        message string
+}
+
+in main:
+var struct_test = mystruct{&quot;john&quot;, &quot;sup&quot;}
+
+OR
+
+var struct_test = mystruct{message: &quot;sup&quot;, name: &quot;john&quot;}
+
+getting values:
+struct_test.name, struct_test.message
+```
+
+Constants: 
+
+```
+const (
+    PI = 3.14
+    Version = &quot;13.37&quot;
+)
+```</pre>
+</div>
+<div created="20180528171616986" modified="20180528181408818" tags="" title="Go Programming notes - 2">
+<pre>Functions: can have multiple return values! You can also declare function inside of a function (function literals)
+
+declaration: func func_name(input_name input_type){ }
+
+```
+func func_name(input_name string){
+    fmt.Println(input_name)
+}
+```
+
+returning stuff: func func_name(input_name, input_type) return_type { }
+
+```
+func domath(one, two int) int{
+        return one+two
+}
+```
+
+returning multiple things: func_name(input_name, input_type) (return_type, return_type2) { }
+
+```
+func domath(one, two int) (int, string){
+        return one+two, &quot;hello&quot;
+}
+
+added, str_out := domath(1,3)
+```
+
+Using _ when looking at returns to ignore part of the return value. example: _, str_out := domath(1,3) in this case, added data is ignored.
+
+variadic function: for passing in multiple parameters. Use ... in front of the type. Example: func test(one int, two ...string) { } accessing: two[0]
+
+len(two) can return # of passed in variables.
+
+passing functions: func test(do func(string)){ use do(string) in here. } 
+
+You can also return functions... 
+
+```
+inside of a function:
+return func(one int){
+    one + 5
+}
+```
+
+Branching: if (optional); cond { code }
+
+```
+if cond {
+    do stuff
+}
+
+if dostuff; cond{
+    do more stuff
+}
+```
+
+branching: if else
+
+```
+if cond{
+    do stuff
+} else {
+    do more stuff
+}
+```
+
+switch:  , behaves kinda like OR
+
+```
+switch name {
+    case &quot;John&quot;, &quot;Bob&quot;: prefix = &quot;Mr &quot;
+    case &quot;Jane&quot;, len(name) == 6: prefix = &quot;Mrs &quot;
+    default: prefix = &quot;Dude &quot;
+}
+```</pre>
 </div>
 <div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
 <pre>Notes from viewing &quot;Performing Malware Analysis on Malicious Documents&quot; presented by Tyler Hudak. It's on PluralSight here: https://www.pluralsight.com/courses/malware-analysis-malicious-documents-performing
@@ -9254,6 +9466,13 @@ executing commands using node: /usr/local/bin/node -e &quot;var exec = require('
 </div>
 <div created="20180520165327363" modified="20180520165918871" tags="" title="PentesterLab Notes - White Badge">
 <pre></pre>
+</div>
+<div created="20180528171639192" modified="20180528171708796" tags="" title="Programming notes">
+<pre>Notes for programming or scripting
+
+[[Go Programming notes]]
+
+[[Go Programming notes - 2]]</pre>
 </div>
 <div created="20180524153104674" modified="20180524153848299" tags="" title="Ubuntu docker container with web shell">
 <pre>This might be useful for CTF's. Dockerfile can be modified so additional tools are installed or additional files are added. 
