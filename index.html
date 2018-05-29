@@ -178,9 +178,15 @@ Error message and password prompt
 
 <li>About</li>
 
+<li>Chrome Extension development</li>
+
 <li>Go Programming notes</li>
 
 <li>Go Programming notes - 2</li>
+
+<li>Go Programming notes - 3</li>
+
+<li>Go Programming notes - 4</li>
 
 <li>Malicious document analysis</li>
 
@@ -261,8 +267,8 @@ java bytecode: Instruction Set Architecture (ISA). bytecode has one byte opcode 
 
 Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 </div>
-<div created="20180519181419479" modified="20180519181419479" title="$:/config/RelinkOnRename">
-<pre>yes</pre>
+<div created="20180519181419479" modified="20180529153808698" title="$:/config/RelinkOnRename">
+<pre>no</pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="" description="TiddlyWiki5 core" list="readme" plugin-priority="0" plugin-type="plugin" title="$:/core" type="application/json" version="5.1.15">
 <pre>{
@@ -8572,7 +8578,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Programming notes]]" title="$:/StoryList">
+<div list="[[Chrome Extension development]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9038,6 +9044,11 @@ Notes:
 
 [[Programming notes]]</pre>
 </div>
+<div created="20180529153708743" modified="20180529153915904" title="Chrome Extension development">
+<pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
+
+</pre>
+</div>
 <div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
 <pre>Notes taken while viewing The Go Programming Language
  by John Sonmez. https://www.pluralsight.com/courses/go 
@@ -9240,6 +9251,124 @@ switch name {
     case &quot;Jane&quot;, len(name) == 6: prefix = &quot;Mrs &quot;
     default: prefix = &quot;Dude &quot;
 }
+```</pre>
+</div>
+<div created="20180529132142480" modified="20180529142414953" title="Go Programming notes - 3">
+<pre>loops: only for loop exists but you can design other loop types.
+
+```
+for i :=0; i &lt; 5; i++ {
+    stuff
+}
+
+i :=  0
+for i &lt; 5 {
+    stuff
+     i++
+}
+
+for {
+    stuff
+}
+
+for i, s := range myslice {
+    i is index #
+    s is slice value
+}
+```
+
+break can be used to break out of the loop. continue can be used as well to restart from top of the loop.
+
+Range works on array, slice, string, map, and channel.
+
+Maps: basically a dictionary. key-value structure. 
+
+```
+var mymap map[string]int
+mymap = make(map[string]int)
+
+mymap[&quot;one&quot;] = 1
+mymap[&quot;two&quot;] = 2
+
+OR
+
+mymap := map[string]int {
+    &quot;one&quot; : 1,
+    &quot;two&quot; : 2,
+}
+
+delete(mymap, &quot;two&quot;)
+
+if value(value), exists(bool) := mymap[&quot;three&quot;];  exists {
+    return value // if exists == true
+}
+return 3
+```
+
+key will be a string. value will be an int. make is required.
+
+for the if state, code before ; runs first then exists condition is checked before code inside the loop is ran.
+
+Slices: basically growable array
+
+```
+var myslice []int
+myslice = make([]int,5, 10)
+myslice[0] = 1
+myslice[1] = 2
+myslice[2] = 4
+myslice[3] = 8
+
+OR
+
+myslice := []int { 1, 2, 4, 8 }
+
+newslice = myslice[0:2]
+
+myslice = append(myslice, 16)
+
+```
+
+5 is starting out length, 10 is max capacity.</pre>
+</div>
+<div created="20180529142502824" modified="20180529153413716" title="Go Programming notes - 4">
+<pre>Methods and Interfaces: 
+
+```
+func (myslice slicetype) myfunc(input inputtype) {
+    do stuff
+}
+```
+
+Interfaces:
+
+```
+type myinterface interface {
+    do stuff
+}
+```
+
+Concurrency: Use the keyword go.
+
+```
+go functioncall(inputs)
+```
+
+channels: basically a pipe. 
+
+```
+mychan := make(chan bool)
+
+go func() { 
+    do stuff
+    mychan &lt;- true
+}()
+
+&lt;- mychan
+
+mychan = make(chan bool, 2) //two inputs
+
+close(mychan)
 ```</pre>
 </div>
 <div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
@@ -9467,12 +9596,18 @@ executing commands using node: /usr/local/bin/node -e &quot;var exec = require('
 <div created="20180520165327363" modified="20180520165918871" tags="" title="PentesterLab Notes - White Badge">
 <pre></pre>
 </div>
-<div created="20180528171639192" modified="20180528171708796" tags="" title="Programming notes">
+<div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
 
 [[Go Programming notes]]
 
-[[Go Programming notes - 2]]</pre>
+[[Go Programming notes - 2]]
+
+[[Go Programming notes - 3]]
+
+[[Go Programming notes - 4]]
+
+[[Chrome Extension development]]</pre>
 </div>
 <div created="20180524153104674" modified="20180524153848299" tags="" title="Ubuntu docker container with web shell">
 <pre>This might be useful for CTF's. Dockerfile can be modified so additional tools are installed or additional files are added. 
