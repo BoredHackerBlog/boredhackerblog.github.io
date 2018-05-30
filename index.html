@@ -9044,8 +9044,45 @@ Notes:
 
 [[Programming notes]]</pre>
 </div>
-<div created="20180529153708743" modified="20180529153915904" title="Chrome Extension development">
+<div created="20180529153708743" modified="20180530193047085" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
+
+Extension is made up of HTML,Javascript, CSS. It's packed into .CRX file. (It's a zip file if i recall correctly)
+
+Chrome extensions can: interact with web pages, control browser features, add UI, modify loaded pages, and load DLLs.
+
+Development info: developers.google.com/chrome
+
+Background page: extenstion can have a background html page that runs in the background. These can be persistent or event page.
+
+UI pages: config/settings page for the extension. This could be popup or full page. 
+
+Content scripts: scripts executed when certain pages are loaded. Script is basically injected into the browser. 
+
+Extension requires manifest (json) file (required), html, icon, javascript, css, and etc.
+
+manifest file requires contains manifest_version, name, description, and version. 
+
+html file: embedded scripts in the html file is not allowed. You have to refer to another .js file in your code. 
+
+Chrome.storage: Used for storing stuff to chrome. It does sync across chrome sessions, if that feature is enabled. In manifest file, &quot;permissions&quot; can be used to get storage permissions. &quot;storage&quot; for storage permissions.
+
+In manifest file: &quot;browser_action&quot;, &quot;default_popup&quot; page comes up when icon is clicked. &quot;options_page&quot; comes up when settings are loaded for the extension. 
+
+chrome.notifications.create('name',options,
+ func) for creating notifications. Notification shows up at the botttom right-hand side of the screen.
+
+eventPage.js: in manifest file &quot;background&quot; with &quot;script&quot; is required with reference to script (evenpage.js in this case). &quot;persistent&quot; can be true or false.
+
+chrome.storage.onChanged.addListener() 
+
+page action extension shows up when certain page/pages are loaded.
+
+in manifest, &quot;permissions&quot; &quot;tabs&quot; is requried.
+
+chrome.tabs.query() for getting tabs.
+
+chrome.pageAction.show(tabid) to show page action extension on a certain tab.
 
 </pre>
 </div>
@@ -9477,7 +9514,7 @@ Here's a referral link if you want to sign up for PentesterLab:  https://pentest
 
 [[PentesterLab Notes - White Badge]]</pre>
 </div>
-<div created="20180520165112246" modified="20180520191744890" tags="" title="PentesterLab Notes - Essential Badge">
+<div created="20180520165112246" modified="20180529205404565" tags="" title="PentesterLab Notes - Essential Badge">
 <pre>There isn't much to note here since most of the exercise involve messing with HTTP requests and parameters. 
 
 Use Burp and advanced scope with .*libcurl.so as the host.
@@ -9507,6 +9544,18 @@ Ruby on rails requires backticks around commands. same with perl.
 python command exec: os.popen('ls').read() or os.system('ls') or (underscore underscore)import(underscore underscore)('os').system('ls') (actually add underscores and dont use ())
 
 for command injection: backticks around command, ;command, and $(command) can be used. 
+
+dir transvesal:
+try: 
+file=/var/www/../../file if some basic path checking is implemented.
+
+file=/../../../file.txt%00 will ignore anything that's added by the server after the file name.
+
+https://www.owasp.org/index.php/LDAP_Injection_Prevention_Cheat_Sheet
+
+https://www.owasp.org/index.php/Testing_for_LDAP_Injection_(OTG-INPVAL-006)
+
+MongoDB: || 1==1 (sql: or 1=1). %00 works as well. ``//`` and ``&lt;!--`` can be used for commenting things out.
 
 </pre>
 </div>
