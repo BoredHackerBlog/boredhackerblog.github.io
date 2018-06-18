@@ -140,6 +140,8 @@ Error message and password prompt
 
 <li>$:/state/showeditpreview</li>
 
+<li>$:/state/sidebar</li>
+
 <li>$:/state/tab--1963855381</li>
 
 <li>$:/state/tab--2112689675</li>
@@ -180,6 +182,8 @@ Error message and password prompt
 
 <li>Chrome Extension development</li>
 
+<li>CTF notes</li>
+
 <li>Go Programming notes</li>
 
 <li>Go Programming notes - 2</li>
@@ -188,7 +192,17 @@ Error message and password prompt
 
 <li>Go Programming notes - 4</li>
 
+<li>hash length extension attack</li>
+
 <li>Malicious document analysis</li>
+
+<li>Malware Analysis Notes</li>
+
+<li>Malware Analysis Notes - 1</li>
+
+<li>Malware Analysis Notes - 2</li>
+
+<li>Malware Analysis Notes - 3</li>
 
 <li>PentesterLab Notes</li>
 
@@ -8563,6 +8577,9 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234704663" modified="20180516191840582" title="$:/state/showeditpreview">
 <pre>yes</pre>
 </div>
+<div created="20180616184138831" modified="20180616184147168" title="$:/state/sidebar">
+<pre>yes</pre>
+</div>
 <div created="20180425011450510" modified="20180425011451988" title="$:/state/tab--1963855381">
 <pre>$:/core/ui/ControlPanel/Palette</pre>
 </div>
@@ -8578,7 +8595,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Chrome Extension development]]" title="$:/StoryList">
+<div list="" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9026,7 +9043,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20180528171722789" tags="" title="About">
+<div created="20180424234251670" modified="20180618141233988" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9042,7 +9059,11 @@ Notes:
 
 [[Malicious document analysis]]
 
-[[Programming notes]]</pre>
+[[Programming notes]]
+
+[[CTF notes]]
+
+[[Malware Analysis Notes]]</pre>
 </div>
 <div created="20180529153708743" modified="20180530193047085" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
@@ -9085,6 +9106,9 @@ chrome.tabs.query() for getting tabs.
 chrome.pageAction.show(tabid) to show page action extension on a certain tab.
 
 </pre>
+</div>
+<div created="20180616183925145" modified="20180616184043410" tags="" title="CTF notes">
+<pre>[[hash length extension attack]]</pre>
 </div>
 <div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
 <pre>Notes taken while viewing The Go Programming Language
@@ -9408,6 +9432,44 @@ mychan = make(chan bool, 2) //two inputs
 close(mychan)
 ```</pre>
 </div>
+<div created="20180616184048616" modified="20180616184124631" title="hash length extension attack">
+<pre>```
+import time
+from hashpumpy import hashpump
+from pwn import *
+
+r = remote('IP',PORT)
+
+print r.read() #read options list
+r.sendline(&quot;2&quot;) #pick order
+print r.read()
+print r.read() #for some reason, two reads works, one didn't
+r.sendline(&quot;5&quot;)
+orderinfo = r.read() #get our order info
+print orderinfo
+
+cleanorder = orderinfo.splitlines()[1] #remove Your order part
+
+ourhash = cleanorder.split(&quot;&amp;sign=&quot;)[1] #gives us the hash
+paymentinfo = cleanorder.split(&quot;&amp;sign=&quot;)[0] #gives us the payment input used
+
+newprice = &quot;&amp;price=100&quot; #we will always have 100 VND
+
+for i in range(8,33): #count from 8 to 32, since signkey length is randomly from 8 to 32. we will try to send all the inputs for all the signkey length
+    r.sendline(&quot;3&quot;) #send 3 so we can Pay
+    print r.read() #read stuff
+    print r.read() #read stuff again...
+    hpout = hashpump(ourhash,paymentinfo,newprice,i) #hashpump returns &quot;A tuple containing the new hex digest and the new message.&quot;
+    newhash = hpout[0]
+    newpayment = hpout[1]
+    sendstr = newpayment + &quot;&amp;sign=&quot; + newhash #make our string again
+    print &quot;SENDING THIS: &quot; + sendstr
+    r.sendline(sendstr) #send it!
+    print r.read() #read stuff
+    print r.read() #read stuff
+
+```</pre>
+</div>
 <div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
 <pre>Notes from viewing &quot;Performing Malware Analysis on Malicious Documents&quot; presented by Tyler Hudak. It's on PluralSight here: https://www.pluralsight.com/courses/malware-analysis-malicious-documents-performing
 
@@ -9500,6 +9562,271 @@ Tools: vipermonkey.
 Some functions to monitor: CreateFile, WriteFile, InternetCrackURL, HTTPCrackURL, CreateProcess.
 
 Tool: Lazy Office Analyzer</pre>
+</div>
+<div created="20180618141154608" modified="20180618164431999" tags="" title="Malware Analysis Notes">
+<pre>My notes for going through RPISec Malware Analysis course and the Practical Malware Analysis book. Notes from both of the resources are combined.
+
+[[Malware Analysis Notes - 1]]
+
+[[Malware Analysis Notes - 2]]
+
+[[Malware Analysis Notes - 3]]</pre>
+</div>
+<div created="20180618141540763" modified="20180618154056232" title="Malware Analysis Notes - 1">
+<pre>Basic Analysis
+
+-Static analysis: analyzing without code exec, may provide information about what malware does. involves looking at file sigs, urls, filenames, registry keys.
+
+-dynamic analysis: analyzing behavior when code is executed. information to look for: files interacted with, process interaction, network activity, other file/command execution, and so on.
+
+Types of malware: backdoor: allows an attacker to connect and use system via alternative method (connect to port) or even regular method (backdoor account). botnet: recvs instructions from C2. downloader: downloads more stuff. info-stealing: steals information such as pw hashes, browser activity, keylogs, etc. launcher: used to launch malicious programs. rootkit: code that hides other code/malware. scareware: used to scare users. spam-sending: sends spam sing a machine. worm/virus: spreads and infects more machines. 
+
+static analysis: using av to see if malicious or not, searching for hashes, using strings or function information. 
+
+Hash: md5, sha1, sha256,etc can be used and google or virustotal search can be done to find more info. 
+
+strings: ascii or unicode strings contained inside the file. Ascii (hex): 41 42 43 00 (null terminator), unicode: 41 00 42 00 43 00 00 00 (null term). String is ABC.
+
+packing and obfuscation: makes files harder to analyze. obfuscation makes it harder to figure out how the malware is executed. packing is when the program is compressed. 
+
+packed or obfuscated malware will often use loadlibrary and get procesaddress functions, which can be used to load and use other libraries and functions. 
+
+when packing is done, a wrapper program runs to decompress the packed code and run it. Packer information can be detected with PEiD. (PEiD plug-ins may execute exe files or contain vulns!)
+
+unpacking upx packed program: upx -d filename.exe
+
+PE = portable executable, it's a file format used by windows executables, object code, and dll files. File contains a header which has info about the code, type of of app, required libraries &amp; functions, and so on...
+
+linked libraries and functions: exe files can import functions from other libraries (DLL files). DLL files usually export functions to be used by other files. 
+
+static linking: when static linking is used, code from the linked library is included with the exe file, increasing the file size. 
+
+runtime linking: loads code from other libraries when it's running and when the code is needed. Windows has functions that allow import of functions from libraries which are not in the file header. LoadLibrary and GetProcaddress are two of the functions that allow for that. LdrGetProcaddress and LdrLoadDLL can also be used. 
+
+Dynamic linking: when the exe file is loaded by the host OS, it loads the required libraries defined by the header. 
+
+Dependency walker makes it easier to identify the use of libraries. Ordinals label in dependency walker can be used when loading a function as well. The malware author can use ordinal number instead of function name. 
+
+some common dll's: kernel32: provides core functionality. useful for interacting with memory, files, or hardware.
+
+advapi32: accessing windows components such as service manager and registry.
+
+user32: for UI related thigns, such as buttons, scrolling and etc.
+
+GDI32: displaying and manipulaing graphics
+
+ntdll: kernel interaction. not typically accessed directly. 
+
+wsock32, ws2_32: for networking.
+
+wininet: for netwokring as well but implments functions to interact with ftp,http, and ntp.
+
+Function naming: FunctionEx, Ex implies it's an updated function. FucntionA or FunctionW. Ascii or wide strings. 
+
+imported functions: MSDN has info on functions that are imported. 
+
+Exported functions: DLLs and EXEs can export functions. Typically DLL exports. 
+
+To run a program as a service, you need a function named ServiceMain. if malware is using this, it may be running as a service.
+
+SetWindowsHookEx, commonly used by keyloggers to get keyboard inputs. 
+
+RegisterHotKey, used for registering a hotkey such as ctrl+shift+P, whenever that's pressed the application get notified. 
+
+Software\Microsoft\Windows\CurrentVersion\Run is used for startup tasks.
+
+PE headers and sections: .text contains executable code. .radata contains import and export information. File can also contain .idata and .edata for import and export info. .data contains global data which can be accessed from anywhere in the application. (like variables such as strings). .rsrc contains resources used by the app, such as icons, images, menutes, and strings. Section names may change depending on the compiler.
+
+Borland Delphi uses CODE instead of .text. Windows doesn't care because PE header contains information about how the section is used. 
+
+.pdata is only present for 64-bit systems and stores exception handling info. .reloc contains information for relocation of library files.
+
+Tool: PEView. 
+
+All Delphi programs use compile time of June 19, 1992. Compile time can be faked as well.
+
+IMAGE_SUBSYSTEM_WINDOWS_CUI means it runs on command line. IMAGE_SUBSYSTEM_WINDOWS_GUI means it uses GUI. It can also be NATIVE.
+
+Virtual Size - how much space is allocated for a section during loading process. Size of Raw Data shows how big the section is on disk. These values usually should be equal. Section size info can be useful for detecting packe files. If virtualsize is larger than size of raw data, then it's probably packed. odd section names and 0 size of raw data can also mean it's packed.
+
+Tool: Resource Hacker.
+
+Resource section can store strings, icons, and images. It can also store executables and drivers.
+
+Tools: PEBrowse, PE Explorer.
+
+PE Header Summary:
+Imports - functios imported from other libraries
+Exports - functions that can be used by other libraries
+TImestamp - when the file was compiled
+Sections - sections in the file
+Subsystem - how the application runs (CLI/GUI)
+Resources - additional things that the file needs such as icons, strings, images, and etc.
+
+Basic Dynamic analysis: When you run the malware and look at what it does.
+
+easy way: using a sandbox, such as hybrid analysis, joebox, cuckoo and so on...
+
+running malware: launching DLL: rundll32.exe can be used: rundll32.exe DLLNAME, Export_FUNCTION arguments_for_function
+
+Export_function can be name or ordinal number. For using ordinal, you can append # in front of the number.
+
+DLLMain is entry point function for DLL's.
+
+regkey HKLM\System\CurrentControlSet\Services has information about services.
+
+procmon, filemon, regmon can be used to monitor activities of a process. 
+
+process explorer: shows process info, including process id, parent/child process info, dll info, mutex and other handles. It also allows you to view strings of the file on disk vs the loaded file in memory.
+
+Tool: Regshot, for taking snapshots of registry at two different times and comparing them.
+
+Faking a network: apateDNS, spoofs DNS responses. Netcat can also be used for listening and viewing connection info. Wireshark for packet capture and analysis. inetsim, runs on linux, for simulating multiple service types. </pre>
+</div>
+<div created="20180618154114725" modified="20180618164414689" title="Malware Analysis Notes - 2">
+<pre>Advanced static analysis:
+x86 assembly: instructions correspond with opcodes mov ecx = b 9
+
+operands: immediate operands - mov eax, 0x42; copy 0x42 to eax. register operands - mov eax, ecx; copy ecx to eax. memory address - mov [esp], eax; copy whatever at address of esp to eax.
+
+general registers: used by cpu during execution. segment registers: memory section tracking, flags: used to make decisions (if/else...), instruction pointer (EIP): keep track of the next instruction to be executed.
+
+EFLAGS - 32-bits, with 1 bit flag inside of it. flag can be set (1) or cleared (0). 
+
+ZF: zero flag, set to 1, when operation output results in zero.
+
+CF: carry flag, set when result of an operation is too large or too small for the destination.
+
+SF: sign flag, set when result of an operation is negative also when most significant bit is set after arithmetic operation.
+
+TP: trap flag, used for debugging. if set, processor will execute one instruction at a time. single step mode.
+
+mov: mov destination, source. Doesn't move, it copies. mov eax, [ebx+8]; copy value at the address ebx+8 into eax.
+
+lea - load effective address. lea dest, source. lea eax, [ebx+8] puts ebx+8 in eax.
+
+add/sub - add/sub dest, value
+
+mul/div - mul/div value, multiply or divide eax by value. results for mul are stored in edx:eax, div results are stored in eax with remainder stored in edx.
+
+logical: or, and, xor. shr/shl, ror, rol. for shift, a bit is thrown away, for rotate, it's kept.
+
+function prologue - few lines of code at the start of the function. prepares stack and registers for use.
+
+function epilogue - few lines at the end of the functions. restores stack and registers to however they were before the function call happened.
+
+Function calls involve: push, pop, call, leave, enter, ret.
+
+Function calling conventions: cdecl - calling function cleans up the stack. stdcall - same as cdecl, except the called function cleans up the stack before returning. fastcall - first few args are passed in registers, usually edx, ecx. thiscall - idk...it exists.
+
+When looking at functions stack frame: local variables will be at negative offset from ebp and function args will be at positive offset.
+
+conditionals: test - similar to and but operands are not modified, only ZF is set. cmp - similar to sub and does not modify operands. sets ZF and/or CF. 
+
+Branching: jmp - unconditional jump. 
+
+rep instruction - for manipulating data buffers(array of bytes). rep movsb. copies address in esi to address in edi. ecx is used as a counter. b for byte, w for word, and d for double word.
+
+IDA colors: light blue - library code recognized by FLIRT signatures. Red - compiler generated. Dark blue - user written. Pink - imports. Gray - defined data. Brown - undefined data.
+
+Memory: high memory address to low. data, code, heap, stack.
+
+data section can be used to put values that are initially loaded, such as static variables or global variables. 
+
+code section contains actual code that gets executed.
+
+heap contains dynamic memory for use in the application. 
+
+stack is used for local variables, storing args for functions, keeping track of return locations and etc.
+
+mov vs lea. mov copies data specified at a location to another place. lea loads an address.
+
+nop: no operation, does nothing.
+
+calling conventions:
+cdecl
+
+```
+ret = test(a,b,c)
+push c
+push b
+push a
+call test
+add esp, 12 (12 because 4*3 inputs)
+mov ret, eax 
+```
+
+stdcall- callee cleans up the stack. add esp,12 (shown above) would not be executed. Used for Windows API.</pre>
+</div>
+<div created="20180618164419740" modified="20180618175040546" tags="" title="Malware Analysis Notes - 3">
+<pre>Windows specific stuff:
+
+Windows API - used for interacting with windows.
+
+DLL = Dynamic link library. 
+
+kernel32 and ntdll for low level interaction. these two are always loaded.
+
+wininet/ws2_32 - networking
+
+advapi32 - service, process, permissions, crypto uses. 
+
+process is basically a container. each process has virtual address space and threads. API: CreateProcess, CreateProcessAsUser, Enumprocesses
+
+Threads: Scheduled and executed by the OS. Belong ot a signle process and share its address space. Have their own thread context and stack. API: CreateThread, CreateRemoteThread.
+
+Thread context: keeps track of the state of a thread. state = register values. API: GetThreadContext, SetThreadContext.
+
+DLLs: shared to save memory space. only loaded into memory once. must map into your virtual address space (LoadLibrary). DllMain function is executed when dll is loaded. API: LoadLIbrary, GetProcAddress.
+
+Registry: heirachical tree with stuff stored, such as configs. Key (similar to folder) value (similar to file).  API: RegOpenKey, RegSetValue, RegEnumKey.
+
+Service: similar to a process. Gets &quot;installed&quot; onto disk/registry. Can be interacted with Service Manager (services.exe), start stop, suspend, schedule, autostart. API: CreateService, OpenSCServiceManager, EnumDependentServices.
+
+Handle: pointer to something, could be registery key, service, file, and etc... Returns handles: OpenFile, CreateFile, OpenService, OpenSCManager, RegCreateKey. Use open handles: WriteFIle, ReadFile, OpenService, ControlService, RegCreateKey, RegReplaceKey.
+
+COM = Component Object Model. For code sharing and interoperability. COM servers offer up implementation. COM Clients use interface to exec the implementation. Similar to #include but anyone can offer up new interfaces, client doesn't need to know who's implementing it and where.
+
+Windows Types: Word (w), DWORD (dw), Handles (H), Long Pointer (LP), Callback.  word = 16-bit unsigned. double word - 32-bit unsigned. handle- handle to an object. long pointer - pointer to another type. LPByte - pointer to a byte. Callback - function called by windows API. InternetSetStatusCallback function passes a pointer to a function that is called whenever the system has an update of the internet status.
+
+Special files: shared files: \\?\servicename\share. \\?\ tells the OS to disable string parsing which allows it access to longer filenames.
+
+access via namespace: \\.\physicaldisk1. \device\physicaldisk1.
+
+ADS = alternate data streams. file.txt:stream:$data
+
+Registry: root key, subkey, key, value entry, value or data. value has name and value.
+
+HKEY_LOCAL_MACHINE (HKLM) - settings that are global to the local machine.
+
+HKEY_CURRENT_USER (HKCU) - stores settings specific to the current user.
+
+HKEY_CLASSES_ROOT - store info defining types.
+
+HKEY_CURRENT_CONFIG - stores settings about the current hardware config.
+
+HKEY_USERS - stores settings for default user, new users, and current users.
+
+User information is stored under HKEY_USER\SID. SID is the security identifier. 
+
+HKEY_LOCAL_MACHINE\
+SOFTWARE\Microsoft\Windows\CurrentVersion\Run contains startup info.
+
+.reg files can be used for registry scripting.
+
+Network APIs:socket - create a socket. bind - attach a socket to a port. listen - socket will listen for incoming connections. accept - open a connection to remote socket and access the connection. connect - connect to remte socket. recv receive data from remote. send - send data to remote.
+
+WSAStartup function must be called before any other networking functions to allocate resources for networking libraries. Setting breakpoint at WSAStart may be useful.
+
+WinINet API: wininet.dll. Implements protocols such as http and ftp. API: InternetOpen used to initialize internet connection. InternetOpenURL connect to URL (HTTP or FTP), InternetReadFile, read data from internet.
+
+Main DLL function is DllMain. It has no label and it is not exported. Function is called to notify the DLL whenever a process loads or unloads the library, creates a new thread, finishes an existing thread.
+
+CreateProcess has STARTUPINFO struct which includes a handle to standard input, output, and error. 
+
+Thread Context: when a thread is running, it has complete control of CPU core. When OS switches between threads, the values in CPU are saved in a structure called thread context.
+
+Mutexes: global objects. API: CreateMutex, OpenMutex.</pre>
 </div>
 <div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
