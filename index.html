@@ -204,6 +204,10 @@ Error message and password prompt
 
 <li>Malware Analysis Notes - 3</li>
 
+<li>Malware Analysis Notes - 4</li>
+
+<li>Malware Analysis Notes - 5</li>
+
 <li>PentesterLab Notes</li>
 
 <li>PentesterLab Notes - Essential Badge</li>
@@ -9563,14 +9567,24 @@ Some functions to monitor: CreateFile, WriteFile, InternetCrackURL, HTTPCrackURL
 
 Tool: Lazy Office Analyzer</pre>
 </div>
-<div created="20180618141154608" modified="20180618164431999" tags="" title="Malware Analysis Notes">
+<div created="20180618141154608" modified="20180619143655984" tags="" title="Malware Analysis Notes">
 <pre>My notes for going through RPISec Malware Analysis course and the Practical Malware Analysis book. Notes from both of the resources are combined.
 
 [[Malware Analysis Notes - 1]]
 
 [[Malware Analysis Notes - 2]]
 
-[[Malware Analysis Notes - 3]]</pre>
+[[Malware Analysis Notes - 3]]
+
+[[Malware Analysis Notes - 4]]
+
+[[Malware Analysis Notes - 5]]
+
+[[Malware Analysis Notes - 6]]
+
+[[Malware Analysis Notes - 7]]
+
+[[Malware Analysis Notes - 8]]</pre>
 </div>
 <div created="20180618141540763" modified="20180618154056232" title="Malware Analysis Notes - 1">
 <pre>Basic Analysis
@@ -9827,6 +9841,202 @@ CreateProcess has STARTUPINFO struct which includes a handle to standard input, 
 Thread Context: when a thread is running, it has complete control of CPU core. When OS switches between threads, the values in CPU are saved in a structure called thread context.
 
 Mutexes: global objects. API: CreateMutex, OpenMutex.</pre>
+</div>
+<div created="20180619145304046" modified="20180619160432744" title="Malware Analysis Notes - 4">
+<pre>Debugging Concepts and Tools: Windows has kernel and user land debugging.
+
+Debugging kernel mode code can require two different system, one running debugger and one system being debugged. 
+
+Sigle stepping- run one instruction and return control to debugger.
+
+stepping into - enter a function
+
+stepping over - do not enter a function, move after the call instruction.
+
+breakpoints: for pausing. softwre breakpoint-debugger adds 0xCC/int 3. hardware breakpoint-CPU keeps track of these. 
+
+first-chance exception: debugger can either handle the exception or pass the exception to the program. 
+
+second-chance exception: exception is passed back to the debugger. Created when the program would have crashed and must be handled.
+
+Patching/modifying: debugger lets  you do this. Instructions and flags can be changed.
+
+Tracing: read tracing-memory read from. write tracing-memory written to. execution tracing-instructions executed.
+
+Tools: Windbg, ollydbg, immunity debugger x64dbg(?)
+
+when trap flag is set, the processor executes one instruction then generates and exception. 
+
+Debugger memory map: displays memory blocks allocated to the program. Basically shows how the program is laid out in the memory. Sections are shown with the permissions (rwx). DLLs are also shown. 
+
+Rebasing - rebasing is what happens when a module in windows is not loaded at its preferred base address.
+
+base address-PE files have preferred base address, known as the image base, which is defined in the PE header. Most executables are loaded at 0x00400000. Developers can modify the base. ASLR will often be relocated. Relocation of DLLs is much more common.
+
+Using &quot;Execute till User Code&quot; can be very helpful.
+
+Ollydbg can also use hardware breakpoints to avoid some anti-debugging methods.
+
+Memory breakpoints are suppported, such as break point on memory access.
+
+Ollydbg can debug DLLs. It uses loaddll.exe to load them. The breakpoint will be set at DllMain function. Debug -&gt; Call DLL Export can allow you to call functions of the DLL.
+
+Tracing records detailed execution information. 
+
+Call stack: view -&gt; call stack. list of calls taken to reach your current location. 
+
+Run Trace allows ollydbg to save every executed instruction and all the chnages made to registers and flags. 
+
+If shellcode is being ran from heap, EIP is less than 0x400000. (below 0x400000 is stack, heap, and etc.) Tracing can be run if EIP is in 00000000 to 003FFFFF.
+
+Ollydbg exception handling: step into exception, step over it, or run the exception handler. 
+
+Analyzing shellcode with ollydbg: copy shellcode from hex editor. from memory map, select region whose type is Priv. (private memory assigned to the processs), double click the rows in the memory map to bring up a hex dump. The area may contains bunch of 00's. Right click the region in memory map window and select set access -&gt; full access (give RWX perms), Do binary paste to the zero-filled area in the memory dump, finally, set EIP to the location of memory where everything was pasted.
+
+Plugins: Ollydump - dumb a process to a PE file. Hide Debugger - protects acgainst anti-debugging methods such as IsDebuggerPresent, FindWindow, and etc... Command line - Gives you CLI interface. Bookmarks - allows you to bookmark things and quickly get to those bookmarks.
+
+Windbg: x THINGTOBESEARCHED, dt OBJECT (returns object structure).
+
+Symbol file: SRV*c:\websymbols*http://msdl.microsoft.com/download/symbols
+
+Tool: OSR Driver Loader can be used to load drivers.
+
+</pre>
+</div>
+<div created="20180619160441197" modified="20180619185621304" title="Malware Analysis Notes - 5">
+<pre>Malware Behavior
+
+Downloader - downloads another sample and install/runs it. 
+
+Launcher - unpacks/decrypts/drops another sample and install/runs it.
+
+Backdoor/RAT - remote access
+
+GINA - graphical identification and auth. Framework for getting all auth attemps.
+
+Credential stealers - steal creds. Out of memory.
+
+Tool/malware: WCE.exe - Windows credential editor. mimikatz.
+
+Persistence- registry keys, startup folder, browser helper objects (BHO), and services.
+
+Analysis tool: sysinternals autoruns
+
+AppInit_DLLs - &quot;a mechanism that allows an arbitrary list of DLLs to be loaded into each user mode process on the system&quot;
+
+svchost DLLs - runs legitimate services. Services can be trojaned.
+
+DLL load order hijacking - putting a DLL in a place where microsoft looks first when loading DLL's.
+
+Privesc - API: AdjustTokenPrivileges. 
+
+GINA: msgina.dll. Loaded by Winlogon executable during login process. Registry: HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GinaDLL
+
+Persistence: Winlogon Notify: Regkey: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\
+
+Service regkey: HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\ServiceName , KEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Svchost
+
+Privesc API: SeDebugPrivilege.
+
+User mode rootkit: (kernel mode rootkits can use SSDT hooking and IRP hooks) IAT and inline hoooking.
+
+IAT = import address table, EAT = export address table. IAT hooking can be useful for hiding files, processes, and network connections. 
+
+Example: TerminateProcess is called, IAT points to rootkit code instead of TerminateProcess code, rootkit code will modify the parameters and then call real TerminateProcess code. 
+
+Inline hooking: overwrites the API function code in the importated DLL. Unlike IAT rootkit, which modifies the pointer, this actually changes the code. 
+
+
+Data encoding and malware countermeasures: 
+
+Simple ciphers: xor, base64, ROT, etc.
+
+Crypto algorithms: RSA, openssl, etc.
+
+custom encoding.
+
+xor - null preserving single-byte xor: skips bytes that are null, the key itself.
+
+add, sub, rol, ror, and multibyte xor can also be used.
+
+base64 - = is used as padding. 
+
+for crypto algorithm, looking for 'openssl' or 'rijndael' in strings and imports can help.
+
+Ida pro plugins: Findcrypt2, Krypto Analyzer. IDA entropy plugin.
+
+Reversing encoding: trace the program execution, figure out function usage, reprogram functions/use functions as they exist... (Frida may be useful if, for example, windows crypto library is used)
+
+Tool: Pycrypto-python crypto library
+
+malware indicators: physical indicatos- hashes, strings, known behavior. network indicators-domains, IPs, http request content.
+
+Sinkhole - host on internal network that recvs redirected traffic from known malicious domains.
+
+IDS = instrusion detection system (snort, suricata, broids)
+
+IPS = intrusion prevention system (snort, suricata)
+
+operations security (opsec) - preventing adversaries from obtaining sensitive info.
+
+spear-phishing emails with unique links, or embedding unused domain in the malware and watching the analyzer try to resolve it. Similar to canary traps.
+
+
+Data encoding:
+Xor, you can brute force it and look for MZ header.  searching for xor in IDA may help find xor loops.
+
+base64, if something looks like base64 but doesn't decode, try adding = to it, for padding. if decodes to garbage, try different indexing. author may have changed base64 indexing or moved letters around.
+
+Using Crypt*/CP*/Cert* functions indicates that microsoft cryptographic provider library is used. 
+
+Safely investigating malware: use tor, proxy, vpn, etc. use dedicated machine and virtual machine.
+
+Useful links: domaintools.com, robtex.com, bfk.de/bfk_dnslogger_en.html.
+
+malware analysis levels: surface analysis -
+ indicators, similar to sandbox output. communication method coverage - understanding code for communication. operational replication - ability to replicate malware server. code coverage - understanding all of the code.
+
+Covert Malware Launching
+
+IAT = import address table-load addresses of DLLs can change, windows loader dynamically resolves address of imports, stores these addresses in IAT.
+
+Windows uses to methods: Directly call IAT function pointers - call whatever. call into jmp table - call xyz, jmp whatever.
+
+IAT hooking: first method: statically-replace all CALLs to the IAT, dynamically - replace address in IAT. second method: replace entry in the jmp table.
+
+inline hooking: insert jmp into code - beginning or end, go to our code, log stuff, modify args, etc...
+
+DLL injection: modify memory of other processes. WriteProcessMemory, CreateRemoteThread. Injected code runs in context of target process. LoadLibrary: loaddll into my address space and execute dll main. 
+
+CreateRemoteThread(victimprocess,..,...,loadlibrary address, dllnameinvictimprocess,...,...) required things: handle to the target process, address of loadlibrary in target process, address of dll name/path in target processs. 
+
+Direct injection: write and execute code in another proess. similar to dll injection. writing shellcode and calling it directly. 
+
+process replacement: completely replacing a processes address space. CreateProcess(...create_suspended...) unmap current sections, alloc new sections, write new section content, set EIP to entry point, resume process. This can be detected using process explorer and comparing strings on disk vs memory.
+
+windows hooks: windows has event/message system. it executes callbacks when things occur, if you register the handler in your dll, then each process is fored to load your dll to run the handler. 
+
+Windows APC - Asynchronous procedure call. API: QueueUserAPC. Alternative to CreateRemoteThread. Instead of creating new thread to execute code, having existing thread execute your code. 
+
+Launchers - also known as loader. An example: executable or DLL in it's own resource section. API: FindResource, LoadResource, SizeofResource.
+
+Process injection: inject code into another running process. API: VirtualAllocEx, WriteProcessMemory.
+
+DLL Injection - remote process is forced to load malicious DLL. DLLMain gets executed. Injector must obtain handle to the victim process. This can be done by using API's: CreateToolhelp32Snapshot, Process32First, Process32Next, and OpenProcess. CreateRemoteThread is used for DLL injection. 
+
+Injection calls: OpenProcess -&gt; VirtualAllocEx -&gt; WriteProcessMemory -&gt; GetModuleHandle(kernel32.dll) -&gt; GetProcAddress(loadlibrary) -&gt; CreateRemoteThread.
+
+Direct Injection: allocating and injecting code into memory space of remote process. API: VirtualAllocEx, WriteProcessMemory, CreateRemoteThread. 
+
+Process replacement: overwriting memory space of running process. Calls: CreateProcess -&gt; ZwUnmapViewofSection -&gt; VirtualAllocEx -&gt; WriteProcessMemory(headers) -&gt; WriteProcessMemory(sections) -&gt; SetThreadContext -&gt; ResumeThread
+
+Hook Injection: local hooks - observe or manipulate messages destined for an internal process. remote hooks - observe or manipulate messages destined for another process. API: SetWindowsHookEx
+
+Detours - library developed my Microsoft Research. Can be used for modifying import table, attaching DLLs to existing program files, and adding function hooks to running processes. .detour section is present in the binary.
+
+APC (asynchronous procedure call) injection - can direct a thread to execute some other code before executing regular code. Every thread has queue of APCs attached to it. API: WaitForSingleObjectEx, WaitForMultipleObjectsEx, ad Sleep.
+
+</pre>
 </div>
 <div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
