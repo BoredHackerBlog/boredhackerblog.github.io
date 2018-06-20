@@ -1,0 +1,151 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>fristileaks</title>
+</head><body>Target IP: 10.0.0.21<br/>
+<br/>
+I changed my attacker machine and now it's behind NAT. Also, this machine has vmware tools installed.<br/>
+<br/>
+root@kali:~# nmap -A 10.0.0.21<br/>
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-06-12 15:48 EDT<br/>
+Nmap scan report for 10.0.0.21<br/>
+Host is up (0.00072s latency).<br/>
+Not shown: 999 filtered ports<br/>
+PORT  STATE SERVICE  VERSION<br/>
+80/tcp open tcpwrapped<br/>
+| http-methods: <br/>
+|_ Potentially risky methods: TRACE<br/>
+| http-robots.txt: 3 disallowed entries <br/>
+|_/cola /sisi /beer<br/>
+|_http-server-header: Apache/2.2.15 (CentOS) DAV/2 PHP/5.3.3<br/>
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).<br/>
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port<br/>
+Device type: specialized|WAP|phone<br/>
+Running: iPXE 1.X, Linux 2.4.X|2.6.X, Sony Ericsson embedded<br/>
+OS CPE: cpe:/o:ipxe:ipxe:1.0.0%2b cpe:/o:linux:linux_kernel:2.4.20 cpe:/o:linux:linux_kernel:2.6.22 cpe:/h:sonyericsson:u8i_vivaz<br/>
+OS details: iPXE 1.0.0+, Tomato 1.28 (Linux 2.4.20), Tomato firmware (Linux 2.6.22), Sony Ericsson U8i Vivaz mobile phone<br/>
+<br/>
+TRACEROUTE (using port 80/tcp)<br/>
+HOP RTT  ADDRESS<br/>
+1  ... 30<br/>
+<br/>
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .<br/>
+Nmap done: 1 IP address (1 host up) scanned in 62.66 seconds<br/>
+<br/>
+<img src="image.png"/><br/>
+<br/>
+<img src="image 2.png"/><br/>
+<br/>
+Going to locations defined in robots.txt gives this as result:<br/>
+<img src="image 3.png"/><br/>
+<br/>
+I had to use a walkthrough to figure out that I need to go to /fristi. I guess I should have picked up on that after looking at robots.txt. <br/>
+<br/>
+/fristi looks like this:<br/>
+<img src="image 4.png"/><br/>
+<br/>
+There is a message in the source code:<br/>
+<img src="image 5.png"/><br/>
+<br/>
+Also there is base64 data as comment.Converting the base64 data results in an image file with this:<br/>
+<img src="image 6.png"/><br/>
+<br/>
+I can guess that eezeepz is a username but I didn't guess that the text in the image was the password but it was...<br/>
+<br/>
+logging in takes me here:<br/>
+<img src="image 7.png"/><br/>
+<br/>
+I can't upload .php file but I can upload .gif file so I did upload one and got this as a result:<br/>
+<img src="image 8.png"/><br/>
+I can access the gif<br/>
+<img src="image 9.png"/><br/>
+<br/>
+I uploaded simple-backdoor.php.gif without modifying contents of simple-backdoor.php and I was able to access that as well.<br/>
+<img src="image 10.png"/><br/>
+<br/>
+After looking in /bin and and /usr/bin, I didn't see netcat or nc. I did see wget and curl. oh and python is also installed.<br/>
+<br/>
+I found some python shells here: https://github.com/infodox/python-pty-shells<br/>
+<br/>
+I used tcp reverse and got a shell. (earlier i did say that im using nat and I am. I had it connect back to another machine)<br/>
+<br/>
+When doing ps and netstat, i noticed that mysql was running. I checked the webserver files to see if it contained info about mysql and it did.<br/>
+<img src="image 11.png"/><br/>
+<br/>
+This is what the database had:<br/>
+<img src="image 12.png"/><br/>
+<br/>
+uname -a shows the following:<br/>
+Linux localhost.localdomain 2.6.32-573.8.1.el6.x86_64 #1 SMP Tue Nov 10 18:01:38 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux<br/>
+<br/>
+I looked for exploits for 2.6.32 centos and found this: https://www.exploit-db.com/exploits/25444/<br/>
+The system also has GCC on it. I downloaded, compiled, and executed the code and it didn't work.<br/>
+<br/>
+I initially looked at the home folder and passwd but I went back and examined it again. I was able to access /home/eezeepz.<br/>
+<br/>
+It has an interesting file:<br/>
+<img src="image 13.png"/><br/>
+<br/>
+The notes.txt contains this:<br/>
+Yo EZ,<br/>
+<br/>
+I made it possible for you to do some automated checks,<br/>
+but I did only allow you access to /usr/bin/* system binaries. I did<br/>
+however copy a few extra often needed commands to my<br/>
+homedir: chmod, df, cat, echo, ps, grep, egrep so you can use those<br/>
+from /home/admin/<br/>
+<br/>
+Don't forget to specify the full path for each binary!<br/>
+<br/>
+Just put a file called &quot;runthis&quot; in /tmp/, each line one command. The<br/>
+output goes to the file &quot;cronresult&quot; in /tmp/. It should<br/>
+run every minute with my account privileges.<br/>
+<br/>
+- Jerry<br/>
+<br/>
+I started out by doing this:<br/>
+<img src="image 14.png"/><br/>
+<br/>
+<br/>
+<img src="image 15.png"/><br/>
+<br/>
+I shoulda paid close attention to the note...<br/>
+<br/>
+I echoed /usr/bin/whoami to the file and it ran. It was running as admin.<br/>
+<br/>
+Now to get admin shell, I can have the cron job run python reverse shell. I modifed the port on the old python script I uploaded and uploaded the updated one and got shell.<br/>
+<img src="image 16.png"/><br/>
+<br/>
+Here are the files I see in the admin folder:<br/>
+<img src="image 17.png"/><br/>
+<br/>
+I examined the files that I thought were interesting:<br/>
+<img src="image 18.png"/><br/>
+<br/>
+Encoding basically takes arg as input then turns it into base64 and reverses it, before applying rot13 operation.<br/>
+<br/>
+I decoded the passwords using python:<br/>
+<img src="image 19.png"/><br/>
+<br/>
+The first password gets me access to fristigod account.<br/>
+second password is for the admin account.<br/>
+<br/>
+I moved into the home folder for fristigod account and discovered a hidden dir with a binary<br/>
+<img src="image 20.png"/><br/>
+<br/>
+I used the following to disassemble the binary:<br/>
+objdump -d -M intel doCom<br/>
+<br/>
+In the main function I see this:<br/>
+<img src="image 21.png"/><br/>
+<br/>
+getuid returns uid in eax, which gets moved to rbp-0x4 and then compared with 0x1f7, which is 503. UID 503 is for fristi user.<br/>
+<br/>
+<br/>
+I examined sudo -l output and I was able to run the binary as fristi user and get shell.<br/>
+<img src="image 22.png"/><br/>
+<br/>
+<img src="image 23.png"/><br/>
+<br/>
+This one was fun.I didn't make too many mistakes and I didn't have to look at other walkthroughs as much as I did for pwnlab init.<br/>
+</body></html>

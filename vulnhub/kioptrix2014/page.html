@@ -1,0 +1,100 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>kioptrix2014</title>
+</head><body>Attacker IP: 10.0.0.22<br/>
+Target IP: 10.0.0.32<br/>
+<br/>
+Nmap scan report for 10.0.0.32<br/>
+Host is up (0.0021s latency).<br/>
+Not shown: 997 filtered ports<br/>
+PORT   STATE SERVICE VERSION<br/>
+22/tcp  closed ssh<br/>
+80/tcp  open  http  Apache httpd 2.2.21 ((FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8)<br/>
+|_http-title: Site doesn't have a title (text/html).<br/>
+8080/tcp open  http  Apache httpd 2.2.21 ((FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8)<br/>
+|_http-title: 403 Forbidden<br/>
+MAC Address: 00:0C:29:24:31:06 (VMware)<br/>
+Device type: general purpose<br/>
+Running: FreeBSD 7.X|8.X|9.X<br/>
+OS CPE: cpe:/o:freebsd:freebsd:7 cpe:/o:freebsd:freebsd:8 cpe:/o:freebsd:freebsd:9<br/>
+OS details: FreeBSD 7.0-RELEASE - 9.0-RELEASE<br/>
+Network Distance: 1 hop<br/>
+<br/>
+Just two ports open. dirb and nikto didn't give anything interesting back. nikto did print that mod_ssl may have a vuln. I've seen that before. It's this exploit https://www.exploit-db.com/exploits/764/ but it doesn't work on Apache 2.2.21...<br/>
+<br/>
+Just when I was about to give up, I decided to check the source code on the web pages to see if there is anything in there that would lead me to find what type of webapp is running on it.<br/>
+I see this:<br/>
+<img src="image.png"/><br/>
+<br/>
+That brings me here:<br/>
+<img src="image 2.png"/><br/>
+<br/>
+Ran dirb again and it found these:<br/>
+---- Scanning URL: http://10.0.0.32/pChart2.1.3/ ----<br/>
+==&gt; DIRECTORY: http://10.0.0.32/pChart2.1.3/cache/               <br/>
+==&gt; DIRECTORY: http://10.0.0.32/pChart2.1.3/class/               <br/>
+==&gt; DIRECTORY: http://10.0.0.32/pChart2.1.3/data/               <br/>
+==&gt; DIRECTORY: http://10.0.0.32/pChart2.1.3/examples/             <br/>
+==&gt; DIRECTORY: http://10.0.0.32/pChart2.1.3/fonts/  <br/>
+<br/>
+pchart2.1.3 is vulnerabilities. they're listed here https://www.exploit-db.com/exploits/31173/<br/>
+<br/>
+I was able to get the passwd file<br/>
+<img src="image 3.png"/><br/>
+oss* user names are related to oss-sec hids obviously. <br/>
+<br/>
+I looked at /etc/rc.conf file. <br/>
+<img src="image 4.png"/><br/>
+<br/>
+here are the firewall rules<br/>
+<img src="image 5.png"/><br/>
+<br/>
+I also found the apache config file: <br/>
+<img src="image 6.png"/><br/>
+<br/>
+Access and error logs:<br/>
+http://10.0.0.32/pChart2.1.3/examples/index.php?Action=View&amp;Script=/var/log/httpd-error.log<br/>
+http://10.0.0.32/pChart2.1.3/examples/index.php?Action=View&amp;Script=/var/log/httpd-access.log<br/>
+<br/>
+There is also this:<br/>
+<img src="image 7.png"/><br/>
+I googled how to configure apache access based on user agent and it looks like that's whats going on here. I sent a request to 8080 and in burp modified the user agent to be mozilla/4.0.<br/>
+<br/>
+You can also change burp to replace user agent, which is what I ended up doing<br/>
+<img src="image 8.png"/><br/>
+<br/>
+This is what I see on 8080 now:<br/>
+<img src="image 9.png"/><br/>
+<br/>
+Examining the code shows this:<br/>
+<img src="image 10.png"/><br/>
+<br/>
+There is an exploit for this on exploit db https://www.exploit-db.com/exploits/21665/ there is also this one https://www.exploit-db.com/exploits/25849/<br/>
+<br/>
+i used the second but I did it from inside of burp.<br/>
+<br/>
+<img src="image 11.png"/><br/>
+<br/>
+and I had a shell, kinda<br/>
+<img src="image 12.png"/><br/>
+There is netcat on the system and it's able to connect to me but disconnects. -e doesn't seem to work either.<br/>
+<br/>
+I used reverse php shell included in kali and transfered it to the target, after modifying it<br/>
+<img src="image 13.png"/><br/>
+<br/>
+It worked!<br/>
+<img src="image 14.png"/><br/>
+<br/>
+After that I found two exploits for freebsd 9.0<br/>
+https://www.exploit-db.com/exploits/28718/ and https://www.exploit-db.com/exploits/26368/<br/>
+<br/>
+I used the second one. I transfered the source code to the target by using netcat and compiled it on the target, since it included gcc.<br/>
+<img src="image 15.png"/><br/>
+<br/>
+All the other writeup had sysret exploit...<br/>
+<br/>
+I went back and checked what I did. Looks like both exploits would work.<br/>
+<img src="image 16.png"/><br/>
+<br/>
+I did pwned the VM this time without giving up and looking at walkthrough for help. </body></html>

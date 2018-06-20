@@ -1,0 +1,116 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>tr0ll1</title>
+</head><body>Attacker IP: 10.0.0.22<br/>
+Target IP: 10.0.0.37<br/>
+<br/>
+I'm expecting to be trolled by this VM.<br/>
+<br/>
+PORT  STATE SERVICE VERSION<br/>
+21/tcp open ftp   vsftpd 3.0.2<br/>
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)<br/>
+|_-rwxrwxrwx  1 1000   0      8068 Aug 10 2014 lol.pcap [NSE: writeable]<br/>
+| ftp-syst: <br/>
+|  STAT: <br/>
+| FTP server status:<br/>
+|   Connected to 10.0.0.22<br/>
+|   Logged in as ftp<br/>
+|   TYPE: ASCII<br/>
+|   No session bandwidth limit<br/>
+|   Session timeout in seconds is 600<br/>
+|   Control connection is plain text<br/>
+|   Data connections will be plain text<br/>
+|   At session startup, client count was 5<br/>
+|   vsFTPd 3.0.2 - secure, fast, stable<br/>
+|_End of status<br/>
+22/tcp open ssh   OpenSSH 6.6.1p1 Ubuntu 2ubuntu2 (Ubuntu Linux; protocol 2.0)<br/>
+| ssh-hostkey: <br/>
+|  1024 d6:18:d9:ef:75:d3:1c:29:be:14:b5:2b:18:54:a9:c0 (DSA)<br/>
+|  2048 ee:8c:64:87:44:39:53:8c:24:fe:9d:39:a9:ad:ea:db (RSA)<br/>
+|  256 0e:66:e6:50:cf:56:3b:9c:67:8b:5f:56:ca:ae:6b:f4 (ECDSA)<br/>
+|_ 256 b2:8b:e2:46:5c:ef:fd:dc:72:f7:10:7e:04:5f:25:85 (ED25519)<br/>
+80/tcp open http  Apache httpd 2.4.7 ((Ubuntu))<br/>
+| http-robots.txt: 1 disallowed entry <br/>
+|_/secret<br/>
+|_http-server-header: Apache/2.4.7 (Ubuntu)<br/>
+|_http-title: Site doesn't have a title (text/html).<br/>
+MAC Address: 00:0C:29:BE:11:98 (VMware)<br/>
+Device type: general purpose<br/>
+Running: Linux 3.X|4.X<br/>
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4<br/>
+OS details: Linux 3.2 - 4.9<br/>
+Network Distance: 1 hop<br/>
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel<br/>
+<br/>
+<br/>
+I downloaded lol.pcap to analyze in wireshark.<br/>
+<img src="image.png"/><br/>
+<br/>
+<img src="image 2.png"/><br/>
+<br/>
+I started dirb.<br/>
+---- Scanning URL: http://10.0.0.37/ ----<br/>
++ http://10.0.0.37/index.html (CODE:200|SIZE:36)                <br/>
++ http://10.0.0.37/robots.txt (CODE:200|SIZE:31)                <br/>
+==&gt; DIRECTORY: http://10.0.0.37/secret/                    <br/>
++ http://10.0.0.37/server-status (CODE:403|SIZE:289)              <br/>
+                                       <br/>
+---- Entering directory: http://10.0.0.37/secret/ ----<br/>
++ http://10.0.0.37/secret/index.html (CODE:200|SIZE:37)<br/>
+<br/>
+Nikto:<br/>
++ Server: Apache/2.4.7 (Ubuntu)<br/>
++ Server leaks inodes via ETags, header found with file /, fields: 0x24 0x500438fe37ded <br/>
++ The anti-clickjacking X-Frame-Options header is not present.<br/>
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS<br/>
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type<br/>
++ No CGI Directories found (use '-C all' to force check all possible dirs)<br/>
++ Entry '/secret/' in robots.txt returned a non-forbidden or redirect HTTP code (200)<br/>
++ &quot;robots.txt&quot; contains 1 entry which should be manually viewed.<br/>
++ Apache/2.4.7 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.<br/>
++ Allowed HTTP Methods: POST, OPTIONS, GET, HEAD <br/>
++ OSVDB-3092: /secret/: This might be interesting...<br/>
++ OSVDB-3233: /icons/README: Apache default file found.<br/>
+<br/>
+The note mentions sup3rs3cr3tdirlol and I assumed it's a directory name which obviously could not be found by dirb.<br/>
+<img src="image 3.png"/><br/>
+<br/>
+root@kali:~# file roflmao <br/>
+roflmao: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.24, BuildID[sha1]=5e14420eaa59e599c2f508490483d959f3d2cf4f, not stripped<br/>
+<br/>
+Probably not the safest to just run binaries like this, especially from a machine named troll.<br/>
+root@kali:~# ./roflmao <br/>
+Find address 0x0856BF to proceedroot@kali:~# <br/>
+<br/>
+I ran the binary using gdb and put a break point on main and tried to go to the address but that was invalid.<br/>
+<br/>
+I put 0x0856BF in the URL after lol/ and that wasn't it. I put it after 10.0.0.37/ and it worked.<br/>
+<br/>
+<img src="image 4.png"/><br/>
+Dirb finds nothing for 0x08... directory<br/>
+<br/>
+<img src="image 5.png"/><br/>
+<img src="image 6.png"/><br/>
+<br/>
+Made a password list:<br/>
+<img src="image 7.png"/><br/>
+<br/>
+I started ssh and ftp brute force with the list but nothing.<br/>
+I also used the list to scan webserver with dirb and nothing.<br/>
+<br/>
+Time to look at a walkthrough for a hint. The password is filename Pass.txt...<br/>
+<br/>
+<img src="image 8.png"/><br/>
+<br/>
+<img src="image 9.png"/><br/>
+<br/>
+The system is ubuntu 14.04 with kernel Linux troll 3.13.0-32 and it's 32-bit.<br/>
+<br/>
+I used this exploit to get root: https://www.exploit-db.com/exploits/37292/ Linux Kernel 3.13.0 &lt; 3.19 (Ubuntu 12.04/14.04/14.10/15.04) - 'overlayfs' Local Privilege Escalation<br/>
+<br/>
+<img src="image 10.png"/><br/>
+<br/>
+<img src="image 11.png"/><br/>
+<br/>
+After looking at other walkthroughs, I could have gotten root through cron job as well.</body></html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>kioptrix3</title>
+</head><body>Attacker: 10.0.0.22<br/>
+Target: 10.0.0.26<br/>
+<br/>
+Nmap scan report for kioptrix3.com (10.0.0.26)<br/>
+Host is up (0.0022s latency).<br/>
+Not shown: 998 closed ports<br/>
+PORT  STATE SERVICE VERSION<br/>
+22/tcp open ssh   OpenSSH 4.7p1 Debian 8ubuntu1.2 (protocol 2.0)<br/>
+| ssh-hostkey: <br/>
+|  1024 30:e3:f6:dc:2e:22:5d:17:ac:46:02:39:ad:71:cb:49 (DSA)<br/>
+|_ 2048 9a:82:e6:96:e4:7e:d6:a6:d7:45:44:cb:19:aa:ec:dd (RSA)<br/>
+80/tcp open http  Apache httpd 2.2.8 ((Ubuntu) PHP/5.2.4-2ubuntu5.6 with Suhosin-Patch)<br/>
+| http-cookie-flags: <br/>
+|  /: <br/>
+|   PHPSESSID: <br/>
+|_   httponly flag not set<br/>
+|_http-server-header: Apache/2.2.8 (Ubuntu) PHP/5.2.4-2ubuntu5.6 with Suhosin-Patch<br/>
+|_http-title: Ligoat Security - Got Goat? Security ...<br/>
+MAC Address: 00:0C:29:CF:74:54 (VMware)<br/>
+Device type: general purpose<br/>
+Running: Linux 2.6.X<br/>
+OS CPE: cpe:/o:linux:linux_kernel:2.6<br/>
+OS details: Linux 2.6.9 - 2.6.33<br/>
+Network Distance: 1 hop<br/>
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel<br/>
+<br/>
+TRACEROUTE<br/>
+HOP RTT   ADDRESS<br/>
+1  2.21 ms kioptrix3.com (10.0.0.26)<br/>
+<br/>
+I started dirb and started looking at some pages<br/>
+<img src="image.png"/><br/>
+Notice the URL here<br/>
+<img src="image 2.png"/><br/>
+<br/>
+<br/>
+I tried using page=php://filter/convert.base64-encode/resource=../../../../../etc/passwd but that didn't work.<br/>
+<br/>
+I also tried page=../../../../etc/passwd%00 and page=/etc/passwd but they didn't work either.<br/>
+<br/>
+After viewing the source, I noticed that lotusCMS was being.<br/>
+Also, I looked at gallary page and after viewing source code, i found a link to the admin page which was commented out.<br/>
+On the admin page I saw link to gallarific, the software being used.<br/>
+<br/>
+<img src="image 3.png"/><br/>
+<br/>
+<br/>
+After doing some reason, I discovered that lotusCSM has a vuln and found an exploit too.<br/>
+<br/>
+Here's the exploit https://packetstormsecurity.com/files/122161/LotusCMS-3.0-PHP-Code-Execution.html<br/>
+<br/>
+<img src="image 4.png"/><br/>
+<br/>
+This machine is running Ubuntu 8.04 with kernel 2.6.24. I tried vmsplice exploit but it didn't work.<br/>
+<br/>
+Also there is a usernamed loneferret which has couple of files in their directory.<br/>
+<img src="image 5.png"/><br/>
+<br/>
+I did the following<br/>
+<img src="image 6.png"/><br/>
+<br/>
+<br/>
+At this point, I'm stuck. I looked at a walkthrough for a hint and started looking at webapp again.<br/>
+<br/>
+I see this<br/>
+<img src="image 7.png"/><br/>
+<br/>
+I used the mysql information to get more passwords<br/>
+<img src="image 8.png"/><br/>
+<br/>
+First hash is for Mast3r and second is for starwars<br/>
+<br/>
+I was able to use dreg's password to ssh into their account. I was also able to use loneferrets password to log into their account.<br/>
+<br/>
+I executed the ht file:<br/>
+<img src="image 9.png"/><br/>
+<br/>
+it's ht version 2.0.18 there is an exploit for it but I wasn't able to run it due to the target having an older version of perl.<br/>
+<br/>
+Since I can run ht as root, I can open up files. I looked into /root and got this:<br/>
+<img src="image 10.png"/><br/>
+<br/>
+But that's not a shell so it doesn't count.<br/>
+<br/>
+I looked at the password file and searched for the root password hash and of course I saw walkthroughs popup in the results. I noticed sudoers in the results and that kinda gave away what I needed to do.<br/>
+I edited the sudoers file to look like this:<br/>
+<img src="image 11.png"/><br/>
+<br/>
+and I was finally able to get root.<br/>
+<br/>
+There were multiple ways to get shell access to the VM. Check out this blog post https://volta-sec.blogspot.com/2017/02/kioptrix-level-3-dont-forget-low.html<br/>
+<br/>
+</body></html>

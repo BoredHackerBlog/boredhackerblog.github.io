@@ -1,0 +1,348 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>mrrobot</title>
+</head><body>Attacker IP: 10.0.0.22<br/>
+Target IP: 10.0.0.48<br/>
+<br/>
+Nmap scan report for 10.0.0.48<br/>
+Host is up (0.0018s latency).<br/>
+Not shown: 65532 filtered ports<br/>
+PORT  STATE SERVICE VERSION<br/>
+22/tcp closed ssh<br/>
+80/tcp open  http   Apache httpd<br/>
+|_http-server-header: Apache<br/>
+|_http-title: Site doesn't have a title (text/html).<br/>
+443/tcp open  ssl/http Apache httpd<br/>
+|_http-server-header: Apache<br/>
+|_http-title: Site doesn't have a title (text/html).<br/>
+| ssl-cert: Subject: commonName=www.example.com<br/>
+| Not valid before: 2015-09-16T10:45:03<br/>
+|_Not valid after: 2025-09-13T10:45:03<br/>
+MAC Address: 08:00:27:3B:47:39 (Oracle VirtualBox virtual NIC)<br/>
+Device type: general purpose<br/>
+Running: Linux 3.X|4.X<br/>
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4<br/>
+OS details: Linux 3.10 - 4.11<br/>
+<br/>
+<br/>
+dirb:<br/>
+---- Scanning URL: http://10.0.0.48/ ----<br/>
+==&gt; DIRECTORY: http://10.0.0.48/0/                                                                                        <br/>
+==&gt; DIRECTORY: http://10.0.0.48/admin/                                                                                      <br/>
++ http://10.0.0.48/atom (CODE:301|SIZE:0)                                                                                     <br/>
+==&gt; DIRECTORY: http://10.0.0.48/audio/                                                                                      <br/>
+==&gt; DIRECTORY: http://10.0.0.48/blog/                                                                                       <br/>
+==&gt; DIRECTORY: http://10.0.0.48/css/                                                                                       <br/>
++ http://10.0.0.48/dashboard (CODE:302|SIZE:0)                                                                                  <br/>
++ http://10.0.0.48/favicon.ico (CODE:200|SIZE:0)                                                                                 <br/>
+==&gt; DIRECTORY: http://10.0.0.48/feed/                                                                                       <br/>
+==&gt; DIRECTORY: http://10.0.0.48/image/                                                                                      <br/>
+==&gt; DIRECTORY: http://10.0.0.48/Image/                                                                                      <br/>
+==&gt; DIRECTORY: http://10.0.0.48/images/                                                                                      <br/>
++ http://10.0.0.48/index.html (CODE:200|SIZE:1188)                                                                                <br/>
++ http://10.0.0.48/index.php (CODE:301|SIZE:0)                                                                                  <br/>
++ http://10.0.0.48/intro (CODE:200|SIZE:516314)                                                                                  <br/>
+==&gt; DIRECTORY: http://10.0.0.48/js/                                                                                        <br/>
++ http://10.0.0.48/license (CODE:200|SIZE:19930)                                                                                 <br/>
++ http://10.0.0.48/login (CODE:302|SIZE:0)                                                                                    <br/>
++ http://10.0.0.48/page1 (CODE:301|SIZE:0)                                                                                    <br/>
++ http://10.0.0.48/phpmyadmin (CODE:403|SIZE:94)                                                                                 <br/>
++ http://10.0.0.48/rdf (CODE:301|SIZE:0)                                                                                     <br/>
++ http://10.0.0.48/readme (CODE:200|SIZE:7334)                                                                                  <br/>
++ http://10.0.0.48/robots (CODE:200|SIZE:41)                                                                                   <br/>
++ http://10.0.0.48/robots.txt (CODE:200|SIZE:41)                                                                                 <br/>
++ http://10.0.0.48/rss (CODE:301|SIZE:0)                                                                                     <br/>
++ http://10.0.0.48/rss2 (CODE:301|SIZE:0)                                                                                     <br/>
++ http://10.0.0.48/sitemap (CODE:200|SIZE:0)                                                                                   <br/>
++ http://10.0.0.48/sitemap.xml (CODE:200|SIZE:0)                                                                                 <br/>
+==&gt; DIRECTORY: http://10.0.0.48/video/                                                                                      <br/>
+==&gt; DIRECTORY: http://10.0.0.48/wp-admin/                                                                                     <br/>
++ http://10.0.0.48/wp-config (CODE:200|SIZE:0)                                                                                  <br/>
+==&gt; DIRECTORY: http://10.0.0.48/wp-content/                                                                                    <br/>
++ http://10.0.0.48/wp-cron (CODE:200|SIZE:0)                                                                                   <br/>
+==&gt; DIRECTORY: http://10.0.0.48/wp-includes/                                                                                   <br/>
++ http://10.0.0.48/wp-links-opml (CODE:200|SIZE:228)                                                                               <br/>
++ http://10.0.0.48/wp-load (CODE:200|SIZE:0)                                                                                   <br/>
++ http://10.0.0.48/wp-login (CODE:200|SIZE:2589)                                                                                 <br/>
++ http://10.0.0.48/wp-mail (CODE:403|SIZE:3018)                                                                                  <br/>
++ http://10.0.0.48/wp-settings (CODE:500|SIZE:0)                                                                                 <br/>
++ http://10.0.0.48/wp-signup (CODE:302|SIZE:0)                                                                                  <br/>
++ http://10.0.0.48/xmlrpc (CODE:405|SIZE:42)                                                                                   <br/>
++ http://10.0.0.48/xmlrpc.php (CODE:405|SIZE:42)                                                                                 <br/>
+                                                                                                         <br/>
+---- Entering directory: http://10.0.0.48/0/ ----<br/>
++ http://10.0.0.48/0/atom (CODE:301|SIZE:0)                                                                                    <br/>
+==&gt; DIRECTORY: http://10.0.0.48/0/feed/                                                                                      <br/>
++ http://10.0.0.48/0/index.php (CODE:301|SIZE:0)                                                                                 <br/>
++ http://10.0.0.48/0/rdf (CODE:301|SIZE:0)                                                                                    <br/>
++ http://10.0.0.48/0/rss (CODE:301|SIZE:0)                                                                                    <br/>
++ http://10.0.0.48/0/rss2 (CODE:301|SIZE:0)                                                                                    <br/>
+^?                                                                                                         ^?                                                                                                                                                                                                                  <br/>
+---- Entering directory: http://10.0.0.48/admin/ ----<br/>
+<br/>
+<br/>
+It's obvious that it's wordpress.<br/>
+<br/>
+Here's one of the keys I found via robots.txt file.<br/>
+<br/>
+<img src="image.png"/><br/>
+<br/>
+I also found a dictionary file via robots.txt. I assume it'll be used later for brute force (?) and it contains words related to the show.<br/>
+<br/>
+Wordpress version obtained via wpscan: [+] WordPress version 4.3.16<br/>
+<br/>
+Nikto:<br/>
+<br/>
++ Server: Apache<br/>
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS<br/>
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type<br/>
++ Retrieved x-powered-by header: PHP/5.5.29<br/>
++ No CGI Directories found (use '-C all' to force check all possible dirs)<br/>
++ Server leaks inodes via ETags, header found with file /robots.txt, fields: 0x29 0x52467010ef8ad <br/>
++ Uncommon header 'tcn' found, with contents: list<br/>
++ Apache mod_negotiation is enabled with MultiViews, which allows attackers to easily brute force file names. See http://www.wisec.it/sectou.php?id=4698ebdc59d15. The following alternatives for 'index' were found: index.html, index.php<br/>
++ OSVDB-3092: /admin/: This might be interesting...<br/>
++ Uncommon header 'link' found, with contents: &lt;http://10.0.0.48/?p=23&gt;; rel=shortlink<br/>
++ /wp-links-opml.php: This WordPress script reveals the installed version.<br/>
++ OSVDB-3092: /license.txt: License file found may identify site software.<br/>
++ /admin/index.html: Admin login page/section found.<br/>
++ Cookie wordpress_test_cookie created without the httponly flag<br/>
++ /wp-login/: Admin login page/section found.<br/>
++ /wordpress/: A Wordpress installation was found.<br/>
++ /wp-admin/wp-login.php: Wordpress login found<br/>
++ /blog/wp-login.php: Wordpress login found<br/>
++ /wp-login.php: Wordpress login found<br/>
+<br/>
+wpscan enum results:<br/>
+[+] We found 7 plugins:<br/>
+<br/>
+[+] Name: akismet<br/>
+| Latest version: 4.0.7 <br/>
+| Last updated: 2018-05-28T16:19:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/akismet/<br/>
+<br/>
+[!] We could not determine a version so all vulnerabilities are printed out<br/>
+<br/>
+[!] Title: Akismet 2.5.0-3.1.4 - Unauthenticated Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8215<br/>
+  Reference: http://blog.akismet.com/2015/10/13/akismet-3-1-5-wordpress/<br/>
+  Reference: https://blog.sucuri.net/2015/10/security-advisory-stored-xss-in-akismet-wordpress-plugin.html<br/>
+[i] Fixed in: 3.1.5<br/>
+<br/>
+[+] Name: all-in-one-seo-pack - v2.0.4<br/>
+| Last updated: 2018-06-07T19:06:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/all-in-one-seo-pack/<br/>
+| Readme: http://10.0.0.48/wp-content/plugins/all-in-one-seo-pack/readme.txt<br/>
+[!] The version is out of date, the latest version is 2.6.1<br/>
+<br/>
+[!] Title: All in One SEO Pack &lt;= 2.1.5 - aioseop_functions.php new_meta Parameter XSS<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/6888<br/>
+  Reference: http://blog.sucuri.net/2014/05/vulnerability-found-in-the-all-in-one-seo-pack-wordpress-plugin.html<br/>
+[i] Fixed in: 2.1.6<br/>
+<br/>
+[!] Title: All in One SEO Pack &lt;= 2.1.5 - Unspecified Privilege Escalation<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/6889<br/>
+  Reference: http://blog.sucuri.net/2014/05/vulnerability-found-in-the-all-in-one-seo-pack-wordpress-plugin.html<br/>
+[i] Fixed in: 2.1.6<br/>
+<br/>
+[!] Title: All in One SEO Pack &lt;= 2.2.5.1 - Information Disclosure<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7881<br/>
+  Reference: http://jvn.jp/en/jp/JVN75615300/index.html<br/>
+  Reference: http://semperfiwebdesign.com/blog/all-in-one-seo-pack/all-in-one-seo-pack-release-history/<br/>
+  Reference: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-0902<br/>
+[i] Fixed in: 2.2.6<br/>
+<br/>
+[!] Title: All in One SEO Pack &lt;= 2.2.6.1 - Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7916<br/>
+  Reference: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html<br/>
+[i] Fixed in: 2.2.6.2<br/>
+<br/>
+[!] Title: All in One SEO Pack &lt;= 2.3.6.1 - Unauthenticated Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8538<br/>
+  Reference: http://seclists.org/fulldisclosure/2016/Jul/23<br/>
+  Reference: https://semperfiwebdesign.com/blog/all-in-one-seo-pack/all-in-one-seo-pack-release-history/<br/>
+  Reference: https://sumofpwn.nl/advisory/2016/persistent_cross_site_scripting_in_all_in_one_seo_pack_wordpress_plugin.html<br/>
+  Reference: https://wptavern.com/all-in-one-seo-2-3-7-patches-persistent-xss-vulnerability<br/>
+  Reference: https://www.wordfence.com/blog/2016/07/xss-vulnerability-all-in-one-seo-pack-plugin/<br/>
+[i] Fixed in: 2.3.7<br/>
+<br/>
+[!] Title: All in One SEO Pack &lt;= 2.3.7 - Unauthenticated Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8558<br/>
+  Reference: https://www.wordfence.com/blog/2016/07/new-xss-vulnerability-all-in-one-seo-pack/<br/>
+  Reference: https://semperfiwebdesign.com/blog/all-in-one-seo-pack/all-in-one-seo-pack-release-history/<br/>
+[i] Fixed in: 2.3.8<br/>
+<br/>
+[+] Name: all-in-one-wp-migration - v2.0.4<br/>
+| Last updated: 2018-05-31T15:25:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/all-in-one-wp-migration/<br/>
+| Readme: http://10.0.0.48/wp-content/plugins/all-in-one-wp-migration/readme.txt<br/>
+[!] The version is out of date, the latest version is 6.69<br/>
+<br/>
+[!] Title: All-in-One WP Migration &lt;= 2.0.4 - Unauthenticated Database Export<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7857<br/>
+  Reference: http://www.pritect.net/blog/all-in-one-wp-migration-2-0-4-security-vulnerability<br/>
+  Reference: https://www.rapid7.com/db/modules/auxiliary/gather/wp_all_in_one_migration_export<br/>
+[i] Fixed in: 2.0.5<br/>
+<br/>
+[!] Title: All-in-One WP Migration &lt;= 6.45 - Reflected Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8851<br/>
+  Reference: https://wordpress.org/plugins/all-in-one-wp-migration/#developers<br/>
+[i] Fixed in: 6.46<br/>
+<br/>
+[+] Name: google-analytics-for-wordpress - v5.3.2<br/>
+| Last updated: 2018-05-14T13:15:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/google-analytics-for-wordpress/<br/>
+| Readme: http://10.0.0.48/wp-content/plugins/google-analytics-for-wordpress/readme.txt<br/>
+[!] The version is out of date, the latest version is 7.0.6<br/>
+<br/>
+[!] Title: Google Analytics by Yoast &lt;= 5.3.2 - Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7838<br/>
+  Reference: http://packetstormsecurity.com/files/130716/<br/>
+[i] Fixed in: 5.3.3<br/>
+<br/>
+[!] Title: Google Analytics by Yoast &lt;= 5.3.2 - Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7856<br/>
+  Reference: https://yoast.com/ga-plugin-security-update-more/<br/>
+  Reference: http://klikki.fi/adv/yoast_analytics.html<br/>
+  Reference: http://packetstormsecurity.com/files/130935/<br/>
+[i] Fixed in: 5.3.3<br/>
+<br/>
+[!] Title: Google Analytics by Yoast &lt;= 5.3.3 - Unauthenticated Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7914<br/>
+  Reference: https://yoast.com/coordinated-security-release/<br/>
+  Reference: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html<br/>
+  Reference: http://klikki.fi/adv/yoast_analytics2.html<br/>
+[i] Fixed in: 5.4<br/>
+<br/>
+[!] Title: Google Analytics by Yoast &lt;= 5.4.4 - Authenticated Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8147<br/>
+  Reference: https://security.dxw.com/advisories/xss-in-google-analytics-by-yoast-premium-by-privileged-users/<br/>
+[i] Fixed in: 5.4.5<br/>
+<br/>
+[+] Name: google-sitemap-generator - v4.0.7.1<br/>
+| Last updated: 2018-04-25T15:06:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/google-sitemap-generator/<br/>
+| Readme: http://10.0.0.48/wp-content/plugins/google-sitemap-generator/readme.txt<br/>
+[!] The version is out of date, the latest version is 4.0.9<br/>
+<br/>
+[!] Title: Google XML Sitemaps &lt;= 4.0.8 - Authenticated Reflected XSS (via HOST header)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8762<br/>
+  Reference: https://plugins.trac.wordpress.org/browser/google-sitemap-generator/trunk/sitemap-ui.php#L1310<br/>
+[i] Fixed in: 4.0.9<br/>
+<br/>
+[+] Name: jetpack - v3.3.2<br/>
+| Last updated: 2018-06-08T19:57:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/jetpack/<br/>
+| Readme: http://10.0.0.48/wp-content/plugins/jetpack/readme.txt<br/>
+[!] The version is out of date, the latest version is 6.2.1<br/>
+<br/>
+[!] Title: Jetpack 3.0-3.4.2 - Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7915<br/>
+  Reference: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html<br/>
+  Reference: https://jetpack.me/2015/04/20/jetpack-3-4-3-coordinated-security-update/<br/>
+[i] Fixed in: 3.4.3<br/>
+<br/>
+[!] Title: Jetpack &lt;= 3.5.2 - Unauthenticated DOM Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7964<br/>
+  Reference: https://blog.sucuri.net/2015/05/jetpack-and-twentyfifteen-vulnerable-to-dom-based-xss-millions-of-wordpress-websites-affected-millions-of-wordpress-websites-affected.html<br/>
+[i] Fixed in: 3.5.3<br/>
+<br/>
+[!] Title: Jetpack &lt;= 3.7.0 - Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8201<br/>
+  Reference: https://jetpack.me/2015/09/30/jetpack-3-7-1-and-3-7-2-security-and-maintenance-releases/<br/>
+  Reference: https://blog.sucuri.net/2015/10/security-advisory-stored-xss-in-jetpack.html<br/>
+[i] Fixed in: 3.7.1<br/>
+<br/>
+[!] Title: Jetpack &lt;= 3.7.0 - Information Disclosure<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8202<br/>
+  Reference: https://jetpack.me/2015/09/30/jetpack-3-7-1-and-3-7-2-security-and-maintenance-releases/<br/>
+[i] Fixed in: 3.7.1<br/>
+<br/>
+[!] Title: Jetpack &lt;= 3.9.1 - LaTeX HTML Element XSS<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8472<br/>
+  Reference: https://jetpack.com/2016/02/25/jetpack-3-9-2-maintenance-and-security-release/<br/>
+  Reference: https://github.com/Automattic/jetpack/commit/dbc33b9105c4dbb0de81544e682a8b6d5ab7e446<br/>
+[i] Fixed in: 3.9.2<br/>
+<br/>
+[!] Title: Jetpack 2.0-4.0.2 - Shortcode Stored Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8500<br/>
+  Reference: https://jetpack.com/2016/05/27/jetpack-4-0-3-critical-security-update/<br/>
+  Reference: http://wptavern.com/jetpack-4-0-3-patches-a-critical-xss-vulnerability<br/>
+  Reference: https://blog.sucuri.net/2016/05/security-advisory-stored-xss-jetpack-2.html<br/>
+  Reference: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-10706<br/>
+[i] Fixed in: 4.0.3<br/>
+<br/>
+[!] Title: Jetpack &lt;= 4.0.3 - Multiple Vulnerabilities<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/8517<br/>
+  Reference: https://jetpack.com/2016/06/20/jetpack-4-0-4-bug-fixes/<br/>
+  Reference: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-10705<br/>
+[i] Fixed in: 4.0.4<br/>
+<br/>
+[+] Name: wptouch - v3.7.3<br/>
+| Last updated: 2018-05-16T18:45:00.000Z<br/>
+| Location: http://10.0.0.48/wp-content/plugins/wptouch/<br/>
+| Readme: http://10.0.0.48/wp-content/plugins/wptouch/readme.txt<br/>
+[!] The version is out of date, the latest version is 4.3.28<br/>
+<br/>
+[!] Title: WPtouch Mobile Plugin &lt;= 3.7.5.3 - Cross-Site Scripting (XSS)<br/>
+  Reference: https://wpvulndb.com/vulnerabilities/7920<br/>
+  Reference: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html<br/>
+[i] Fixed in: 3.7.6<br/>
+<br/>
+<br/>
+Out of the wpscan results this jumps out: All-in-One WP Migration &lt;= 2.0.4 - Unauthenticated Database Export There is a metasploit module for it but it didn't seem to work.<br/>
+<br/>
+I used wpscan to brute force wordpress with admin username and the dictionary i got earlier. This would take to long so I had to stop it.<br/>
+<br/>
+Registration on the site is disabled.<br/>
+<br/>
+Time to get a hint from a walkthrough. Username is elliot...<br/>
+<br/>
+I started brute force again with that name.<br/>
+<img src="image 2.png"/><br/>
+<br/>
+It works:<br/>
+<img src="image 3.png"/><br/>
+<br/>
+<br/>
+I used plugin editor feature to edit a php file to add a backdoor and it looks like i broke everything becuase I'm getting 500 response back.<br/>
+<br/>
+I downloaded the VM again and set it up again. This time I'm taking a snapshot.<br/>
+<br/>
+There are couple of ways to get shell via wordpress. Metasploit has a module, there are github projects for plugins https://github.com/IRDeNial/Wordpress-Backdoor-Plugin &amp; https://github.com/leonjza/wordpress-shell, you can also make a malicious theme as shown in this post: http://forum.top-hat-sec.com/index.php?topic=5758.0, also you can edit the theme code.<br/>
+<br/>
+I edited 404.php file for one of the themes. Activated the theme and visited a page which would give me 404 error. It seemed to execute the code.<br/>
+<img src="image 4.png"/><br/>
+<br/>
+With backdoor code, it seems to work:<br/>
+<img src="image 5.png"/><br/>
+<br/>
+<img src="image 6.png"/><br/>
+<br/>
+<img src="image 7.png"/><br/>
+<br/>
+I put a python reverse shell on the target box and receive a connection.<br/>
+<br/>
+<img src="image 9.png"/><br/>
+<br/>
+The hash is for abcdefghijklmnopqrstuvwxyz<br/>
+<br/>
+second key:<br/>
+<img src="image 10.png"/><br/>
+<br/>
+Wordpress config file: wp-config.php<br/>
+<br/>
+The machine is ubuntu 14.04 with kernel 3.13.0-55. it's also 64-bit.<br/>
+<br/>
+I found this exploit https://www.exploit-db.com/exploits/37292/ but it did not seem to work.<br/>
+<br/>
+I used nmap for privesc (this is a good resource: https://pentestlab.blog/2017/09/25/suid-executables/) I did look at a walkthrough for a hint and i saw the find command and realized that I had skipped this step.<br/>
+<img src="image 8.png"/><br/>
+<br/>
+Final key:<br/>
+<img src="image 11.png"/><br/>
+<br/>
+The front-end for the wordpress site was pretty cool.<br/>
+<br/>
+</body></html>

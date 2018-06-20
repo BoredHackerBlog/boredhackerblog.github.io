@@ -1,0 +1,143 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>stapler</title>
+</head><body>Attacker IP: 10.0.0.22<br/>
+Target IP: 10.0.0.17<br/>
+<br/>
+Nmap scan report for 10.0.0.17<br/>
+Host is up (0.0044s latency).<br/>
+Not shown: 65523 filtered ports<br/>
+PORT   STATE SERVICE   VERSION<br/>
+20/tcp  closed ftp-data<br/>
+21/tcp  open  ftp     vsftpd 2.0.8 or later<br/>
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)<br/>
+|_Can't get directory listing: PASV failed: 550 Permission denied.<br/>
+| ftp-syst: <br/>
+|  STAT: <br/>
+| FTP server status:<br/>
+|   Connected to 10.0.0.22<br/>
+|   Logged in as ftp<br/>
+|   TYPE: ASCII<br/>
+|   No session bandwidth limit<br/>
+|   Session timeout in seconds is 300<br/>
+|   Control connection is plain text<br/>
+|   Data connections will be plain text<br/>
+|   At session startup, client count was 3<br/>
+|   vsFTPd 3.0.3 - secure, fast, stable<br/>
+|_End of status<br/>
+22/tcp  open  ssh     OpenSSH 7.2p2 Ubuntu 4 (Ubuntu Linux; protocol 2.0)<br/>
+| ssh-hostkey: <br/>
+|  2048 81:21:ce:a1:1a:05:b1:69:4f:4d:ed:80:28:e8:99:05 (RSA)<br/>
+|  256 5b:a5:bb:67:91:1a:51:c2:d3:21:da:c0:ca:f0:db:9e (ECDSA)<br/>
+|_ 256 6d:01:b7:73:ac:b0:93:6f:fa:b9:89:e6:ae:3c:ab:d3 (ED25519)<br/>
+53/tcp  open  domain   dnsmasq 2.75<br/>
+| dns-nsid: <br/>
+|_ bind.version: dnsmasq-2.75<br/>
+80/tcp  open  http    PHP cli server 5.5 or later<br/>
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).<br/>
+123/tcp  closed ntp<br/>
+137/tcp  closed netbios-ns<br/>
+138/tcp  closed netbios-dgm<br/>
+139/tcp  open  netbios-ssn Samba smbd 4.3.9-Ubuntu (workgroup: WORKGROUP)<br/>
+666/tcp  open  doom?<br/>
+| fingerprint-strings: <br/>
+|  NULL: <br/>
+|   message2.jpgUT <br/>
+|   QWux<br/>
+|   &quot;DL[E<br/>
+|   #;3[<br/>
+|   \xf6<br/>
+|   u([r<br/>
+|   qYQq<br/>
+|   Y_?n2<br/>
+|   3&amp;M~{<br/>
+|   9-a)T<br/>
+|   L}AJ<br/>
+|_  .npy.9<br/>
+3306/tcp open  mysql    MySQL 5.7.12-0ubuntu1<br/>
+| mysql-info: <br/>
+|  Protocol: 10<br/>
+|  Version: 5.7.12-0ubuntu1<br/>
+|  Thread ID: 7<br/>
+|  Capabilities flags: 63487<br/>
+|  Some Capabilities: ODBCClient, Support41Auth, LongPassword, ConnectWithDatabase, Speaks41ProtocolOld, SupportsTransactions, SupportsLoadDataLocal, IgnoreSigpipes, IgnoreSpaceBeforeParenthesis, Speaks41ProtocolNew, InteractiveClient, SupportsCompression, DontAllowDatabaseTableColumn, LongColumnFlag, FoundRows, SupportsAuthPlugins, SupportsMultipleResults, SupportsMultipleStatments<br/>
+|  Status: Autocommit<br/>
+|  Salt: |	bFVa@g\x11H|\x1CX\x16]sEQ\x03,<br/>
+|_ Auth Plugin Name: 88<br/>
+12380/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))<br/>
+|_http-server-header: Apache/2.4.18 (Ubuntu)<br/>
+|_http-title: Tim, we need to-do better next year for Initech<br/>
+<br/>
+FTP supported anonymous login<br/>
+<img src="image.png"/><br/>
+<br/>
+<img src="image 2.png"/><br/>
+<br/>
+<img src="image 3.png"/><br/>
+<br/>
+<img src="image 4.png"/><br/>
+<br/>
+There is also port 12380 open. Running dirb on http page gives nothing. If you try https, it'll actually find pages.<br/>
+<br/>
+There is also robots.txt with this:<br/>
+<img src="image 5.png"/><br/>
+Dirb found this stuff:<br/>
+<br/>
+<img src="image 6.png"/><br/>
+<img src="image 7.png"/><br/>
+<br/>
+<br/>
+I did originally open this in the browser and javascript did execute...<br/>
+<br/>
+<img src="image 8.png"/><br/>
+<br/>
+<br/>
+Blogblog page has wordpress running<br/>
+<img src="image 9.png"/><br/>
+<br/>
+<img src="image 10.png"/><br/>
+<br/>
+Themes and plugin folders are accessable.<br/>
+After some research, one of the plugins seemed to have a LFI vuln. It was the advanced video plugin. here's the exploit: https://www.exploit-db.com/exploits/39646/<br/>
+On github, I came across an updated version of the exploit which was already modified for stapler VM... https://github.com/gtech/39646/blob/master/39646.py<br/>
+<br/>
+Running it with some modification gets us the wpconfig file<br/>
+<img src="image 11.png"/><br/>
+<br/>
+The database info can be used to get into phpmyadmin and access mysql db.<br/>
+<br/>
+<img src="image 12.png"/><br/>
+<br/>
+You can also remotely access mysql since the port is open<br/>
+<img src="image 13.png"/><br/>
+<br/>
+oh yeah i learned this trick when i was doing pentesterlab, you can use mysql to read files<br/>
+<img src="image 14.png"/><br/>
+<br/>
+I could have used the LFI vuln to get this information as well. Anyways, I made a list of usernames and started brute forcing the target using hydra.<br/>
+<img src="image 15.png"/><br/>
+<br/>
+One login worked!<br/>
+<img src="image 16.png"/><br/>
+<br/>
+<img src="image 17.png"/><br/>
+<br/>
+I examined the process list and noticed this<br/>
+<img src="image 18.png"/><br/>
+<br/>
+Python http server is running on port 8888 but I can't access it..<br/>
+<br/>
+Also, earlier, I did notice that I'm allowed to access directory for all the users.<br/>
+<br/>
+jkanode has the most data in the history file.<br/>
+<br/>
+<img src="image 19.png"/><br/>
+<br/>
+That gives us two passwords.<br/>
+<br/>
+logging in as peter gives us root...<br/>
+<img src="image 20.png"/><br/>
+<br/>
+After looking at other walkthroughs, I found out that there are more ways to get a foothold on the machine and do privesc. For example, there is a privesc exploit that works on this kernel, which is what I was planning to use next to get root. This VM was pretty fun.<br/>
+</body></html>

