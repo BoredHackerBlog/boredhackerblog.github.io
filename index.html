@@ -208,6 +208,12 @@ Error message and password prompt
 
 <li>Malware Analysis Notes - 5</li>
 
+<li>Malware Analysis Notes - 6</li>
+
+<li>Malware Analysis Notes - 7</li>
+
+<li>Malware Analysis Notes - 8</li>
+
 <li>PentesterLab Notes</li>
 
 <li>PentesterLab Notes - Essential Badge</li>
@@ -10037,6 +10043,195 @@ Detours - library developed my Microsoft Research. Can be used for modifying imp
 APC (asynchronous procedure call) injection - can direct a thread to execute some other code before executing regular code. Every thread has queue of APCs attached to it. API: WaitForSingleObjectEx, WaitForMultipleObjectsEx, ad Sleep.
 
 </pre>
+</div>
+<div created="20180620151258443" modified="20180620161814391" title="Malware Analysis Notes - 6">
+<pre>Anti-Analysis: to delay or prevent analysis. 
+
+Anti-disassembly:
+
+Disassemblers: linear - process one instruction at a time, linearly. flow-oriented - examines each instruction and builds a list of locations to disassemble. Looks at jumps, calls, and etc. Used by IDA and other commercial disassemblers.
+
+opaque predicates: an unconditional jump, but IDA always processes false branches first.
+
+backwards jump: jump into middle of own instruction. 
+
+Misusing Structured exception handling (SEH): the disassembler does not understand SEH.
+
+Anti-debugging: IsDebuggerPresent - checks the Process Environment Block. CheckRemoteDebuggerPresent - checks for a process on the local machine. NTQueryInformationProcess - used to check for a debugger. OutputDebugString - sends a string to a debugger for display. Ollydbg has/had a format string vuln.
+
+Manual Debugging checks: Checking BeingDebugged flag - The flag is located at 0x02 in the PEB. PEB is located at fs:[30h] in x86. Checking the ProcessHeap flag - located at 0x18 in the PEB. Checking the NTGlobal flag - location 0x68 in PEB.
+
+Malware can also check: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug, look for specific files and irs. search process list, use FindWindow.
+
+Malware can also look for int 3 / 0xCC (software breakpoint). It can also do checksum on its own sections or code. This can be avoided with hardware breakpoints.
+
+Timing checks - malware is slower when debugged. rdtsc instruction - gets the count of ticks since system reboot. QueryPerformanceCounter &amp; GetTickCount can be used as well.
+
+TLS Callbacks - A section in PE header that executes before the entry point. Used to subvert debuggers, since .tls section is executed first before debugging begines. 
+
+Fighting anti-analysis: Ollydbg plugin: phant0m. Scyllahide. 
+
+Anti-virtual machine: Using VMs leaves artifacts on the system. Example: vmware tools or virtualbox tools running. 
+
+Some instructions are executed different in aa VM. No pill technique - sgdt, sldt, sidt. Querying the I/O comm port - in. Segment selector - str. Other - cpuid, smsw, etc... These can be patched out.
+
+Red pills - instructions with different semantics in-VM than on real hardware. Example: bsf edi, [esp-0xc] - produces incorrect status flags in qemu. mulps xmm1, [esp-4] - does not raise fault if source operand is not correctly aligned in Bochs). push 0x407d - erroneously alters FPU state in Bochs.
+
+Anti-VM stuff can be patched out. Tool: ScoopyNG - anti-vm detection tool.
+
+Anti-antivirus: antivirus: before execution - file hash/signature, emulator scans, heuristic code analysis. run time - hooks in system libraries, monitoring from kernel, network/file system monitoring.
+
+Anti-antivirus: look for AV processes running or installed. Examine libraries for inline hooks, obfuscate code, use packers.
+
+AV emulators - emulates x86. emulates winAPI. 
+
+Anti-reverse engineering: linear disassembly - iterates over block of code, disassembling one instruction a a time. ignore flow-control instructions (as in, does not do disassembly based on them). flow-oriented disassembly - does disassembly based on flow and what instructions are called/jumped to. 
+
+anti-disassembly techniques - jump instructions with the same target - two back-to-back condititional jump instructions that both point to the same target. example: if jaz loc_512 is followed by jnz loc_512, loc_512 will always be jumped to. When the disassembler comes across this, it will follow the false path, even though, in execution, loc_512 will always be jumped to. 
+
+jump instruction with a constant condition - single conditional jump where the condition will always be the same. example: xor eax, eax, jz to_a_place. This will always be true since xor eax, eax sets the zero flag. 
+
+call is combination of jump and push. retn is a combination of pop and jump. 
+
+anti-debugging: using WIndows API. manually checking PEB. FindWindow.
+
+regkey: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug specifies the debugger that activates when an application error occurs. 
+
+Int 3 scanning: 
+
+```
+call $+5
+pop edi
+sub edi, 5
+mov ecx, 400h
+mov eax, 0CCh (int 3)
+repne scasb
+jz DebuggerDetected
+```
+
+Detection for int 3 scanning can be avoided by using hardware breakpoints.
+
+Timing checks: record a timestamp, perform operations, take another timestamp, compare two timestamps. If there is a lag, there might be a debugger present.
+
+TLS callbacks: TLS callback can be used to execute code before the entry point. TLS callback can run as soon as a sample is loaded into a debugger. TLS is a Windows storage class in which a data object is not an automatic stack variable, yet is local to each thread that runs the code. TLS allows each thread to maintain a different value for a variable declared using TLS. PE header will contain .tls section.
+
+Debugger/Disassembler allows you to change entry point to TlsCallback. 
+
+VM artifacts: Registry keys, processes running, file/folders, services.
+
+IDT = interrrupt descriptor table - a data structure internal to the CPU, used by OS to determine correct responses for interrrupts and exceptions. 
+
+GDT = global descriptor table, LDT = local descriptor table - contain segment descriptors that provide access details for each segment, including base address, type, length, access rights.
+
+instructions: sidt, sgdt, and sldt read the location of these tables. These are used by OS but can be executed from user space. 
+
+anti-vm instructions: sidt, sgdt, sldt, smsw, str, in, cpuid.</pre>
+</div>
+<div created="20180620161826027" modified="20180620174113878" title="Malware Analysis Notes - 7">
+<pre>Packers and unpacking:
+
+packed program - program wrapped by another program. Can be encrypted and/or compressed.
+
+Reason: signature evasion, reduced payload size, increase difficulty of analysis.
+
+Detection: PEiD, size of raw vs virtual size, limited strings/imports, entropy.
+
+Packer techniques: decrypts/decompresses packed code, loads code into memory, resolves imports of original executable, transfer execution to OEP (original entry point).
+
+location of unpacked code: same section (as stub), new section, heap, etc...
+
+Resolving imports: keep original import table intact, Windows loader will resolve imports.
+
+Resolving imports: packed stub only imports GetProcAddress and LoadLibrary. Interates original executable import table, creates the import table from results. This is a very common method.
+
+Resolving imports: No imports... Get address of kernel32 from PEB, walk kernel32.dll's export table, find address of GetProcAddress and LoadLibrary.
+
+Automated unpacking: use the official tool, like UPX. Use custom scripts or tools. Tools: OllyScript, OdbgScript, Python, PEExplore, NSPack, UPack, UPX.
+
+Manual unpacking: Write a tool to undo each step performed by the packer (nobody does this) OR run the packed program to OEP, dump the process from memory.
+
+Process: Find OEP, reconstruct import table.
+
+Finding OEP: tail jumps: jump from unpacking stub to OEP, really visble in simple unpacking stubs - jmp BB goes nowhere. Doesn't have to be a jmp, push/ret, SEH, call, etc...
+
+Finding OEP: section hop - OEP can be in a different section than the unpacking stub. Olly can set a memory breakpoint on the other sections. Will automatically break as soon as execution changes sections.
+
+Finding OEP: PUSHA/POPA. PUSHA is used to save register state at beginning of stub. POPA is used to restore register state at end of stub. Put mem breakpoint on one of the register values on the stack, will break when POPA pops the value. Usually close to OEP.
+
+Finding OEP: API call - fixing the import table is usually close to the end of the stub, break on LoadLIbrary/GetProcAddress.
+
+Finding OEP: API call - Windows makes identifiable API calls in start, example: GetModuleHandle, GetCommandLine. Break on one of these functions, OEP is sually at the top of the parent.
+
+Finding OEP: Tool; VERA, uses intel PIN.
+
+Fixing Imports: Ollydbg. ImpREC. Doing it by hand is possible, you have to lookup each address and fill in the pointer in the IAT.
+
+Fixing PE header - LordPE can fix, compare, and analyze headers.
+
+Packer Anatomy: Packers take executable file as input and produce an executable file as output. Most packers use a compression algorithm to compress the original executable. 
+
+Unpacking stub - function: upack the original executable. Unpacking steps: unpack the executable in memory, resolve all imports of the original executable, transfer execution to original entry point (OEP).
+
+Resolving imports: LoadLibrary and GetProcAddress functions. Or keep original import table intact. Or keep one import function from each dll contained in the original import table. Or Remova ll imports (including LoadLibrary, GetProcAddress) and the packer must find all the needed functions or find LoadLibrary and GetProcAddress.
+
+Tail jump - Instruction that transfers execution to the OEP is referred to as the tail jump. 
+
+Identifying packed programs: Indicators: LoadLibrary or GetProcAddress are the only imports. IDA Pro only recognizes small amount of code. OllyDbg warns that the file may be packed. Section names, such as UPX0. Virtual Size vs Raw size, for example if size of raw data is 0 and virtual size is not zero. PEiD. Entropy Calculation.
+
+Unpacking options: Automated static unpacking - with applications such as PE Explorer. Plugins support unpacking NSPack, UPack, UPX. Automated dynamic unpacking - runs the executable and allows the unpacking stub to unpack the original file. Once unpacked, it's written to the disk and the unpacker reconstructs the original import table. 
+
+Automated unpacking program must determine where the unpacking stub ends and where the original executable begins.
+
+Manual unpacking: two appraoches. Discover packing algo and write a program to reverse it. Or run the packed program so the unpacking stub does the work.
+
+OllyDump plugin has feature &quot;Find OEP by section hop&quot; When OEP is in another section, olly hits a breakpoint. &quot;Dump Debugged Process&quot; can be used to dump the executable to the disk.
+
+Rebuilding import table with import reconstruction (ImpRec). ImpRec can be used to repair import table for packed programs. Requires RVA value of OEP (without image base, so not 0x403904 but 0x3904) Click IAT autosearch. Click GetImports. 
+
+Finding OEP: Automated tools can be used, such as OllyDump. 
+
+Manually finding OEP: look for tail jump (doesn't have to be jmp instruction, could be other things)
+
+UPX: You can use -d option. You can also find OEP by section hop feature. 
+
+PECompact: look for tail jump. &quot;jmp eax&quot; followed by 0x00 bytes.
+
+ASPack: Use heardware breakpoints. Determine which stack addresses are used to store the regsiters and set a hardware breakpoint on one of those addresses. Ensure that it is set to break on a read instruction. When POPAD instruction is called, the breakpoint will be triggered and you'll be few instructions away from tail jump to OEP.
+
+Petite: Pass single-step exceptions to the program. Use hadware breakpoints. Similar to ASPack. Petite keeps at least one import from each library in the original import table. 
+
+WinUpack/Upack: Automated unpackers exist. Set breakpoint on GetProcAddress, single-step over instructions looking for the loops that set import resolution. Setting breakpoint on GetModuleHandleA or GetCommandLineA can help as well.
+
+Themida: Automated tools exist but are not perfect. ProcDump can help. 
+
+DLLs can also be packed. If it's packed then the export functions are also packed. </pre>
+</div>
+<div created="20180620174209126" modified="20180620191537368" title="Malware Analysis Notes - 8">
+<pre>RPISec lecture 10, 11, 12 are skipped. Maybe I'll go back to them when I understand more.
+
+Special Topics: 
+
+Shellcode Analysis: payload of raw executable code. 
+
+Windows loader tasks: placing the program at its preferred memory location, applying address relocations, loading required libraries and resolving external dependencies.
+
+Position-independent code (PIC) is code that uses no hard-coded addresses for either code or data. Shellcode is PIC. 
+
+Call sub_whatever, jnz loc_whatever, and mov eax, [ebp-4] are position independent. 
+
+mov edx, dword_whatever is not position independent.
+
+Using call/pop: when call is executed, the processor pushes the address of the instruction following the call onto the stack and then branches to the requested location. This function executes and when it's done it executes ret to pop the return address off the top of stack and load it into instruction pointer (EIP). 
+
+shellcode_launcher.exe can be used to test shellcode. shellcode_launcher.exe -i shellcode.bin -bp -L user32. -L LIBRARY_NAME is required to load library for the shellcode. 
+
+Setting ollydbg as JIT debugger: options -&gt; just in time debugging -&gt; make ollydbg jit debugger.
+
+Manual symbol resolution: shellcode must find kernel32.dll in memory, parse it and search for exported functions LoadLibraryA and GetProcAddress.
+
+Online disassembler / ODA maybe useful for shellcode analysis.
+
+C++ analysis and 64-bit malware are skipped.</pre>
 </div>
 <div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
