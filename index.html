@@ -162,6 +162,8 @@ Error message and password prompt
 
 <li>1. Basic Concepts</li>
 
+<li>10. Memory Management - Part 3</li>
+
 <li>2. System Architecture - Part 1</li>
 
 <li>3. System Architecture - Part 2</li>
@@ -186,6 +188,8 @@ Error message and password prompt
 
 <li>CTF notes</li>
 
+<li>CTFZone 2018 Quals</li>
+
 <li>Exploitation Notes - 1</li>
 
 <li>Go Programming notes</li>
@@ -197,6 +201,8 @@ Error message and password prompt
 <li>Go Programming notes - 4</li>
 
 <li>hash length extension attack</li>
+
+<li>ISITDTU CTF 2018 Quals</li>
 
 <li>Malicious document analysis</li>
 
@@ -8611,7 +8617,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="About" title="$:/StoryList">
+<div list="[[ISITDTU CTF 2018 Quals]] About" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8798,6 +8804,9 @@ Chunks of memory used by processes are called pages, which are 4kilobytes big. T
 64-bit processes can allocate up to 8TB of memory(low addresses). 6TB for system space (high addresses)
 
 Objects and handles: some examples of objects: process, mutex, event, desktop, file, and etc. objects can be accessed by kernel code directly. User mode code has to use handles to access objects. </pre>
+</div>
+<div created="20180730001800924" modified="20180730001800924" title="10. Memory Management - Part 3">
+<pre></pre>
 </div>
 <div created="20180516180855059" modified="20180516191145694" tags="" title="2. System Architecture - Part 1">
 <pre>Windows Design Goals:
@@ -9091,7 +9100,7 @@ Notes:
 
 [[Exploitation Notes - 1]]</pre>
 </div>
-<div created="20180529153708743" modified="20180530193047085" title="Chrome Extension development">
+<div created="20180529153708743" modified="20180730001111855" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
 
 Extension is made up of HTML,Javascript, CSS. It's packed into .CRX file. (It's a zip file if i recall correctly)
@@ -9131,10 +9140,62 @@ chrome.tabs.query() for getting tabs.
 
 chrome.pageAction.show(tabid) to show page action extension on a certain tab.
 
-</pre>
+Debugging:
+Right clicking on the plugin/extension will bring up &quot;Inspect&quot; which can pop-up developer tool for the plugin/extension. In extensions list, inspect views link should provide dev tools. 
+
+In console, chrome.whatever allows chrome API access. </pre>
 </div>
-<div created="20180616183925145" modified="20180616184043410" tags="" title="CTF notes">
-<pre>[[hash length extension attack]]</pre>
+<div created="20180616183925145" modified="20180729155548199" tags="" title="CTF notes">
+<pre>[[hash length extension attack]]
+
+[[CTFZone 2018 Quals]]
+
+[[ISITDTU CTF 2018 Quals]]</pre>
+</div>
+<div created="20180722212952280" modified="20180722213709143" tags="" title="CTFZone 2018 Quals">
+<pre>https://ctftime.org/event/632
+
+```
+url = 'http://web-04.v7frkwrfyhsjtbpfcppnu.ctfz.one/profile.php?uuid=%22%3E%3Csvg/onload=$.globalEval(name)'
+
+name = 'any js code';
+
+window.open(url, name);
+```
+
+^ js code can be used for xss, if target's browser opens up pages. The code above would go on attackers page. Client has to be redirected to attacker.
+
+This might be useful https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20injection
+
+flask can return data with custom mime-types. might be useful for something...
+
+```
+usb-rubber-ducky/Decode# perl ducky-decode.pl 
+```
+
+for decoding inject.bin files used by rubberducky. github repo https://github.com/hak5darren/USB-Rubber-Ducky
+
+
+dealing with ihex or avr bin files:
+https://stackoverflow.com/a/21805053
+
+https://github.com/christophediericx/AVRDisassembler
+
+xloader can be used to put ihex files on arduino.
+
+radare2/cutter can load ihex files.
+
+
+```
+ihex example taken from wiki
+:10010000214601360121470136007EFE09D2190140
+:100110002146017E17C20001FF5F16002148011928
+:10012000194E79234623965778239EDA3F01B2CAA7
+:100130003F0156702B5E712B722B732146013421C7
+:00000001FF
+```
+
+</pre>
 </div>
 <div created="20180624225140945" modified="20180624225140945" title="Exploitation Notes - 1">
 <pre></pre>
@@ -9498,6 +9559,89 @@ for i in range(8,33): #count from 8 to 32, since signkey length is randomly from
     print r.read() #read stuff
 
 ```</pre>
+</div>
+<div created="20180729155552850" modified="20180730010855868" title="ISITDTU CTF 2018 Quals">
+<pre>https://ctftime.org/event/642
+
+Solved: https://ctftime.org/task/6337 - given a rar file with two registry files inside. Registry Explorer is a useful tool. The flag was a password for one of the accounts. If the registry files look like sam and system hives, these tools help https://tools.kali.org/password-attacks/creddump
+
+Solved: somewhere - flag was somewhere on the website. wget mirroring (wget -mk site) or https://www.guyrutenberg.com/2014/05/02/make-offline-mirror-of-a-site-using-wget/ and doing grep -ri flag_format gets the flag. 
+
+https://ctftime.org/task/6344 - xoxopwn, python eval vuln. input size was 21. in eval, globals().items() gets more info about functions. Using
+
+```
+open(__file__).read()
+```
+
+can get the current file. https://ctftime.org/writeup/10537
+
+dir(), vars() can help too.
+
+for shell command exec via eval, this might help https://vipulchaskar.blogspot.com/2012/10/exploiting-eval-function-in-python.html
+
+https://ctftime.org/writeup/10543 cool - reversing challenge. hashed input and compared it to a hash. searching sites with hash helps. calls to check for tracing/debugging can be disabled using binary ninja. ltrace and strace help a lot. if gdb doesn't show assembly code and step doesn't work, stepi might work. i r can be used to keep track of RIP/EIP and can be checked against a disassembleer. Always use ni, si, and x/20i $rip/eip for GDB. When looking at disassembly, check arg size as well.  https://rls1004.github.io/2018-07-30-isitdtu-writeup-cool/
+
+https://ctftime.org/task/6336 play with ... - encrypted file. xortool and xordump may help. xortool can be used with brute force and those files can be examined with &quot;file&quot; command. If it's a picture, see if size can be changed so more of the picture is viewed. 
+
+music - picture file with RIFF (.wav) inside of it. Instead of just relying on binwalk, use other tools such as other forensic carvers. if it's wave, visualization can be done with sonic visualizer or audacity as well. 
+
+https://ctftime.org/task/6343 IZ - php code which does some checks before it prints the flag. php -a lets you do interactive php. code:
+
+```
+&lt;?php 
+include &quot;config.php&quot;; 
+$number1 = rand(1,100000000000000); 
+$number2 = rand(1,100000000000); 
+$number3 = rand(1,100000000); 
+$url = urldecode($_SERVER['REQUEST_URI']); 
+$url = parse_url($url, PHP_URL_QUERY); 
+if (preg_match(&quot;/_/i&quot;, $url))  
+{ 
+    die(&quot;...&quot;); 
+} 
+if (preg_match(&quot;/0/i&quot;, $url))  
+{ 
+    die(&quot;...&quot;); 
+} 
+if (preg_match(&quot;/\w+/i&quot;, $url))  
+{ 
+    die(&quot;...&quot;); 
+}     
+if(isset($_GET['_']) &amp;&amp; !empty($_GET['_'])) 
+{ 
+    $control = $_GET['_'];         
+    if(!in_array($control, array(0,$number1))) 
+    { 
+        die(&quot;fail1&quot;); 
+    } 
+    if(!in_array($control, array(0,$number2))) 
+    { 
+        die(&quot;fail2&quot;); 
+    } 
+    if(!in_array($control, array(0,$number3))) 
+    { 
+        die(&quot;fail3&quot;); 
+    } 
+    echo $flag; 
+} 
+show_source(__FILE__); 
+?&gt;
+```
+
+REQUEST_URI is the whole URL.
+
+urldecode takes %41, etc and turns into A or text.
+
+parse_url takes args and seperates them. for example: ?id=123 -&gt; id=123.
+
+Putting # and doing &amp;_=a bypasses fails. a is not empty, 0 would be. but &quot;a&quot;==0 in php? also # has to be urlencoded. https://www.youtube.com/watch?v=9bY7ysRhD9w
+
+https://ctftime.org/task/6342 friss - page with textbox and curl. adding /?debug=1 helps... 
+
+https://ctftime.org/task/6335 embedding - extracing exe file results in getting the flag...
+
+https://github.com/kuqadk3/CTF-and-Learning/tree/master/ISITDTU%20CTF/Drill drill - involved IDing and fixing a zip file. printf HEADER| cat - file_that_needs_header &gt; complete file.. 
+</pre>
 </div>
 <div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
 <pre>Notes from viewing &quot;Performing Malware Analysis on Malicious Documents&quot; presented by Tyler Hudak. It's on PluralSight here: https://www.pluralsight.com/courses/malware-analysis-malicious-documents-performing
@@ -10451,7 +10595,7 @@ Accessing the container: http://YOUR_IP:8080/ login: test/test
 
 [ext[Notes|./vulnhub/index.html]]</pre>
 </div>
-<div created="20180516170408208" modified="20180528150002167" tags="" title="Windows Internals Notes">
+<div created="20180516170408208" modified="20180730001738718" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
 
 You can find them here: https://www.pluralsight.com/courses/windows-internals
@@ -10478,6 +10622,8 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 [[8. Memory Management - Part 1]]
 
 [[9. Memory Management - Part 2]]
+
+[[10. Memory Management - Part 3]]
 
 Viewing the course is recommended. </pre>
 </div>
