@@ -186,6 +186,8 @@ Error message and password prompt
 
 <li>About</li>
 
+<li>Advanced Malware Analysis: Combating Exploit Kits</li>
+
 <li>Binary Exploitation Notes</li>
 
 <li>Chrome Extension development</li>
@@ -193,6 +195,8 @@ Error message and password prompt
 <li>CTF notes</li>
 
 <li>CTFZone 2018 Quals</li>
+
+<li>Ethical Hacking: Buffer Overflow</li>
 
 <li>Exploitation Notes - 1</li>
 
@@ -228,6 +232,8 @@ Error message and password prompt
 
 <li>Malware Analysis Notes - 8</li>
 
+<li>OPSEC for Pentesters</li>
+
 <li>OSCP Notes</li>
 
 <li>PentesterLab Notes</li>
@@ -242,11 +248,15 @@ Error message and password prompt
 
 <li>PentesterLab Notes - White Badge</li>
 
+<li>PluralSight Notes</li>
+
 <li>Programming notes</li>
 
 <li>Security for Hackers and Developers Notes</li>
 
 <li>Security for Hackers and Developers: Code Auditing</li>
+
+<li>Security for Hackers and Developers: Exploit Development</li>
 
 <li>Security for Hackers and Developers: Fuzzing</li>
 
@@ -8637,7 +8647,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Security for Hackers and Developers: Reverse Engineering]]" title="$:/StoryList">
+<div list="About [[Binary Exploitation Notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9159,23 +9169,17 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20180802192256510" tags="" title="About">
+<div created="20180424234251670" modified="20180806183757734" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
 Notes:
 
-[[Windows Internals Notes]]
+[[PluralSight Notes]]
 
 [[PentesterLab Notes]]
 
 [[Ubuntu docker container with web shell]]
-
-[[.NET and Java malware analysis]]
-
-[[Malicious document analysis]]
-
-[[Programming notes]]
 
 [[CTF notes]]
 
@@ -9186,11 +9190,37 @@ Notes:
 [[VulnHub Notes]]
 
 [[OSCP Notes]]
-
-[[Security for Hackers and Developers Notes]]</pre>
+</pre>
 </div>
-<div created="20180624224949924" modified="20180624225133392" title="Binary Exploitation Notes">
-<pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE), Hacking, 2nd Edition book, and Shellcoders handbook.
+<div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
+<pre>Tools: JS Detox, Cerbero Profiler, Bytecode viewer, JPEXS Free Flash Decompiler, FlashDevelop, Wepawet (UCSB), Firefox addon javascript deobfuscator.
+
+Angler EK is popular (at least was when the course was made)
+
+some encryption used: DH, XTEA, RC4. Sometimes encoding (base64) is used.
+
+Malware self-defense: strings -&gt; xored strings -&gt; obfuscation -&gt; encryption. 
+
+DGA - domain generation algo. Using dates or words to make c2 domains.
+
+Tools: pestudio, CFF explorer, Detect it easy. Process Hacker.
+
+Process Hacker allows dumping memory of different sections from a running executable. 
+
+IDA plugins: findcrypt2, idascope. idastealth. IDAtoolbag
+
+ollydbg UST - has API break plugin. 
+
+ollyplugin: Hide Debugger
+
+Binary reconstruction: scylla. import REconstruction.
+
+Reporting: High level summary, technical details, remediation plan, attribution(maybe, can't be accurate).
+
+actionable threat data: TTP, Tools, Network/Host Artifacts, Domain names, IP, hashes.</pre>
+</div>
+<div created="20180624224949924" modified="20180807163322446" title="Binary Exploitation Notes">
+<pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE).
 
 [[Exploitation Notes - 1]]</pre>
 </div>
@@ -9290,6 +9320,17 @@ ihex example taken from wiki
 ```
 
 </pre>
+</div>
+<div created="20180806180352818" modified="20180806183540022" title="Ethical Hacking: Buffer Overflow">
+<pre>Another Pluralsight course. https://www.pluralsight.com/courses/ethical-hacking-buffer-overflow
+
+Heap chunk - type of chunk, size of chunk, memory address of previous and next chunk.
+
+static code analysis: 
+
+unsafe fuctions: gets, strcpy, strncpy, strcat, strncat, sprintf, scanf, sscanf, memcpy.
+
+defenses: gcc stackguard, stack shield, MS buffer security check. DEP, ASLR,SEHOP, EMET.</pre>
 </div>
 <div created="20180624225140945" modified="20180624225140945" title="Exploitation Notes - 1">
 <pre></pre>
@@ -10490,6 +10531,17 @@ Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
 </div>
+<div created="20180806131720547" modified="20180806133325817" title="OPSEC for Pentesters">
+<pre>Notes from PluralSight course: https://www.pluralsight.com/courses/opsec-penetration-testers
+
+Three laws of opsec: if you dont know the threat, how do you know what to protect?, if you don't know what to protect, how do you know you're protecting it?, if you're not protecting it, the enemy wins.
+
+risk = impact x likelihood
+
+harden penteseting system. reduce attack surface. don't use defaults. test that everything is working.
+
+clean up victim systems or tell client to clean up the victim systems.</pre>
+</div>
 <div created="20180730180417654" modified="20180730182427468" title="OSCP Notes">
 <pre>Found my OSCP notes from 2016. Just dumping them here. Some of the notes may or may not be relevant or accurate anymore. 
 
@@ -11083,6 +11135,23 @@ print cPickle.dumps(Blah())
 
 </pre>
 </div>
+<div created="20180806183636309" modified="20180806183753977" title="PluralSight Notes">
+<pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
+
+[[Windows Internals Notes]]
+
+[[.NET and Java malware analysis]]
+
+[[Malicious document analysis]]
+
+[[Programming notes]]
+
+[[Security for Hackers and Developers Notes]]
+
+[[OPSEC for Pentesters]]
+
+[[Ethical Hacking: Buffer Overflow]]</pre>
+</div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
 
@@ -11096,7 +11165,7 @@ print cPickle.dumps(Blah())
 
 [[Chrome Extension development]]</pre>
 </div>
-<div created="20180802192302525" modified="20180803004557786" title="Security for Hackers and Developers Notes">
+<div created="20180802192302525" modified="20180806133448096" title="Security for Hackers and Developers Notes">
 <pre>Going through 
 Security for Hackers and Developers Path on Pluralsight (https://www.pluralsight.com/paths/security-for-hackers-and-developers) before I do Application Security: For Hackers and Developers training at Derbycon.
 
@@ -11106,7 +11175,11 @@ Security for Hackers and Developers Path on Pluralsight (https://www.pluralsight
 
 [[Security for Hackers and Developers: Fuzzing]]
 
-[[Security for Hackers and Developers: Reverse Engineering]]</pre>
+[[Security for Hackers and Developers: Reverse Engineering]]
+
+[[Security for Hackers and Developers: Exploit Development]]
+
+[[Advanced Malware Analysis: Combating Exploit Kits]]</pre>
 </div>
 <div created="20180802195637367" modified="20180802221525571" title="Security for Hackers and Developers: Code Auditing">
 <pre>Some vulns: overflow, off-by-one, format string, integer error. switch case should have default, if none of the cases end up matching. command line injection, sql injection. use correct function based on string type (windows has ascii/wide). 
@@ -11118,6 +11191,45 @@ Try not to ignore compiler errors...
 VLA - variable length array. 
 
 (there isn't a lot here. i'll take more notes during fuzzing and exploitation)</pre>
+</div>
+<div created="20180803193820817" modified="20180803212927070" title="Security for Hackers and Developers: Exploit Development">
+<pre>Tools: Debuggers - gdb, immdbg, windbg, ida, etc...
+
+bug classes: stack overflow, function pointer overwrite, heap overflow, off-by-one, format string, uninitialized vars, integer error, use-after-free, double-fetch, type confusion, etc...
+
+IDA, pressing C will convert data to code. Useful when looking at shellcode.
+
+ExportHashestoIDC takes dll and converts function values to hashes.
+
+0xcc software breakpoint. 
+
+springboard technique - bounce off dll at a fixed location. 
+
+Use mona.py. Works with immunity and windbg.
+
+```
+!py mona sehchain shows SEH chain, which could be overwritten.
+
+!py mona findwild -s &quot;jmp edx&quot; looks for jmp edx in all the modules. Look for modules that doesn't use ASLR so the address stays static. 
+```
+
+stack overflow defense: stack canary/cookie. non-execution memory pages (DEP). 
+
+.load msec in windbg allows !exploitable. 
+
+Defeating ASLR: OS Vuln. Address leak. Use module that doesn't use ASLR... 
+
+Pivot - exchange the stack pointer with register under attacker control. 
+
+ROP: Return Oriented Programming. Executing existing code. In ROP, esp increments. EIP fluctuates. Requires instructions then RET. 
+
+mona can find gadgets w/ !find_gadget
+
+Github: Ropgadget, Ropper
+
+VirtualProtect - change page permissions where shellcode is to RWX.
+
+VirtualAlloc, NTAllocateVirtualMemory can allocate RWX page, shellcode can be copied there.</pre>
 </div>
 <div created="20180802222227430" modified="20180803004417660" title="Security for Hackers and Developers: Fuzzing">
 <pre>fuzzing - automated testing technique. done during run time. focuses on the attack surface.
@@ -11187,8 +11299,15 @@ Code analysis techniques: Attack surface. Where does input come from?
 Read code from top down, look for vuln functions, look for comments (fix me), dangerous API usage, etc.
 </pre>
 </div>
-<div created="20180803004603810" modified="20180803005012918" title="Security for Hackers and Developers: Reverse Engineering">
-<pre></pre>
+<div created="20180803004603810" modified="20180803193536601" title="Security for Hackers and Developers: Reverse Engineering">
+<pre>.NET reverse engineering: dnspy. decompiler by jetbrains. java: bytecodeviewer, javascript: jsdetox, flash: free-decompiler flash.
+
+cdecl - common in unix. parameters in reverse, caller cleans up stack.
+
+stdcall - common in windows. parameters are in reverse, function cleans stack.
+
+FLIRT/FLAIR: for dealing with stripped and statically compiled binaries. 
+</pre>
 </div>
 <div created="20180524153104674" modified="20180524153848299" tags="" title="Ubuntu docker container with web shell">
 <pre>This might be useful for CTF's. Dockerfile can be modified so additional tools are installed or additional files are added. 
