@@ -200,6 +200,8 @@ Error message and password prompt
 
 <li>Exploitation Notes - 1</li>
 
+<li>Exploitation Notes - 2</li>
+
 <li>Go Programming notes</li>
 
 <li>Go Programming notes - 2</li>
@@ -8649,7 +8651,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="About" title="$:/StoryList">
+<div list="[[Binary Exploitation Notes]] [[Exploitation Notes - 2]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9221,10 +9223,12 @@ Reporting: High level summary, technical details, remediation plan, attribution(
 
 actionable threat data: TTP, Tools, Network/Host Artifacts, Domain names, IP, hashes.</pre>
 </div>
-<div created="20180624224949924" modified="20180807163322446" title="Binary Exploitation Notes">
+<div created="20180624224949924" modified="20180814195823284" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE).
 
-[[Exploitation Notes - 1]]</pre>
+[[Exploitation Notes - 1]]
+
+[[Exploitation Notes - 2]]</pre>
 </div>
 <div created="20180529153708743" modified="20180730001111855" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
@@ -9336,7 +9340,7 @@ unsafe fuctions: gets, strcpy, strncpy, strcat, strncat, sprintf, scanf, sscanf,
 
 defenses: gcc stackguard, stack shield, MS buffer security check. DEP, ASLR,SEHOP, EMET.</pre>
 </div>
-<div created="20180624225140945" modified="20180809151903570" title="Exploitation Notes - 1">
+<div created="20180624225140945" modified="20180814200909729" title="Exploitation Notes - 1">
 <pre>Registers: General Purpose: EAX, EBX, ECX, EDX (or R for 64-bit)
 
 ESP - stack pointer, top of current stack frame (lower memory)
@@ -9399,7 +9403,145 @@ x/xw addr - examine 1 word in hex
 x/s addr - examine null terminated string
 ```
 
-tracing tools: ltrace - library calls, strace - system calls.</pre>
+tracing tools: ltrace - library calls, strace - system calls.
+
+Memory corruption: class of bugs that involve modifying memory in a way that wasn't intended.
+
+printing ABCD:
+
+```
+echo -e '\x41\x42...'
+printf '\x41\x42...'
+python -c 'print &quot;\x41\x42...&quot;'
+perl -e 'print &quot;\x41\x42...&quot;;'
+```
+
+bash inputs:
+
+```
+args:
+./vuln `command`
+./vuln $(command)
+stdin:
+command | ./vuln
+command &gt; file &amp;&amp; ./vuln &lt; file
+```
+
+gdb io:
+
+```
+args:
+run $(command)
+run &lt; file
+```
+
+gdb:
+
+```
+info functions
+info registers
+disassemble function
+breakpoint function
+breakpoint *0xaddr
+```
+
+Little endian: 41424344 is stored as 44 43 42 41.
+
+lab2A: after shell is executed nothing can be done because stdin is closed. cat can be used to keep stdin open and take input. https://groheresearch.blogspot.com/2017/06/rpisec-modern-binary-exploitation-lab-2.html https://unix.stackexchange.com/a/103893
+
+Shellcoding:
+
+```
+char *shell[2];
+
+shell[0] = &quot;/bin/sh&quot;;
+shell[1] = NULL;
+
+exec(shell[0], shell, NULL);
+
+exit(0);
+```
+
+https://defuse.ca/online-x86-assembler.htm#disassembly
+
+avoiding null bytes: use lower half of the register if possible. 
+
+xoring something by itself clears it. 
+
+syscall info: http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html
+
+```
+nasm -f elf shellcode.asm
+ld -o shellcode shellcode.o
+objdump -M intel -d shellcode
+```
+
+Testing shellcode:
+
+```
+gcc -z execstack -o tester tester.c
+
+char shellcode[] = &quot;\xSHELLCODE&quot;;
+
+int main()
+{
+(*(void (*)()) shellcode)();
+return 1;
+}
+```
+
+shtest https://github.com/hellman/shtest
+
+premade shellcode: http://shell-storm.org/shellcode/files/shellcode-811.php
+
+Use nops...
+
+fgets reads stdin until input length. scanf and gets read until terminating chars. 
+
+\x00 or null byte stops string functions, including: strcpy, strlen, strcat, strcmp
+
+\x0a or new line causes gets and fgets to stop but nulls or \x00 don't.
+
+http://docs.pwntools.com/en/stable/shellcraft/i386.html
+
+https://ocw.cs.pub.ro/courses/cns/labs/lab-07#pwntools_tutorial</pre>
+</div>
+<div created="20180814200917077" modified="20180814213305989" title="Exploitation Notes - 2">
+<pre>Format strings: 
+
+formats &amp; length modifier:
+
+```
+char, type(bytes), usage
+d,4, int
+u,4,uint
+x,4,hex
+s,4byte ptr, string
+c,1,char
+
+hh, 1, char
+h, 2, short int
+l, 4, long int
+ll, 8, long long int
+```
+
+%n takes a pointer as an argument. Writes number of bytes written so far. It writes 4 bytes. %hn writes 2 bytes.
+
+controlled writes: wanted - current + 8
+
+Gaining control: look for: return address, function pointer (for stack based), global offset table (GOT), Destructor List (DTOR) (binary based).
+
+global offset table: list of pointers to dynamically linked symbols (printf, exit, system, etc)
+
+readelf --relocs ./elfbin
+
+in gdb-peda: p system for address of system.
+
+GOT modification: checksec RELRO shouldn't be FULL.
+
+DTOR list: objdump -h -j .fini_array ./elfbin. Write at VMA or __DTOR_END__. RELRO needs to be disabled.
+
+Reading: Hacking book page 167</pre>
 </div>
 <div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
 <pre>Notes taken while viewing The Go Programming Language
@@ -10597,7 +10739,7 @@ Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
 </div>
-<div created="20180808162525879" modified="20180808233627165" title="Microcorruption">
+<div created="20180808162525879" modified="20180809210140598" title="Microcorruption">
 <pre>https://microcorruption.com/
 
 New Orleans: Input password is compared with string at 0x2400. password: wyO#oJr
@@ -10664,7 +10806,19 @@ password: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA * 7
 final input password:  
 414141414c444141414141414141414141414141414141414141414141414141
 
-Addis Ababa: </pre>
+Addis Ababa: format string exploitation. placing %x prints an address on the stack(?) and %n allows writing to that address(writing # of bytes printed). Like %x%n. (if i understand this correctly). 
+
+Looked at other tutorial if BA%x%n is inputted then 4142 has 02 in it. 
+
+Since SP is tested before unlocking and SP is 0, it needs to be overwritten to unlock. SP location 36a4. Final input: a4362578256e. 
+
+Novosibirsk: unlock_door is provided but doesn't actually unlock the door because it calls INT with 7e. This uses printf again. 7e should be rewritten to 7f in order to unlock the door. Last time 02 was written since the input was 2 bytes. This time it has to be 127 byte input.
+
+The address of 7e is at: 44c8. 
+
+final input: &quot;c844&quot;*63 + &quot;41&quot; + &quot;256e&quot;(%n). 
+
+Algiers: </pre>
 </div>
 <div created="20180806131720547" modified="20180806133325817" title="OPSEC for Pentesters">
 <pre>Notes from PluralSight course: https://www.pluralsight.com/courses/opsec-penetration-testers
