@@ -252,6 +252,8 @@ Error message and password prompt
 
 <li>PentesterLab Notes - White Badge</li>
 
+<li>Performing OSINT Gathering on Corporate Targets</li>
+
 <li>PluralSight Notes</li>
 
 <li>Programming notes</li>
@@ -8651,7 +8653,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Binary Exploitation Notes]] [[Exploitation Notes - 2]]" title="$:/StoryList">
+<div list="[[Performing OSINT Gathering on Corporate Targets]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9506,7 +9508,7 @@ http://docs.pwntools.com/en/stable/shellcraft/i386.html
 
 https://ocw.cs.pub.ro/courses/cns/labs/lab-07#pwntools_tutorial</pre>
 </div>
-<div created="20180814200917077" modified="20180814213305989" title="Exploitation Notes - 2">
+<div created="20180814200917077" modified="20180816195555460" title="Exploitation Notes - 2">
 <pre>Format strings: 
 
 formats &amp; length modifier:
@@ -9541,7 +9543,58 @@ GOT modification: checksec RELRO shouldn't be FULL.
 
 DTOR list: objdump -h -j .fini_array ./elfbin. Write at VMA or __DTOR_END__. RELRO needs to be disabled.
 
-Reading: Hacking book page 167</pre>
+Reading: Hacking book page 167
+
+DEP &amp; ROP:
+
+DEP: data execution prevention. (no more -z execstack)
+
+checksec: nx enabled.
+
+Only code segments are executable. DEP is known as NX, XN, XD, W^X...
+
+DEP basics: No segment of memory should ever be wriable and executable at the same time.
+
+Data segments: stack, heap, .bss, .ro, .data.  
+
+code segments: .text, .plt
+
+DEP implementation: 2004 - linux kernel, XP SP2.
+
+DEP stops execution of injected shell code since it almost always ends up in RW region. 
+
+Technique to execute code with DEP: ROP/reusing existing code.
+
+ROP/Return Oriented programming: reusing existing code. 
+
+Gadget: sequence of meaningful instructions followed by ret. Multiple gadgets are cahined together to do malicious action. Chains are called ROP chains.
+
+ropgadget --binary /bin/bash
+
+```
+Shellcode:
+xor eax, eax
+inc ebx
+int 0x80
+vs
+ROP chain:
+xor eax, eax; ret
+inc ebx; ret
+int 0x80
+```
+
+Tools: 
+gdbpeda - searchmem, ropsearch.
+ropgadget.
+
+Stack pivoting: Moving stack into a more favorable location. Any gadgets that touch ESP will probably help. (leave does mov esp, ebp)
+
+ROP NOPs: gadgets that point to ret's.
+
+ret2lib: technique of ROP where you return to functions in standard libraries (libc) rather than using gadgets.
+
+common ret2libc targets: system(), (f) open()/read()/write().
+</pre>
 </div>
 <div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
 <pre>Notes taken while viewing The Go Programming Language
@@ -11424,7 +11477,128 @@ print cPickle.dumps(Blah())
 
 </pre>
 </div>
-<div created="20180806183636309" modified="20180806183753977" title="PluralSight Notes">
+<div created="20180819154501835" modified="20180819200805225" title="Performing OSINT Gathering on Corporate Targets">
+<pre>Course: https://www.pluralsight.com/courses/osint-gathering-corporate-targets
+
+It mentions PTES! (http://www.pentest-standard.org/index.php/Main_Page) 
+
+OSINT = opensource intelligence
+
+Other ints: humint, masint, sigint, finint, geoint...
+
+PTES: pre-engagement interactions, intel gathering, threat modeling, vuln analysis, exploitation, post-exploitation, reporting. 
+
+Levels of osint: compliance driven(L1), best practice(L2), state sponsored(L3).
+
+Tools: mindmapping (xmind, freemind, etc), VM's, Kali, shodan, pastebin, robtex, hurricane electric, punkspider, censys, maltego ce, foca, creepy, theharvester, recon-ng.
+
+github for the course: github.com/slandail/corporate-osint
+
+Physical OSINT: areas of focus: physical locations, remote locations, business relationships.
+
+locations (L1): full address, ownership (land/builder owner), associated records (city, tax, legal)
+
+physical security measures: cameras, sensors, fences, gates, guard posts, types of ID's, entry points (employees, suppliers)
+
+For hosts/NOC: full cidr notation, dns entries, AS, peering paths, CDN provisioning, netblock owners. 
+
+Tools: hurricane electric BGP, robtex, scans.io, censys.io
+
+L1, L2: land/tax records, owner, shared/individual, time zones, hosts/NOC
+
+tools: search engines: google, bing, duckduckgo
+
+tax records: know physical location, know county/city/state, find county auditor website.
+
+on-site recon: tools: cameras(phone, dslr), drone (FAA has rules).
+
+tools: inteltechniques.com/osint/maps.html 
+
+Relationships: types: business partners, customers, suppliers, rental companies, corporate website, search engines
+
+Discover schedules, supply routes, names, etc.
+
+Logical OSINT: company relationships, public interaction, technology needs.
+
+business partners(work with), business clients(work for), business competitors(work against). 
+
+Tool: hoovers.com has informatin on companies, people, and industries. google finance, yahoo finance, linkedin. data.com, insideview, zoominfo.
+
+marketing info: product line, marketing vertical, marketing accounts.
+
+tools: privacyrights.org/data-breach contains data breach info.
+
+marketing accounts: facebook, twitter, youtube, pinterest, instagram, tumblr, linkedin.
+
+Identify important dates: meetings, significant company dates. 
+
+significant company dates: board meetings, holidays, anniversaries, product/service launch, fiscal year.
+
+meetings: meeting minutes published? meetings open to the public?
+
+google queries: site: w/ calendar, events, meeting minutes, etc...
+
+Technology needs: technology that enables their business. staff to implement and support the tech.
+
+categories: job openings, RFP, RFQ, public bid info.
+
+job search sites: indeed, monster, careerbuilder, computerjobs, dice. targets career page.
+
+job search terms: tech support, sys admin, db admin, app dev, it architect, sec analyst, sec engineer.
+
+Public bid info: request for proposal (RFP). request for quote (RFQ). 
+
+public disclosure: charity affiliations, political donations, court records, prof licenses or registries. 
+
+court records search terms: &quot;court records&quot;, syllabus, plaintiff, defendant, &quot;case no.&quot; with pdf filetype. &quot;v.&quot; also appears in case documents (versus)
+
+political donations: federal election commission. federal lobbying disclosure act compliance, opensecrets.
+
+Stackshare.io - contains info about technologies used by a company.
+
+Namechk.com - domain/username/account check
+
+Constructing an org chart: leadership, management, staff. Example: CEO, director, manager, etc.
+
+groups: external: board members, executives, communications. internal: department heads, executive admins, IT.
+
+tools: linkedin.com, cogmap, https://www.owler.com
+
+process: start with valid data, cross-ref with existing data, expand based on linkedin searches.
+
+tools: pastebin w/ &quot;@domain&quot; search.
+
+transactions: org changes: promotions, lateral movements. 
+
+tools: bizjournals.com w/ inurl:potm (people on the move), linkedin w/ &quot;present (1 month)&quot;
+
+linkedin search: People who work at, people who used to work at, advanced &gt; title.
+
+search terms: company name w/ accepted position, new job, hired, resigned.
+
+tools: cogmap, theofficialboard.com
+
+Electronic OSINT: tools: archive.org way back machine. 
+
+marketing communication: Newsroom, PR Newswire, social media profiles, mailing lists.
+
+contextual data vs metadata: data gathered from document (which can be seen), metadata is data about document.
+
+Google Hacking Database (GHDB exploit-db)
+
+Robots.txt can be helpful.
+
+search terms: filetype:pdf, docx, xlsx, pptx.
+
+Tool: HTTrack - mirrors a site.
+
+Metadata: data contained within the file. file author, date created, date modified, etc.
+
+Tool: FOCA, and other exif tools such as exiftool, apache tika, and etc. metagoofil, meta-extractor, ManualDeposit (analyzes media as well).
+
+</pre>
+</div>
+<div created="20180806183636309" modified="20180819154453967" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -11439,7 +11613,9 @@ print cPickle.dumps(Blah())
 
 [[OPSEC for Pentesters]]
 
-[[Ethical Hacking: Buffer Overflow]]</pre>
+[[Ethical Hacking: Buffer Overflow]]
+
+[[Performing OSINT Gathering on Corporate Targets]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
