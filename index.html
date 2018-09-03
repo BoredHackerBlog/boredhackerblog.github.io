@@ -202,6 +202,10 @@ Error message and password prompt
 
 <li>Exploitation Notes - 2</li>
 
+<li>Exploitation Notes - 3</li>
+
+<li>Getting Started with Reverse Engineering</li>
+
 <li>Go Programming notes</li>
 
 <li>Go Programming notes - 2</li>
@@ -236,6 +240,8 @@ Error message and password prompt
 
 <li>Microcorruption</li>
 
+<li>Network Security Monitoring (NSM) with Security Onion</li>
+
 <li>OPSEC for Pentesters</li>
 
 <li>OSCP Notes</li>
@@ -251,6 +257,8 @@ Error message and password prompt
 <li>PentesterLab Notes - Unix Badge</li>
 
 <li>PentesterLab Notes - White Badge</li>
+
+<li>Pentesting</li>
 
 <li>Performing OSINT Gathering on Corporate Targets</li>
 
@@ -270,9 +278,15 @@ Error message and password prompt
 
 <li>Security for Hackers and Developers: Reverse Engineering</li>
 
+<li>TokyoWesterns CTF 4th 2018</li>
+
 <li>Ubuntu docker container with web shell</li>
 
 <li>VulnHub Notes</li>
+
+<li>Webapp</li>
+
+<li>Webapp - 2</li>
 
 <li>Windows Internals Notes</li>
 
@@ -8653,7 +8667,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Performing OSINT Gathering on Corporate Targets]] About" title="$:/StoryList">
+<div list="[[Exploitation Notes - 3]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9225,12 +9239,14 @@ Reporting: High level summary, technical details, remediation plan, attribution(
 
 actionable threat data: TTP, Tools, Network/Host Artifacts, Domain names, IP, hashes.</pre>
 </div>
-<div created="20180624224949924" modified="20180814195823284" title="Binary Exploitation Notes">
+<div created="20180624224949924" modified="20180903195923430" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE).
 
 [[Exploitation Notes - 1]]
 
-[[Exploitation Notes - 2]]</pre>
+[[Exploitation Notes - 2]]
+
+[[Exploitation Notes - 3]]</pre>
 </div>
 <div created="20180529153708743" modified="20180730001111855" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
@@ -9277,14 +9293,16 @@ Right clicking on the plugin/extension will bring up &quot;Inspect&quot; which c
 
 In console, chrome.whatever allows chrome API access. </pre>
 </div>
-<div created="20180616183925145" modified="20180808162508917" tags="" title="CTF notes">
+<div created="20180616183925145" modified="20180901012431954" tags="" title="CTF notes">
 <pre>[[hash length extension attack]]
 
 [[CTFZone 2018 Quals]]
 
 [[ISITDTU CTF 2018 Quals]]
 
-[[Microcorruption]]</pre>
+[[Microcorruption]]
+
+[[TokyoWesterns CTF 4th 2018]]</pre>
 </div>
 <div created="20180722212952280" modified="20180722213709143" tags="" title="CTFZone 2018 Quals">
 <pre>https://ctftime.org/event/632
@@ -9595,6 +9613,93 @@ ret2lib: technique of ROP where you return to functions in standard libraries (l
 
 common ret2libc targets: system(), (f) open()/read()/write().
 </pre>
+</div>
+<div created="20180903195928299" modified="20180903201109069" title="Exploitation Notes - 3">
+<pre>ASLR: Address Space Layout Randomization
+
+Ensure that address ranges for memory segments are random every execution. For mitigating exploits with hardcoded stack,heap,code, libc addresses.
+
+with ASLR stack heap, library addresses change. (cat /proc/self/maps)
+
+aslr status: /proc/sys/kernel/randomize_va_space. if 0, no aslr, 1 = conservative randomization, 2 = full randomization.
+
+Position Independent Executable (PIE): exec compiled such that their base address doesn't matter.  gcc -pie -fPIE -o tester tester.c. checksec to check if it's compiled with PIE.
+
+Bypassing ASLR: information disclosure/leak, parrtial address overwrite + crash state, partial address overwrite + bruteforce.
+
+Heap exploitation:
+</pre>
+</div>
+<div created="20180901160525900" modified="20180902210426038" title="Getting Started with Reverse Engineering">
+<pre>https://app.pluralsight.com/library/courses/reverse-engineering-getting-started/table-of-contents
+
+Flow: Unknown bin -&gt; basic analysis -&gt; adv analysis -&gt; reporting and documentation.
+
+Memory layers: (fast to slow access) Registers, cache, memory, disk, etc.
+
+32-bit systems have 8 general purpose registers. 64-bit systems have 16 general purpose registers. New ones are r8-r15. 
+
+pointer registers: EIP(instruction pointer), ESP (top of the stack), EBP (base pointer). RIP, RSP, EBP in 64-bit system.
+
+index registers: ESI, EDI, RSI, RDI. Use for copy operations. 
+
+EFLAGS &amp; RFLAGS - storing math op outputs(carry, zero, sign, etc) and/or cpu related flags.
+
+binary file formats: headers, sections. 
+
+.text/.code segment: instructions and entry point. 
+
+.data/.idata: initialized data/declared vars
+
+.rsrc: resources such as icons, images, etc.
+
+.bss: uninitialized data. global vars or other vars that doesn't have an assigned value.
+
+Instruction: Mnemonic (add,mov,etc), Operants (argument, register, constant, or memory loc).
+
+math instructions: add/sub dest, source. 
+
+mul for unsigned. imul for signed. 
+
+`:` in assembly means concatination. 
+
+div for unsigned, idiv for signed.
+
+memory: mov dst, src.  mov dword ptr [ecx], 18h. moves 18h into memory location stored in ecx. dword means it's 4 bytes.
+
+comparisons: cmp data,data2. does data-data2. results update E/RFLAGS. 
+
+jumps: je/jz, jne/jnz, etc... 
+
+call: calls function. different from jump. call pushes address of the next instruction to stack.
+
+call is followed by ret. ret pops stack value into EIP.
+
+bitwise operations: AND, OR, XOR, NOT.
+
+sizes: quad-word: 8 bytes/64 bits. dword: 4 bytes/32-bits. word: 2 bytes/16 bits. byte: 8 bits. bit: 1 or 0.
+
+Endianness: big-endian - most significant byte first. little-endian - least significant byte first. 
+
+Windows API: Uses Hungarian notations. LPCTSTR name = long pointer to a constant char str. 
+
+Handles: opened/created by OS. Basically a pointer to an object (process, file, etc)
+
+Linking: static - library code is copied to executable. runtime - code is imported when it's needed. dynamic - imports are defined in PE file. librarires for imports are loaded by OS.
+
+Tools: 010 editor, Dependency walker, PEStudio.
+
+Single stepping - single instruction at a time. stepping over - debugger steps over calls (doesn't go into calls). stepping into - debugger goes into call func. 
+
+Windows virtual memory: Higher addr - Lower addr. Stack grows higher to lower. Heap grows lower to higher.
+
+local variables are just space on the stack. they're referenced relative to EBP or ESP.
+
+cdec: args are pushed from last to first. caller cleans up. func(1,2,3)  = push 3...
+
+stdcall: func(1,2,3) = push 3... callee cleans up. ret 0xC(or other #) is used during return. 
+
+Useful IDA options: Line prefix for graph, autocomments.</pre>
 </div>
 <div created="20180528150220245" modified="20180528171611472" tags="" title="Go Programming notes">
 <pre>Notes taken while viewing The Go Programming Language
@@ -10873,6 +10978,43 @@ final input: &quot;c844&quot;*63 + &quot;41&quot; + &quot;256e&quot;(%n).
 
 Algiers: </pre>
 </div>
+<div created="20180823153301808" modified="20180823161955742" title="Network Security Monitoring (NSM) with Security Onion">
+<pre>Course: https://app.pluralsight.com/library/courses/security-onion-network-security-monitoring/table-of-contents
+
+Types of data used by security onion: alert data, asset data, full content data, host data, session data (OS-Sec), transaction data. 
+
+Monitoring locations: 
+
+in perimeter. layout: lan -&gt; firewall -&gt; internet. Monitoring location lan -&gt; firewall.
+
+in front of firewall: monitoring location firewall -&gt; internet. 
+
+inline - layout: LAN -&gt; IPS -&gt; firewall -&gt; internet. monitoring at IPS level.
+
+sec onion deployment modes: standalone, production server &amp; distributed deployment, analyst VM. 
+
+interfaces: monitoring &amp; management. 
+
+soup - security onion update tool.
+
+security onion tools: data gathering tools &amp; analysis tool.
+
+main tools: bro, suricata, snort, kibana, squil, squert, and etc.
+
+so-import-pcap to import pcap file, for testing.
+
+tcpreplay for replying traffic to a port.
+
+Autocat - automatically categorizes alerts. 
+
+Rules location: /etc/nsm/rules.
+
+pulledpork allows disabling rules. rule-update command can be used to update rules afterwards.
+
+bro file extraction script: /opt/bro/share/bro/file-extraction.
+
+sosetup allows creating a conf file.</pre>
+</div>
 <div created="20180806131720547" modified="20180806133325817" title="OPSEC for Pentesters">
 <pre>Notes from PluralSight course: https://www.pluralsight.com/courses/opsec-penetration-testers
 
@@ -11477,7 +11619,10 @@ print cPickle.dumps(Blah())
 
 </pre>
 </div>
-<div created="20180819154501835" modified="20180820003759641" title="Performing OSINT Gathering on Corporate Targets">
+<div created="20180902211031737" modified="20180902211031737" title="Pentesting">
+<pre></pre>
+</div>
+<div created="20180819154501835" modified="20180820143352461" title="Performing OSINT Gathering on Corporate Targets">
 <pre>Course: https://www.pluralsight.com/courses/osint-gathering-corporate-targets
 
 It mentions PTES! (http://www.pentest-standard.org/index.php/Main_Page) 
@@ -11596,9 +11741,55 @@ Metadata: data contained within the file. file author, date created, date modifi
 
 Tool: FOCA, and other exif tools such as exiftool, apache tika, and etc. metagoofil, meta-extractor, ManualDeposit (analyzes media as well).
 
-</pre>
+Identifying infrastructure assets: 
+
+network blocks: range of IP's in-scope for the pentest.
+
+Tools: DNSStuff Toolbox - zone transfer &amp; whois tools. Hurricane Electric BGP toolkit.
+
+CIDR &gt; DNS: PTR records, IP addresses.
+
+Recon-ng, whois_miner, whois_orgs, reverse_resolve, shodan_net, census_2012, sonar_cio. 
+
+emails: usernames, domains structure, message headers. 
+
+Company website may have emails and searchable db. Linkedin, search queries, and automated scripts and tools can help.
+
+Maltego CE &amp; theharvester.
+
+Shodan.io w/ domain name search or org filter.
+
+CVE details for vuln search based on banner info.
+
+robtex can help get NS, Mail servers, and IP's.
+
+DNS records: MX mail, NS name server, A address, PTR pointer, SOA start of authority.
+
+Technologies used: job postings, support forums(email address /domain might help with searching), reddit, tom's hardware.
+
+Purchase agreements: hardware licenses, software licenses, existing assets. search terms: purchase agreement, or license. 
+
+How to documents, remote access portals, support portals, mobile device management, knowledge base help gathering info on technologies.
+
+VPN info may be helpful too. 
+
+Remote support services: bomgar, gotoassist, logmein, pcanywhere.
+
+ssllabs.com for SSL config info. kali: sslyze. Observatory.mozilla.org, punkspider.
+
+Defensive tech: nmap: http-waf-detect(NSE), HTTP header info.
+
+Financial reports: annual report (form 10-K), quarterly report (10-Q), current report (8-K). 
+
+SEC Edgar.
+
+Market info: gartner, IDC, forrester, 451 research.
+
+Morningstar, google finance, yahoo finance, nasdaq.
+
+Other: companies may have slack. companyname.slack.com for example.</pre>
 </div>
-<div created="20180806183636309" modified="20180819154453967" title="PluralSight Notes">
+<div created="20180806183636309" modified="20180903151528940" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -11615,7 +11806,17 @@ Tool: FOCA, and other exif tools such as exiftool, apache tika, and etc. metagoo
 
 [[Ethical Hacking: Buffer Overflow]]
 
-[[Performing OSINT Gathering on Corporate Targets]]</pre>
+[[Performing OSINT Gathering on Corporate Targets]]
+
+[[Network Security Monitoring (NSM) with Security Onion]]
+
+[[Webapp]]
+
+[[Webapp - 2]]
+
+[[Getting Started with Reverse Engineering]]
+
+[[Pentesting]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
@@ -11774,6 +11975,56 @@ stdcall - common in windows. parameters are in reverse, function cleans stack.
 FLIRT/FLAIR: for dealing with stripped and statically compiled binaries. 
 </pre>
 </div>
+<div created="20180901012445114" modified="20180903152919626" title="TokyoWesterns CTF 4th 2018">
+<pre>SimpleAuth
+
+```
+&lt;?php
+
+require_once 'flag.php';
+
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $query = $_SERVER['QUERY_STRING'];
+    $res = parse_str($query);
+    if (!empty($res['action'])){
+        $action = $res['action'];
+    }
+}
+
+if ($action === 'auth') {
+    if (!empty($res['user'])) {
+        $user = $res['user'];
+    }
+    if (!empty($res['pass'])) {
+        $pass = $res['pass'];
+    }
+
+    if (!empty($user) &amp;&amp; !empty($pass)) {
+        $hashed_password = hash('md5', $user.$pass);
+    }
+    if (!empty($hashed_password) &amp;&amp; $hashed_password === 'c019f6e5cd8aa0bbbcc6e994a54c757e') {
+        echo $flag;
+    }
+    else {
+        echo 'fail :(';
+    }
+}
+else {
+    highlight_file(__FILE__);
+}
+```
+
+Uses parse_str, which can be used to overwrite a variable. Solution: http://simpleauth.chal.ctf.westerns.tokyo/?action=auth&amp;hashed_password=c019f6e5cd8aa0bbbcc6e994a54c757e
+
+flag: TWCTF{d0_n0t_use_parse_str_without_result_param}
+
+Other writeups: https://ctftime.org/writeup/10876
+
+Not solved:
+scs7 was base59 encoding... https://ctftime.org/writeup/10861
+
+https://ctftime.org/event/651/tasks/</pre>
+</div>
 <div created="20180524153104674" modified="20180524153848299" tags="" title="Ubuntu docker container with web shell">
 <pre>This might be useful for CTF's. Dockerfile can be modified so additional tools are installed or additional files are added. 
 
@@ -11815,6 +12066,151 @@ Accessing the container: http://YOUR_IP:8080/ login: test/test
 <pre>Not walkthroughs! It's just notes and thoughts I wrote down while doing some of the VM's from VulnHub.
 
 [ext[Notes|./vulnhub/index.html]]</pre>
+</div>
+<div created="20180830173930417" modified="20180831181800176" title="Webapp">
+<pre>Notes from a bunch of webapp courses. 
+
+https://app.pluralsight.com/library/courses/web-app-hacking-password-reset-functionality/table-of-contents
+
+Password reset implementaitons: Email link, pw gen + email, and secret q&amp;a.
+
+Good practice: Use HTTPS for reset links. Referer header can leak links (when image is loaded from external domain, browser may send request with referer header)
+
+IDOR insecure direct object reference: issues caused by modifying ID due to access control issues.
+
+Session ID should change when going from non-auth to auth state. 
+
+Expiring old sessions should be done when the password is changed for a user.
+
+Password reset links should have token which is long, random, and should be tied to a user. Reset links should expire and only one valid link should exist. If link has been used, it should expire.
+
+User enum: webapp has diff responses depending on password reset request. 
+
+webapp should give same response for uses that may or may not exist. 
+
+https://app.pluralsight.com/library/courses/caching-problems-web-app-hacking/table-of-contents
+
+Searching google: site:site.com inurl:token
+
+Modifying robots.txt can help avoid indexing and caching.
+
+http responses shouldn't contain sensitive data like password, if it does, header should disallow caching. (cache-control, pragma)
+
+good practice: don't cache certain data and turn off autocomplete for some form fields.
+
+Don't put sensitive data in the URL. It can appear in server logs. Use POST and GET correctly.
+
+OWASP ASVS - application security verification standard. 
+
+https://app.pluralsight.com/library/courses/cross-site-forgery-request-web-app/table-of-contents
+
+CSRF: sending requests on behalf of a victim. Can be prevented by having random anti-csrf tokens that the attacker can't guess.
+
+Make sure CSRF can't allow an attacker to send login requests on behalf of a victim.
+
+Regenerate anti-csrf token after auth. 
+
+https://app.pluralsight.com/library/courses/cookie-attacks-web-app-hacking/table-of-contents
+
+cookie: name, value, attributes. set-cookie header is used.
+
+if set-cookie header contains secure then cookie is sent only over https, else it can be sent over http and https.
+
+If HttpOnly is specified cookie can't be read via XSS.
+
+Cookies/session ID's should be destroyed and/or regenerated. Server should do the same.
+
+Cookies can be set with domain attribute and this can be used for cross-origin exploitation. 
+
+https://app.pluralsight.com/library/courses/xml-processing-web-app-hacking/table-of-contents
+
+XXE attack: malicious XML file is used with external entity. 
+
+```
+&lt;!DOCTYPE doctype[&lt;!ENTITY myentity system &quot;filename&quot;&gt; ]&gt;
+```
+
+Processing external entities should be disabled.
+
+XML entity can include a URL, such as URL containing SecretAccessKey on AWS.
+
+XPATH injection is possible if user input is not validated. Queries can be modified. Similar to sqli. a' or '*
+
+malicious SVG: can include javascript. Javascript can execute HTTP requests for stealing cookies.
+
+Content-disposition: attachment can make sure the browser doesn't open a sent file. 
+
+https://app.pluralsight.com/library/courses/hacking-authentication-web-app/table-of-contents
+
+SQL injection - validate input and use secure way to query the database
+
+Dictionary attack - prevent by using captcha.
+
+Session - make sure to regenerate cookies and session id's, also invalidate old ones.
+
+User enum - make sure to respond with same information regardless of if a user is registered or not.
+
+Use strong password policy and two-factor auth.
+
+https://app.pluralsight.com/library/courses/sensitive-data-exposure-web-app/table-of-contents
+
+Avoid returning verbose error messages. 
+
+triggering errors: provide unexpected data.
+
+Careful about what's in robots.txt. Disable directory listing if not needed.
+
+Be mindful about metadata in files (office files, pics, etc)
+
+Software information can be disclosed to an attacker by the server as well.
+
+Use HTTPS with secure cipher suites and secure crypto libraries. ssllabs.com/ssltest is a useful tool for analyzing ssl info.</pre>
+</div>
+<div created="20180831191720149" modified="20180903193902286" title="Webapp - 2">
+<pre>https://app.pluralsight.com/library/courses/ethical-hacking-web-servers/table-of-contents
+
+techniques: crawling, enum (dirb), mirroring.
+
+notepad++ allows searching all files in a directory. 
+
+recon tools: riskiq, can get an IP, can do reverse dns as well.
+
+Looking at response headers can help with server fingerprinting. 
+
+Tool: HTTPRecon
+
+Internal leakage: verbose errors caused by unexpected input. 
+
+ASP .net can use elmah library. /elmah shows list of errors.
+
+prod server left with debugging on can also leak info.
+
+ssllabs.com can help determine misconfigured https sites.
+
+tool: defaultpassword.com
+
+Use sandboxing.
+
+https://app.pluralsight.com/library/courses/ethical-hacking-web-applications/table-of-contents
+
+http verbs: GET, POST, PUT, DELETE
+
+html inputs: uses `&lt;input&gt;` tag
+
+Browser protections: Chrome has phishing protection (for known suspicious sites). Invalid SSL certs are also detected. Mixed content is detected (https site with http content). XSS protection. Security headers. 
+
+Recon: spider/crawl, enum (dirb), directory traversal, banner grabbing, fingerprinting, etc.
+
+Check .git, Check API, Check frameworks being used.
+
+Tamper with parameters, including hidden parameters. 
+
+Tamper with cookies.
+
+Insecure direct object ref (IDOR): modifying ID to see if other things can be accessed. 
+
+Validate data. Only client-side validation isn't reliable. Conduct server-side validation. 
+</pre>
 </div>
 <div created="20180516170408208" modified="20180730194535515" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
