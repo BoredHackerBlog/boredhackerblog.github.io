@@ -168,6 +168,12 @@ Error message and password prompt
 
 <li>12. Exceptions</li>
 
+<li>13. Services</li>
+
+<li>14. I/O System</li>
+
+<li>15. Device Drivers</li>
+
 <li>2. System Architecture - Part 1</li>
 
 <li>3. System Architecture - Part 2</li>
@@ -192,9 +198,13 @@ Error message and password prompt
 
 <li>Chrome Extension development</li>
 
+<li>CSAW 2018 Quals</li>
+
 <li>CTF notes</li>
 
 <li>CTFZone 2018 Quals</li>
+
+<li>Docker</li>
 
 <li>Ethical Hacking: Buffer Overflow</li>
 
@@ -203,6 +213,10 @@ Error message and password prompt
 <li>Exploitation Notes - 2</li>
 
 <li>Exploitation Notes - 3</li>
+
+<li>Exploitation Notes - 4</li>
+
+<li>General Security stufff</li>
 
 <li>Getting Started with Reverse Engineering</li>
 
@@ -260,6 +274,8 @@ Error message and password prompt
 
 <li>Pentesting</li>
 
+<li>Pentesting - 2</li>
+
 <li>Performing OSINT Gathering on Corporate Targets</li>
 
 <li>PluralSight Notes</li>
@@ -287,6 +303,8 @@ Error message and password prompt
 <li>Webapp</li>
 
 <li>Webapp - 2</li>
+
+<li>Webapp - 3</li>
 
 <li>Windows Internals Notes</li>
 
@@ -8667,7 +8685,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Exploitation Notes - 3]]" title="$:/StoryList">
+<div list="[[CSAW 2018 Quals]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8928,6 +8946,53 @@ windbg !analyze -v for analyzing memory.dump files.
 ```
 
 </pre>
+</div>
+<div created="20180906204816530" modified="20180907181308627" title="13. Services">
+<pre>Service: application that provides functionality without being tied to a logged in user.
+
+Examples: IIS service (web server), MSSQL server. 
+
+Service needs to register with Service Control Manager (SCM)
+
+Service Control Program (SCP) can control services. 
+
+Service characteristics: built just like any other win32 app. Has main,winmain etc.. Must be registered with SCM (using CreateService API), Communicates with SCM using a named pipe. May run automatically when Windows boots up but this is configurable. Services run under a special account. Some accounts: Local system, network service, local service. Sevice Control programs (SCP) can manipulate services (StartService, ControlService, etc..).
+
+Service configuration: service is installed using CreateService or other similar tool. New registry key under HKLM\system\css\services is added. Services MMC snap-in can be used to view services. Service can be started by a service control program. 
+
+Service Key paramters: Start: when should the service start. DelayedAutostart: if service is started sometime after SCM is started. Type: service or driver?. ImagePath: path to executable. DisplayName: name that gets displayed in service mmc snap-in. Description: description of the service. 
+
+Controlling services: Service Control Program such as MMC snap-in. OpenSCManager- connect to SCM. OpenService,CreateService. OpenService opens a connection to an existing service. CreateService installs a new service. StartService - start service. ControlService - stop, pauce, continue, etc... QueryServiceStatus - get service status. DeleteService - uninstall service.
+
+Service Accounts: LocalSystem-Most powerful account on the local computer. NetworkService-allows service to auth ouside the local computer. Less privs locally. LocalService-Similar to network service. Can only access network element accepting anonymous access. Some specific user-Service can run under a specific users account. 
+
+Shared Service processes: some services run their own process and some share a single process. Windows uses Svchost.exe. 
+
+Trigger start services: introduced in win7. Service starts or stops based on some trigger. Example: computer joins a domain, device plugged-in, policy change, etc...</pre>
+</div>
+<div created="20180907181353698" modified="20180907182531490" title="14. I/O System">
+<pre>I/O system abstracts logical and physical devices. Most i/o system parts are in executive and kernel. 
+
+i/o system components: windows provides i/o manager and pnp manager (both in kernel mode). User mode pnp manager exists and communicates with kernel pnp manager. Power manager (kernel) handle and manage power related to devices. All the managers talk to device drivers. Drivers communicate with HAL or directly talk to device.
+
+Device drivers are loadable kernel modules. Basically the glue between OS and device. User mode device drivers exist, for example printer drivers. 
+
+invoking a driver: call fread(app), call ReadFile (msvcrt.dll), Call NtReadFile (kernel32.dll), sysenter/syscall (Ntdll.dll), call NtReadFile (kernel, Ntoskrnl.exe), Ntreadfile: call driver (kernel, Ntoskrnl.exe), initiate i/o (kernel, driver.sys). 
+
+Accessing Devices: Client needs to open a handle to the device. CreateFile or CreateFile2 can be used. CreateFile accepts filename, which can be device symbolic link. name format: \\.\\name. (UNC format). 
+
+Tool: winobj.exe</pre>
+</div>
+<div created="20180907182642337" modified="20180907183328395" title="15. Device Drivers">
+<pre>Anatomy of a driver: set of functions callable by the i/o system. It exports functions which can be used by the kernel. 
+
+Windows Driver Model (WDM): Model for writing device drivers. Supported bunch of buses (pci, usb, etc), still used today, supports devices such as HID, scanners, cameras. Did not support File system drivers or video drivers. 
+
+Windows Driver Foundation: alternative to WDM. Can out with Windows Vista. Has two parts. KMDF - kernel mode driver framework. UMDF - usermode driver framework. 
+
+Drivers have DriverEntry function. Similar to main function. When driver loads, driverentry is called. 
+
+Unload Routine: function for cleaning up. </pre>
 </div>
 <div created="20180516180855059" modified="20180516191145694" tags="" title="2. System Architecture - Part 1">
 <pre>Windows Design Goals:
@@ -9239,14 +9304,17 @@ Reporting: High level summary, technical details, remediation plan, attribution(
 
 actionable threat data: TTP, Tools, Network/Host Artifacts, Domain names, IP, hashes.</pre>
 </div>
-<div created="20180624224949924" modified="20180903195923430" title="Binary Exploitation Notes">
+<div created="20180624224949924" modified="20180904183504159" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE).
 
 [[Exploitation Notes - 1]]
 
 [[Exploitation Notes - 2]]
 
-[[Exploitation Notes - 3]]</pre>
+[[Exploitation Notes - 3]]
+
+[[Exploitation Notes - 4]]
+</pre>
 </div>
 <div created="20180529153708743" modified="20180730001111855" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
@@ -9293,7 +9361,19 @@ Right clicking on the plugin/extension will bring up &quot;Inspect&quot; which c
 
 In console, chrome.whatever allows chrome API access. </pre>
 </div>
-<div created="20180616183925145" modified="20180901012431954" tags="" title="CTF notes">
+<div created="20180917220954506" modified="20180917221439445" title="CSAW 2018 Quals">
+<pre>Solved:
+bigboy: Overflow to rewrite a register to 0xcaf3baee. 
+
+Writeups: https://ctftime.org/writeup/11246
+
+Not solved: whyos 
+
+https://github.com/liuhack/writeups/blob/master/2018/CSAW/WhyOS/README.md
+
+more writeups https://ctftime.org/event/633/tasks/</pre>
+</div>
+<div created="20180616183925145" modified="20180917220840478" tags="" title="CTF notes">
 <pre>[[hash length extension attack]]
 
 [[CTFZone 2018 Quals]]
@@ -9302,7 +9382,9 @@ In console, chrome.whatever allows chrome API access. </pre>
 
 [[Microcorruption]]
 
-[[TokyoWesterns CTF 4th 2018]]</pre>
+[[TokyoWesterns CTF 4th 2018]]
+
+[[CSAW 2018 Quals]]</pre>
 </div>
 <div created="20180722212952280" modified="20180722213709143" tags="" title="CTFZone 2018 Quals">
 <pre>https://ctftime.org/event/632
@@ -9348,6 +9430,45 @@ ihex example taken from wiki
 ```
 
 </pre>
+</div>
+<div created="20180904160233769" modified="20180904172241626" title="Docker">
+<pre>https://app.pluralsight.com/library/courses/docker-networking/table-of-contents
+
+Docker networking: Container Network Model(CNM), Libnetwork, drivers.
+
+CNM: sandbox(contains full network stack, isolated), endpoint(network interface, eth0), network(connection of endpoints).
+
+libnetwork: implementation of CNM.
+
+drivers: network specific, overlay, macvlan, ipvlan, bridge, etc... 
+
+docker network ls - list networks. name can be anything. driver name matters.
+
+docker network inspect name - viewing config info for a network. 
+
+docker info - lists network plugin info.
+
+single-host networking: 
+
+```
+docker network create -d bridge --subnet 10.0.0.1/24 ps-bridge // driver = bridge, name = ps-bridge
+
+brctl show or ip link show - for viewing bridges.
+```
+
+multi-host networking: uses vxlan tunnel. similar to GRE tunneling. Two seperate IP's that can talk to eachover can setup vxlan tunnel in which two containers can talk and be on the same subnet.
+
+```
+docker network create -d overlay ps-over //create overlay network
+```
+
+MACVLAN: gives IP and MAC address on the existing network (similar to using bridge mode on vbox and vmware). Requires host cards to be in promiscuous mode. Containers can't ping their host. 
+
+IPVLAN: similar to MACVLAN. No mac address for container. Containers can't ping their host. 
+
+```
+docker network create -d ipvlan --subnet=192.168.1.0/24 --gateway=192.168.1.254 --ip-range=192.168.1.0/28 -o ipvlan_mode=l2 -o parent=eth0 ps-ip //ipvlan mode is layer2, should be there by default. eth0 is the network this is attached to
+```</pre>
 </div>
 <div created="20180806180352818" modified="20180806183540022" title="Ethical Hacking: Buffer Overflow">
 <pre>Another Pluralsight course. https://www.pluralsight.com/courses/ethical-hacking-buffer-overflow
@@ -9614,7 +9735,7 @@ ret2lib: technique of ROP where you return to functions in standard libraries (l
 common ret2libc targets: system(), (f) open()/read()/write().
 </pre>
 </div>
-<div created="20180903195928299" modified="20180903201109069" title="Exploitation Notes - 3">
+<div created="20180903195928299" modified="20180904183450607" title="Exploitation Notes - 3">
 <pre>ASLR: Address Space Layout Randomization
 
 Ensure that address ranges for memory segments are random every execution. For mitigating exploits with hardcoded stack,heap,code, libc addresses.
@@ -9627,7 +9748,225 @@ Position Independent Executable (PIE): exec compiled such that their base addres
 
 Bypassing ASLR: information disclosure/leak, parrtial address overwrite + crash state, partial address overwrite + bruteforce.
 
-Heap exploitation:
+Heap exploitation: pool of memory used for dynamic allocations at runtime. malloc() to allocate, free() to release.
+
+```
+buff = malloc(0x100) // allocate 0x100 bytes.
+free(buff) //free allocated memory
+```
+
+heap vs stack:
+heap = dynamic, runtime, for objects, big buffers, structs..., slow and manual. malloc/calloc/recalloc/free &amp; new/delete
+
+stack: fixed, compile time, for vars, ret addr, func args. fast and automatic. no need to alloc and de-alloc.
+
+malloc(32) = 40 bytes, 4 = 16 bytes, 20 = 24 bytes, 0 = 16 bytes.
+
+heap chunk: previous chunk size (4 bytes), chunk size &amp; flags (4 bytes), data (8 + (n/8)* bytes)
+
+previous chunk size: size of previous chunk if previous chunk is free
+
+chunk size: size of entire chunk
+
+data: newly allocated memory / ptr retuned by malloc
+
+heap grows towrds high memory. 0x00000000 -&gt; 0xffffffff
+
+states of heap chunks: in use/malloc'd, free'd
+
+free'd chunk contains forward pointer and backwards pointer. forward pointer points to next free chunk. backwards pointer points to previous free chunk. foward pointer and backward points are 4 bytes.
+
+heap overflow: buffer overflows on heap and stack are the similar.
+
+use-after-free (UAF): data on the heap is freed but a leftover reference or dangling pointer is used by the code
+
+dangling pointer: left over pointer that references free'd data and is prone to be re-used. memory it's pointing at was freed and there's no guarantees on what data exists at that spot. also known as stale pointer or wild pointer.
+
+UAF does not required memory corruption, can be used for info leaks, can be used for memory corruption or to get control of EIP
+
+heap spray: technique used to increase exploit reliability by filling the heap with large chunks of data relevant to the exploit. may help bypass ASLR.
+
+metadata corruption: corrupting heap metadata in such a way that you can use the allocator's internal functions to cause a controlled write. involves faking chunks and abusing different coalescing or unlinking processes.
+
+miscellaneous concepts:
+
+integers in c:
+
+```
+int var1 = 0; // can be positive and negative
+unsigned int var2 = 0; // only positive
+
+signed: int, signed int, long
+unsigned: uint, unsigned int, unsigned long
+```
+
+two's complement: to make a number negative: invert all the bits, add 1
+
+assembly instructions for signed: idiv, imul, sal, sar, movsx, jl, jle, jg, jge.
+
+assembly instructions for unsigned: div, mul, shl, shr, movzx, jb, jbe, ja, jae.
+
+minimum sizes: char 8bits, short 16bits, int 16bits, long 32bits, long long 64bits.
+
+fixed size format: intBITS_t or uintBITS_t. example: int8_t, uint16_t
+
+uninitialized data: can leak info or cause undefined behavior in an app.
+
+file descriptors: in linux, everything is a file. when a file is opened, it gets a number. 0 = STDIN, 1 = STDOUT, 2 = STDERR
+
+file descriptors from parent processes are inherited by children.</pre>
+</div>
+<div created="20180904183508991" modified="20180905184734785" title="Exploitation Notes - 4">
+<pre>C++ differences and concepts:
+
+vtables: Virtual fuction or method table. Pointer to an array of function pointers.
+
+linux kernel exploitation: 
+
+userspace runs on top of kernel. Kernel provides file ip, privs, syscalls, processes, and other services/features. 
+
+ring 0: kernel, ring 1: device drivers, ring 2: device drivers, ring 3: applications.
+
+Loadable kernel modules (LKM): executables that run in kernel space.
+
+insmod - insert module.
+
+rmmod - remove module
+
+lsmod - list modules
+
+Library calls may be different in kernel mode.
+
+Future of security and exploitation:
+
+Finding bugs: source code analysis. Tools: spinroot.com/static (owasp has a list too)
+
+fuzzing: tool: AFL
+
+taint analysis: tracing user input and it's impact on execution
+
+symbolic execution + sat/smt solving: providing specific conditions can exist in execution to manifest diffcult bugs. z3, smt-lib
+
+cyber reasoning systems.</pre>
+</div>
+<div created="20180912150725066" modified="20180913191904054" title="General Security stufff">
+<pre>https://app.pluralsight.com/library/courses/set-detecting-network-anomalies-behavioral-analysis/table-of-contents
+
+Frequency Analysis: Types: count (of indicator) per period of time. Relative to total volume. time between events. time of day relevant to human behavor or work schedule. 
+
+scans: Looking for stuff like &gt; 5 connection attempts per minute can help. Look for sweep or scan behavior.
+
+beaconing: generally, traffic from websever should be more than traffic to webserver, unless uploads are being done. timelion can help visualize traffic over long time.
+
+Command and control: DNS sessions lasting long time maybe suspisious. (dnscat might be used). 
+
+brute force: lots of short sessions may caused by brute force. 
+
+protocol analysis: Looking for stuff that breaks protocol rules. 
+
+DNS: bunch CNAME, TXT, MX queries with weird URL's maybe suspicious. Bad HTTPS certs may also be suspicious. 
+
+SSH: if host provides keys randomly for ssh session, there maybe some spoofing. (broIDS can script can help detect this)
+
+DHCP: malicious dhcp server can packets with malicious options (different dns, gateway). 
+
+population analysis: if ratio of inbound/outbound data is weird, it maybe a sign of exfiltration or download. 
+
+https://app.pluralsight.com/library/courses/security-network-host-lfce/table-of-contents
+
+rsyslog - rocket fast sysm log processing. log local messages. log to remote systems.
+
+Linux firewall architecture (centos): netfilter(kernel), iptables for managing iptables. firewalld(centos iptables service). 
+
+netfilter: Tables-collection of chains. Chain-evaluation point for packets (based on rules). Rules-has matches and targets. Rules are processed from top down. 
+
+Chains- at what time packet is evaluated. PREROUTING - before routing. INPUT - packets delievered to local processes. FORWARD - routed packets. OUTPUT - sent packets. POSTROUTING - after routing decision is made.
+
+Targets: ACCEPT - accept. REJECT - replies prohibited. DROP - drop, no reply. LOG - record info to file.
+
+States: NEW - new connection. ESTABLISH - already established connections. RELATED - associated with a connection. 
+
+Default tables and their chains (centos): FILTER table has INPUT, FORWARD, and OUTPUT chains. 
+
+NAT table has PREROUTING, OUTPUT, and POSTROUTING chains. 
+
+MANGLE table has PREROUTING, INPUT, FORWARD, OUTPUT, and POSTROUTING chains.
+
+```
+iptables:
+-t //table
+-I insert / -A append / -D delete
+chain
+-m //match (ip,protocol, port)
+-j //target (accept, reject, etc..)
+```
+
+tcp wrappers - host based access controls. 
+
+hosts.allow, hosts.deny used for access control. allow is looked at first. 
+
+```
+daemon list: client list [options]
+
+/etc/hosts.allow
+sshd: .psdemo.local //allow
+sshd: .psdemo.local DENY //deny
+
+/etc/hosts.deny
+sshd: badserver.local //deny
+```
+
+ssh public key auth: client generates keypair(ssh-keygen). public key is copied to remote system under user/.ssh/authorized_keys (ssh-copy-id).
+
+https://app.pluralsight.com/library/courses/linux-system-security-lpic-2/table-of-contents
+
+Routing tables: 
+
+```
+ip route show OR ip r //show routes
+route //show routes
+
+ip route add 192.168.59.0/24 via 192.168.60.253 // add route
+```
+
+enabling routing/ip forwarding:
+
+```
+sysctl -w net.ipv4.ip_forward=1 //reboot disables this
+
+//works after reboot as well
+/etc/sysctl.conf:
+net.ipv4.ip_forward=1
+
+sysctl -p //reload the new sysctl file
+```
+
+fail2ban: 
+
+```
+apt-get install fail2ban
+/etc/fail2ban/ for config
+
+create jail.local file
+[sshd] //jail name
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3 //max attempts
+findtime = 300 //300 seconds, 5 mins
+bantime = 86400 //seconds, 1 day
+ignoreip = 127.0.0.1 //just ip's the rule doesn't apply to
+```
+
+fail2ban creates a chain for itself and it can be viewed with iptables. iptables also shows what has been blocked. 
+
+fail2ban-client status - for status...
+
+fail2ban-client status sshd - for sshd jail 
+info
+
+fail2ban-client set sshd unbanip IP - for unbanning ip
 </pre>
 </div>
 <div created="20180901160525900" modified="20180902210426038" title="Getting Started with Reverse Engineering">
@@ -11619,8 +11958,125 @@ print cPickle.dumps(Blah())
 
 </pre>
 </div>
-<div created="20180902211031737" modified="20180902211031737" title="Pentesting">
-<pre></pre>
+<div created="20180902211031737" modified="20180905233452836" title="Pentesting">
+<pre>https://app.pluralsight.com/library/courses/ethical-hacking-denial-service/table-of-contents
+
+HTTP flood: http requests. attacks on process that takes long to run. large file download.
+
+syn flood: sending syn but not final ack. 
+
+amplification: sending requests that result in more or larger requests...
+
+slowloris: sending requests without termination sequence. request never completes. target keeps waiting.
+
+Tools: LOIC, JS LOIC, DoSHTTP
+
+Loader.io (legit stress testing tool)
+
+https://app.pluralsight.com/library/courses/ethical-hacking-evading-ids-firewalls-honeypots/table-of-contents
+
+Implementations: software firewall, hardware firewall, firewall as a service.
+
+bastion host: computer that is fully exposed to attack. 
+
+internet - firewall (bastion host) - internal network(s).
+
+internet - firewall - dmz - firewall 2 - internal network.
+
+packet filtering firewall: checks packet metadata before allowing. 
+
+app level firewall: protocol based. 
+
+firewall ID: firewalking, relies on TTL. 
+
+evasion: ip spoofing. alternative routing, tiny fragment attack (packet is split into fragments), icmp,ack, http tunneling.
+
+evasion tools: gtunnel (garden tunnel), httptunnel.
+
+IDS evasion: if it's signature based, try changing signature. polymorphic code: mutating code. ascii shellcode: shellcode is built with ascii data instead of using assembly that results in non-ascii data. other: unicode, encryption/compression, fragmentation. DoS.
+
+https://app.pluralsight.com/library/courses/exploit-development-execution-metasploit-framework/table-of-contents
+
+Windows: Lower addr -&gt; higher addr. .text, .data, .bss, heap, stack.
+
+common bad chars: 00, 0a, 0d, ff.
+
+initialize func in metasploit contains metadata and some required things for exploitation. 
+
+Exitfunc: SEH, when SEH is used. Thread, runs shellcode in a sub-thread. Process.
+
+Payload: specify bad chars.
+
+exploit (def exploit) contains building of the payload. 
+
+SEH: check SEH chain in immunity.
+
+https://app.pluralsight.com/library/courses/exploitation-evading-detection-bypassing-countermeasures/table-of-contents
+
+IDS evasion: obfuscation (encoding, encryption, polymorph), attack and evade (insertion, fragmentation, dos), protocol ambiguity.
+
+msfvenom -e for encoding. shikata_ga_nai - polymorphic encoder.
+
+encryption: payload and/or session. 
+
+Tools: Veil-Evasion, fragroute, ptunnel
+
+nmap kippo-detect.nse for detecting kippo honeypot.
+
+AV blocking techs: whitelist, signature, heuristic and sandboxing. 
+
+Tools: veil-evasion, hyperion, pescrambler
+
+anti-sandbox/anti-vm: CPU instructions, MAC addresses, services/network adapters/regkey.
+
+Tools: AlicanAkyol/sems @ github.</pre>
+</div>
+<div created="20180906171024421" modified="20180906191308930" title="Pentesting - 2">
+<pre>https://app.pluralsight.com/library/courses/ethical-hacking-session-hijacking/table-of-contents
+
+Types of session hijacking: app level (webapp): session id sniffing, session fixation, session donation, session id brute force.
+
+Network level: blind hijacking, session sniffing, ip spoofing, udp hijacking.
+
+Attack vectors: Man in the middle, man in the browser, brute force, XSS, session ID leakage.
+
+webapp hijacking: using xss and document.cookie... logs/debug with http requests, session id brute force.
+
+network layer stuff: sequence number exploitation. (this was predicted in 1985). 
+
+blind hijacking: ID hosts at risk of predictable sequence number. Desynchronize the connection, use predicted sequence number to communicate with server.
+
+session sniffing: man in the middle/attacker routing packets. 
+
+udp hijacking: forging UDP response. 
+
+man in the browser: browser is infected. victim browsers site, attacker extracts data from DOM (form data, cookies, etc). 
+
+automating session hijacking attacks: ZAP allows changing of request header, so does burp. 
+
+Juggernaut (securiteam.com) useful for tcp session hijacking.
+
+Hunt (securiteam) for tcp hijacking.
+
+Ettercap @ github
+
+https://app.pluralsight.com/library/courses/hack-your-api-first/table-of-contents
+
+Tool: Fiddler (proxy just like zap and burp).
+
+Wifi pineapple and LAN Tap may help as well for monitoring and intercepting communications. 
+
+API shouldnt return data that isn't used. (emails, passwords, etc...)
+
+google hack: filetype:.asmx inurl:.asmx can help discover API's.
+
+Sources of untrusted data: URL query, form data, cookies, request headers, etc...
+
+FiddlerScript can be used to modify data...
+
+Auth methods: OpenID, Oauth
+
+App should reject invalid certs. Cert pinning should be used.</pre>
 </div>
 <div created="20180819154501835" modified="20180820143352461" title="Performing OSINT Gathering on Corporate Targets">
 <pre>Course: https://www.pluralsight.com/courses/osint-gathering-corporate-targets
@@ -11789,7 +12245,7 @@ Morningstar, google finance, yahoo finance, nasdaq.
 
 Other: companies may have slack. companyname.slack.com for example.</pre>
 </div>
-<div created="20180806183636309" modified="20180903151528940" title="PluralSight Notes">
+<div created="20180806183636309" modified="20180912150712954" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -11814,9 +12270,17 @@ Other: companies may have slack. companyname.slack.com for example.</pre>
 
 [[Webapp - 2]]
 
+[[Webapp - 3]]
+
 [[Getting Started with Reverse Engineering]]
 
-[[Pentesting]]</pre>
+[[Pentesting]]
+
+[[Docker]]
+
+[[Pentesting - 2]]
+
+[[General Security stufff]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
@@ -12166,7 +12630,7 @@ Software information can be disclosed to an attacker by the server as well.
 
 Use HTTPS with secure cipher suites and secure crypto libraries. ssllabs.com/ssltest is a useful tool for analyzing ssl info.</pre>
 </div>
-<div created="20180831191720149" modified="20180903193902286" title="Webapp - 2">
+<div created="20180831191720149" modified="20180905200353035" title="Webapp - 2">
 <pre>https://app.pluralsight.com/library/courses/ethical-hacking-web-servers/table-of-contents
 
 techniques: crawling, enum (dirb), mirroring.
@@ -12210,9 +12674,135 @@ Tamper with cookies.
 Insecure direct object ref (IDOR): modifying ID to see if other things can be accessed. 
 
 Validate data. Only client-side validation isn't reliable. Conduct server-side validation. 
+
+https://app.pluralsight.com/library/courses/session-management-testing-web-application-penetration-testing/table-of-contents
+
+Examine cookies. Pre and post auth and post deauth.
+
+Tool: EditThisCookie, Cookiemonster
+
+jwt.io can help examine cookies as well.
+
+burp sequencer can help check entropy. ZAP as well with Generate Tokens feature.
+
+https://app.pluralsight.com/library/courses/web-app-pentesting-fundamentals/table-of-contents
+
+black box testing: no creds, source, or app functions. 
+
+white box testing: source, creds, interviews with devs, audit reports.
+
+grey box testing: app use case known. creds provided. multiple accounts provided for access control testing. 
+
+footprinting: spidering, dirb, server/app info discovery, robots.txt. Burp can find comments on all the pages Under engadgement tools.
+
+tools: burp, zap, nessus, nexpose, ibm app scan, nikto. wpscan, joomscan, sqlmap. sslscan, ssllabs ssltest.
+
+auth test: check default creds. password policy may help. dashlane has password policy. 
+
+fuzzing: url params, body params, cookies, etc.
+
+If app takes in #'s from user (# of orders or price for example), check if that can that can be modified to be negative or something else.
 </pre>
 </div>
-<div created="20180516170408208" modified="20180730194535515" tags="" title="Windows Internals Notes">
+<div created="20180906143844231" modified="20180906193904105" title="Webapp - 3">
+<pre>https://app.pluralsight.com/library/courses/browser-security-headers/table-of-contents
+
+Headers with X-whatever are experimental.
+
+HSTS: HTTP Strict Transport Security. Telling the browser to use HTTPS only. 
+
+```
+HSTS header: Strict-Transport-Security: max-age=31536000; includeSubdomains; preload. //every request should be https, including embeded stuff. Protects against downgrade attack. 
+```
+
+max-age refers to how long insecure requests cannot be made. 
+
+includesubdomains requires all the subdomains to be https as well.
+
+preload: preloading HSTS hard-codes it into the browser. 
+
+HPKP: HTTP Public Key Pinning. Allows trusted certs to be whitelisted. 
+
+```
+HPKP header: Public-Key-Pins: pin-sha256=[pin 1], ..., max-age=..., report-uri=[uri]; includeSubdomains // whitelist all the allowable certs for the domain, protects from fruad certs.
+```
+
+Causes error message in chrome: ERR_SSL_PINNED_KEY_NOT_IN_CERT_CHAIN
+
+pin-sha256: declares multiple hashes of the cert thumbprint. best practice: pin public cert, CSR, backup CSR.
+
+report-uri: directs browser to report key violation via the specified URI
+
+Public-Key-Pins-Report-Only: only reports. Does not block.
+
+CSP: Content-Security-Policy. 
+
+```
+CSP header: Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' [uris]; style-src 'self' 'unsafe-inline' [uris]; img-src 'self' [uris]; frame-src [uris]; font-src 'self' [uris]; report-uri [uri] //declares approved sources of content
+
+CSP Cheat Sheet: scotthelme.co.uk/csp-cheat-sheet/
+```
+
+```
+Content source keywords: * (anything), none (content shouldn't come from anywhere), self (content can come from same site).
+
+content source hosts: https://othersite.com(from main domain), https://*.othersite.com(from subdomain), https:// (from any https site)
+```
+
+hashes or nonces can be used for trusting scripts as well.
+
+frame-ancestors none makes sure that site cannot be framed by anyone.
+
+Tools for working with headers: securityheaders.io, report-uri.io (analyzer and allows building headers), CSP-Fiddler-Extension @ github, NWebsec @ github.
+
+https://app.pluralsight.com/library/courses/ethical-hacking-sql-injection/table-of-contents
+
+Types of SQL injections: Error based, union, blind (boolean or time based).
+
+```
+' or 1=1-- //returns in true
+' and 1=1-- //this can be used as well
+'--
+```
+
+webapp user interacting with database shouldn't be able to modify the database. (unless it's needed...)
+
+union - combines results from two different queries. union uses column name of the first select statement. Both queries should have same number of columns.
+
+```
+select * from color union select * from city
+```
+
+select * from sys.tables - to get list of tables  (mssql)
+
+select * from sys.columns - to get columns (mssql)
+
+xp_cmdshell allows command execution (mssql).  
+
+```
+exec sp_configure 'xp_cmdshell', 1
+reconfigure //enable xp_cmdshell
+
+exec xp_cmdshell 'ping ...'
+```
+
+mitigation: data validation, query parameterization, stored procedures, priv/access control, IDS/WAF, isolation, etc...
+
+Evasion: instead of 1=1, try 'foo'='foo' or 2&gt;1, etc...
+
+URL, hex, unicode, char() encoding.
+
+string splitting can help with evasion as well. 'SEL' + 'ECT...'
+
+Instead of spaces, try multiple space, tabs, line returns.
+
+inline comments: /**/query/**/query...
+
+reversing or concatenating strings.
+
+Tools: sqlinjectme, burp, havij, sqlmap.</pre>
+</div>
+<div created="20180516170408208" modified="20180907182611525" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
 
 You can find them here: https://www.pluralsight.com/courses/windows-internals
@@ -12245,6 +12835,12 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 [[11. Interrupts]]
 
 [[12. Exceptions]]
+
+[[13. Services]]
+
+[[14. I/O System]]
+
+[[15. Device Drivers]]
 
 Viewing the course is recommended. </pre>
 </div>
