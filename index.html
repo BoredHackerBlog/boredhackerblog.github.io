@@ -218,7 +218,9 @@ Error message and password prompt
 
 <li>Exploitation Notes - 4</li>
 
-<li>General Security stufff</li>
+<li>General Security stuff</li>
+
+<li>General Security stuff 2</li>
 
 <li>Getting Started with Reverse Engineering</li>
 
@@ -281,6 +283,8 @@ Error message and password prompt
 <li>Pentesting - 2</li>
 
 <li>Performing OSINT Gathering on Corporate Targets</li>
+
+<li>Performing OSINT Gathering on Employee Targets</li>
 
 <li>PluralSight Notes</li>
 
@@ -8689,7 +8693,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Elasticsearch Notes]]" title="$:/StoryList">
+<div list="[[Performing OSINT Gathering on Employee Targets]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9952,7 +9956,7 @@ symbolic execution + sat/smt solving: providing specific conditions can exist in
 
 cyber reasoning systems.</pre>
 </div>
-<div created="20180912150725066" modified="20180913191904054" title="General Security stufff">
+<div created="20180912150725066" modified="20190104155848964" title="General Security stuff">
 <pre>https://app.pluralsight.com/library/courses/set-detecting-network-anomalies-behavioral-analysis/table-of-contents
 
 Frequency Analysis: Types: count (of indicator) per period of time. Relative to total volume. time between events. time of day relevant to human behavor or work schedule. 
@@ -10071,6 +10075,75 @@ info
 
 fail2ban-client set sshd unbanip IP - for unbanning ip
 </pre>
+</div>
+<div created="20190104155914681" modified="20190104164343230" title="General Security stuff 2">
+<pre>Physical security:
+
+Life safety above everything.
+
+Ring protection - layered defense. 
+
+Detect -&gt; assess -&gt; respond.
+
+Crime Prevention Through Environmental Design (CPTED) 
+
+Territoriality - restricted access
+
+Surveillance - monitoring
+
+Access control - entrances
+
+Vulns: based on location (enviornmental, crime, etc..), age and condition of facility, and design. 
+
+location: proximity to emergency services, visibility (how much attention building draws), access to public transit.
+
+physical security threats: human-made/political events, natural/environmental, circumstantial.
+
+threats: criminals, external activists, compeitors.
+
+bountry protection: use natural terrain, fences, gates, walls, bollards (for protection from cars).
+
+physical intrusion detection: electronic sensors, pressure sensors, temp sensors, vibration sensors. 
+
+Closed Circuit Television (CCTV) for monitoring. 
+
+CCTV considerations: size, depth, height, width, pan, tilt. contrast.
+
+guards: deterrent
+
+entry points: doors, windows, loading ramps, elevator, ventilation ducts, crawlspaces, sewage or steam lines.
+
+doors: should be well lit, should have alarms and camera too. contact device: to know if door is open or has been left open.
+
+locks: locks, combination, biometrics. use pick resistant locks.
+
+windows and glass: standard glass, tempered glass, acrylic, polycarbonate
+
+window protection: lamination, solar film, bomb blast film/curtains, wired glass, intrusion detection sensors.
+
+sensitive areas: wiring closes, server room, etc...
+
+fire: prevent -&gt; alert -&gt; minimize damage
+
+fire triangle: oxygen, heat, fuel. needs trigger to start the fire.
+
+detection: smoke (ion, light, vesda), heat, flame
+
+fire suppression: remove heat, or fuel, or oxygen. 
+
+fire/environmental considerations: emergency power off switch, hvac shutdown, gas/chemical for fire supression. 
+
+fire classes: class A - common combustibles (wood, paper...), class b - liquids (oil, patrol...), class c - electrical, class d - metals, class k -cooking fats ( kitchen fires...)
+
+extinguishers: A - water, foam, dry chem. B - gas, foam, dry chem. C - CO2, dry chem., D - dry powders, K - wet chemicals.
+
+water-based systems: dry pipes (water released when needed), wet pipe (water released as soon as fire detection), deluge (large amounts of water), misting.
+
+electrical power: clean power, steady/uninterrupted, stable.
+
+power faults: blackout (longterm loss of power), fault (temp loss of power), brownouts/sag (decrease in voltage), spikes (increase in voltage), surge (longterm increase in voltage), interference/noise (EMI/RFI).
+
+controls - UPS system, generators, power line monitors.</pre>
 </div>
 <div created="20180901160525900" modified="20180902210426038" title="Getting Started with Reverse Engineering">
 <pre>https://app.pluralsight.com/library/courses/reverse-engineering-getting-started/table-of-contents
@@ -12441,7 +12514,71 @@ Morningstar, google finance, yahoo finance, nasdaq.
 
 Other: companies may have slack. companyname.slack.com for example.</pre>
 </div>
-<div created="20180806183636309" modified="20180912150712954" title="PluralSight Notes">
+<div created="20190104173018812" modified="20190104175845543" title="Performing OSINT Gathering on Employee Targets">
+<pre>https://app.pluralsight.com/library/courses/osint-gathering-performing-employee-targets/table-of-contents
+
+Workforce members: employees, non-employees.
+
+Employees: execs, management, staff
+
+Non-employees: partners, vendors, contractors
+
+forms of osint: passive (undetectable), semi-passive (normal traffic), active (detectable)
+
+employee data can be gathered from linkedin. 
+
+tools: raven (0x09AL github), does osint on linkedin
+
+google searches: &quot;company_name&quot; accepted, new job, hired, resigned, etc...
+
+site: bizjournals.com
+
+court records: google: county_name &quot;court records&quot;, wf_member_name filetype:pdf &quot;v.&quot; &quot;syllabus&quot; OR &quot;plaintiff&quot; OR &quot;defendant&quot; OR &quot;case no.&quot;
+
+Political donations: FEC, Lobbying disclosure act (LDA), OpenSecrets
+
+search for licenses or registries for target person.
+
+tools for organizing data: xmind, freemind
+
+sites: cogmap, crowdsourced, theorg.com, theofficialboard
+
+social media: inteltechniques + social network sites
+
+sites: namechk.com
+
+check shared file metadata
+
+tools: foca, metagoofil, apache tika, exif viewer
+
+sites: KnowEm.com, checkusernames.com
+
+podcasts: listennotes.com, castbox.fm, soundcloud.com
+
+password generation: cewl
+
+site: hunter.io for searching email addresses
+
+tools: theharvester, maltego
+
+site: pastebin, haveibeenpwned
+
+location sharing services: foursquare, swarm (foursquare rename), facebook, twitter, tripit, waze, yelp, glympse, findmyfriends, google maps.
+
+tools: cree.py
+
+meetings: meetup, eventbrite
+
+site: familytreenow.com
+
+phone searching: pipl, opencnam, spokeo, inteltechniques
+
+Email signature can be useful for IDing software or hardware.
+
+paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
+</pre>
+</div>
+<div created="20180806183636309" modified="20190104173010167" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -12476,7 +12613,11 @@ Other: companies may have slack. companyname.slack.com for example.</pre>
 
 [[Pentesting - 2]]
 
-[[General Security stufff]]</pre>
+[[General Security stuff]]
+
+[[General Security stuff 2]]
+
+[[Performing OSINT Gathering on Employee Targets]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
