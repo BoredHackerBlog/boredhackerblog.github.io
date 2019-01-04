@@ -206,6 +206,8 @@ Error message and password prompt
 
 <li>Docker</li>
 
+<li>Elasticsearch Notes</li>
+
 <li>Ethical Hacking: Buffer Overflow</li>
 
 <li>Exploitation Notes - 1</li>
@@ -8687,7 +8689,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="" title="$:/StoryList">
+<div list="[[Elasticsearch Notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9256,7 +9258,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20181228151622736" tags="" title="About">
+<div created="20180424234251670" modified="20190102153538701" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9279,6 +9281,8 @@ Notes:
 [[OSCP Notes]]
 
 [[HTB Notes]]
+
+[[Elasticsearch Notes]]
 </pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
@@ -9473,6 +9477,101 @@ IPVLAN: similar to MACVLAN. No mac address for container. Containers can't ping 
 ```
 docker network create -d ipvlan --subnet=192.168.1.0/24 --gateway=192.168.1.254 --ip-range=192.168.1.0/28 -o ipvlan_mode=l2 -o parent=eth0 ps-ip //ipvlan mode is layer2, should be there by default. eth0 is the network this is attached to
 ```</pre>
+</div>
+<div created="20190102153544577" modified="20190102175639720" title="Elasticsearch Notes">
+<pre>Notes for Elasticsearch 5.0.
+
+PUT index123
+
+GET index123
+
+Document addition -&gt; inverted index -&gt; available for search.
+
+Domain specific language (DSL) can be used for querying.
+
+index - basically a namespace for storing data. 
+
+relation db comparison - database:index, table:type, row:document, column:field
+
+GET /_cat/indices?v for list of index
+
+document - an entry in an index
+
+type - type of document/structure of document, for example: type person(name as string, age as int).
+
+field - inside of a document. document can have multiple fields, such as name and/or age.
+
+mapping info:
+
+GET /index/_mapping/document/field1,field2
+
+Clustering - Nodes: master-eligible, data node (there are more...)
+
+master-eligible - controls the cluster
+
+data node - data related operations
+
+shards - make up the index (default: 5 shards per index), distributed across elasticsearch nodes
+
+replica shard - copy of primary shard
+
+Shards and replica # can be specified at the time of index creation. Can't primary shard number after index is created. Replica number can be changed.
+
+elasticsearch data types: string, byte, short, integer, long, float, double, boolean, date. geolocation is supported as well.
+
+cluster health: GET /_cluster/health?pretty
+
+deleting index: DELETE /index123
+
+creating index with mapping: PUT /index123
+
+{ &quot;mappings&quot;:{....} }
+
+When adding a document, user can assign an ID or ES will do it.
+
+POST /_bulk for adding documents in bulk
+
+text - analyzed. 
+
+keyword - not analyzed. searched as extract value.
+
+GET /index123/_count - # of documents
+
+GET /index123/doctype/_count - # of documents of a specific document type
+
+{ &quot;query&quot; } can be added for specific searches. 
+
+size=#ofdocs returned, from=# from where to start listing.
+
+Updating documents: PUT replaces the whole document. POST just replaces the specific field.
+
+Domain specific language (DSL)
+
+match: match search data with field. multimatch: match search data with multiple fields.
+
+range queries: gte, gt, lte, lt.
+
+_score = score of the match. 
+
+term query - find exact match for a field.
+
+boosting: field^2, adds more weight to the score.
+
+exists searching - search based on field existance. (field existing with non-null value)
+
+metrics aggregation: math calculation on a value in a document. 
+
+bucket aggregation: group resuts into buckets. useful for histogram creation. 
+
+logstash: data source -&gt; input -&gt; filter -&gt; output -&gt; ES
+
+X-Pack: for security, monitoring, alerting, reporting, and graphs. installation: plugin needs to installed with elasticsearch and kibana.
+
+when interacting with ES after x-pack installation, un/pw need to be supplied.
+
+Beats: can ship data to ES or logstash. 
+
+File beat: log file, metric beat: agg data, packet beat: network data, winlog beat: windows logs</pre>
 </div>
 <div created="20180806180352818" modified="20180806183540022" title="Ethical Hacking: Buffer Overflow">
 <pre>Another Pluralsight course. https://www.pluralsight.com/courses/ethical-hacking-buffer-overflow
