@@ -156,6 +156,8 @@ Error message and password prompt
 
 <li>$:/temp/info-plugin</li>
 
+<li>$:/temp/search</li>
+
 <li>$:/themes/tiddlywiki/snowwhite</li>
 
 <li>$:/themes/tiddlywiki/vanilla</li>
@@ -193,6 +195,8 @@ Error message and password prompt
 <li>About</li>
 
 <li>Advanced Malware Analysis: Combating Exploit Kits</li>
+
+<li>Advanced MW analysis: Ransomware</li>
 
 <li>Binary Exploitation Notes</li>
 
@@ -235,6 +239,8 @@ Error message and password prompt
 <li>hash length extension attack</li>
 
 <li>HTB Notes</li>
+
+<li>Hunting for fileless malware</li>
 
 <li>ISITDTU CTF 2018 Quals</li>
 
@@ -8693,7 +8699,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Performing OSINT Gathering on Employee Targets]]" title="$:/StoryList">
+<div list="[[Hunting for fileless malware]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8741,6 +8747,9 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
         }
     }
 }</pre>
+</div>
+<div created="20190306161922594" modified="20190306161925087" title="$:/temp/search">
+<pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.15">
 <pre>{
@@ -9315,6 +9324,59 @@ Binary reconstruction: scylla. import REconstruction.
 Reporting: High level summary, technical details, remediation plan, attribution(maybe, can't be accurate).
 
 actionable threat data: TTP, Tools, Network/Host Artifacts, Domain names, IP, hashes.</pre>
+</div>
+<div created="20190306161854800" modified="20190306174026400" title="Advanced MW analysis: Ransomware">
+<pre>Link: 
+https://www.pluralsight.com/courses/advanced-malware-analysis-ransomware
+
+symmetric key- same key for enc/dec, asymmetric key - pub for enc, priv for dec...
+
+ransomware stages: key gen, file encryption, key sent to attacker, destory key from victim system.
+
+Broken ransomware: one key for all infections, broken crypto implementation
+
+Guestmount - vmdk mounting tool for linux.
+
+volatility + yarascan plugin - for scanning mem with yara rules. 
+
+check file hases, registry, for extension, recovery instruction files, check file headers (docx file has non-docx header), etc...
+
+yara - example: looking for PE files
+
+```
+rule detect_exe
+{
+meta: 
+description = &quot;exe&quot;
+
+strings:
+$mz = { 4D 5A }
+
+condition ( $mz at 0 )
+}
+```
+
+yara -r /rules /target
+
+md5 all the files: `find mnt/ -type f -print0 | xargs -0 md5sum &gt; md5_files.log`
+
+grep: `grep -f known_md5.txt -i md5_files.log`
+
+IR tools: procex, process hacker, procmon, sysmon, etc...
+
+volume shadow copy: win service that backs up files. Used with WIndows Backup. Allows users to restore files. `vssadmin delete shadows /all /quiet` and `wmic shadowcopy delete` are used to delete shadow copies. 
+
+MBR - master boot record: contains partition info &amp; bootloader. 
+
+MBR ransomware - corrupts bootloader, exec malicious code before OS is loaded, etc...
+
+killswitch: used to stop ransomware from encrypting. Can be a domain or file, etc...
+
+Propagation: network(exploit, file share, etc...), removable devices, etc...
+
+using files: shortcut files that start an exe or call cmd then call exe
+
+protection: detection, honeypots, patching, etc..</pre>
 </div>
 <div created="20180624224949924" modified="20180904183504159" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE).
@@ -10668,6 +10730,11 @@ masscan -p1-65535 10.10.10.95 --rate=1000 -e tun0 &gt; ports
 ports=$(cat ports | awk -F &quot; &quot; '{print $4}' | awk -F &quot;/&quot; '{print $1}' | sort -n | tr '\n' ',' | sed 's/,$//')
 nmap -Pn -sV -sC -p$ports 10.10.10.95
 ```</pre>
+</div>
+<div created="20190306174048371" modified="20190306175521666" title="Hunting for fileless malware">
+<pre>Link: https://www.pluralsight.com/courses/detecting-analyzing-fileless-malware
+
+</pre>
 </div>
 <div created="20180729155552850" modified="20180730010855868" title="ISITDTU CTF 2018 Quals">
 <pre>https://ctftime.org/event/642
@@ -12578,7 +12645,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190104173010167" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190306174042587" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -12617,7 +12684,11 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[General Security stuff 2]]
 
-[[Performing OSINT Gathering on Employee Targets]]</pre>
+[[Performing OSINT Gathering on Employee Targets]]
+
+[[Advanced MW analysis: Ransomware]]
+
+[[Hunting for fileless malware]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
