@@ -8701,7 +8701,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Endpoint log analysis]]" title="$:/StoryList">
+<div list="[[PluralSight Notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9641,9 +9641,27 @@ Beats: can ship data to ES or logstash.
 
 File beat: log file, metric beat: agg data, packet beat: network data, winlog beat: windows logs</pre>
 </div>
-<div created="20190307185631249" modified="20190307193202385" title="Endpoint log analysis">
+<div created="20190307185631249" modified="20190324221545858" title="Endpoint log analysis">
 <pre>Link: https://www.pluralsight.com/courses/getting-started-endpoint-log-analysis
 
+common log fields: machine id, sid/username, hostname, port, protocol, timestamp. 
+
+malicious indicators: failed login (4525 event id, also check sub status code (code *6A is bad password)). Services starting/running when it shouldn't. watch for powershell activity. User logons from multiple locations, C2 connections, irregular privileged account use, file permission changes, reg settings change. 
+
+logon type field: shows how the user logged in.
+
+Every user has different Security ID. 
+
+Important Win Event IDs:
+
+```
+4704 - privesc?
+4697 - app installation
+4698 - persistent service
+4657 - reg key modification
+7036 - app with stopped state
+7034 - app terminated unexpectedly
+```
 </pre>
 </div>
 <div created="20180806180352818" modified="20180806183540022" title="Ethical Hacking: Buffer Overflow">
@@ -12674,7 +12692,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190307185627286" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190324221621726" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
