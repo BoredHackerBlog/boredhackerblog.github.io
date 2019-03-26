@@ -244,6 +244,8 @@ Error message and password prompt
 
 <li>Hunting for fileless malware</li>
 
+<li>Identifying and Defeating Packing</li>
+
 <li>ISITDTU CTF 2018 Quals</li>
 
 <li>Malicious document analysis</li>
@@ -8701,7 +8703,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[PluralSight Notes]]" title="$:/StoryList">
+<div list="[[Identifying and Defeating Packing]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -10783,6 +10785,70 @@ DeepBlueCLI - find suspicious command execution.
 
 </pre>
 </div>
+<div created="20190325234021987" modified="20190326002706064" title="Identifying and Defeating Packing">
+<pre>https://www.pluralsight.com/courses/malware-analysis-identifying-defeating-packing
+
+Why Malware Authors pack code:
+Obfuscation - make analysis difficult.
+Packing/packed - compression. Analysis can’t be done until unpacked/extracted
+Delay analysis
+
+Packing affects static and dynamic analysis. 
+
+Why unpack? ID packing/signs of packing, defeat packing, deeper analysis/better IOCs
+
+Packing has legit uses for IP protection, software compression, etc…
+
+Common packing scenarios: 
+commercial/opensource tools- IDed through signatures, payload is compressed/encrypted. 
+
+Crimewave or lesser known packers-difficult to detect
+
+Modular unpackers - multiple stages, difficult to trace and unpack
+
+Tools: PEiD, PE Studio, strings
+
+Detecting signs of packing:
+Strings - presence or absence of certain strings.
+Imports - imports or lack of imports. Not a lot of imports can be suspicious.
+Sections - abnormal section names. # of sections.
+Entropy - (0-8.0), high levels of entropy may indicate packing
+Signature - PE file analysis tools may detect packer based on signatures
+
+PE File format: headers, sections. 
+Headers have info about the file.
+Sections contain resources, code, imports, exports, variables, etc…
+
+PEStudio: indicators - abnormality of the PE file (ranked)
+
+Sections: .text - actual code that will be executed. Entry point usually points in this section.
+
+Windows functions: LoadLibraryA, GetProcAddress for loading libraries and resolving function. VirtualProtect is for messing with memory.
+
+UPX will have sections UPX0, UPX1, UPX2 and high entropy.
+
+PE Studio and PEiD can use signatures to detect packers (signatures are under \xml\signatures.xml, XX is wildcard, ep_only looks at entry point only, instead of the whole binary)
+
+PEiD signatures are in users.txt. PEiD does contain plugins, however, some of them they may execute the code. 
+
+Detect-It-Easy - also used for detection. Similar to PEiD but has more features. Allows for login in signatures.
+
+PEStudio uses signatures from: handlers.sans.org/jclausing/userdb.txt
+
+UPX unpacking: ups -d packed.exe -o unpacks.exe
+
+Tool: Exeinfo PE - also useful for signature checking. Also mentions how to unpack.
+
+Entropy: measure of randomness. 0.0-8.0. Calculated using Shannons forumla. Entropy can be measure on the whole file or sections. Around 7.0 is packed sample. 
+
+Section names are arbitrary. Common names: .text/CODE, .rdata, .bss, .reloc.
+
+Imports: Imports code from DLL's/system libraries. Libraries are dynamically linked, runtime linked, statically linked. 
+
+Tools: PackerAttacker (built with Detours lib from Microsoft), Cuckoo (process memory may contain unpacked version of the malware).
+
+Manual unpacking:</pre>
+</div>
 <div created="20180729155552850" modified="20180730010855868" title="ISITDTU CTF 2018 Quals">
 <pre>https://ctftime.org/event/642
 
@@ -12692,7 +12758,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190324221621726" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190325234011970" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -12737,7 +12803,9 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[Hunting for fileless malware]]
 
-[[Endpoint log analysis]]</pre>
+[[Endpoint log analysis]]
+
+[[Identifying and Defeating Packing]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
