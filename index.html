@@ -208,6 +208,8 @@ Error message and password prompt
 
 <li>CTFZone 2018 Quals</li>
 
+<li>Detecting Malicious Traffic with Signature and Session Analysis</li>
+
 <li>Docker</li>
 
 <li>Elasticsearch Notes</li>
@@ -267,6 +269,8 @@ Error message and password prompt
 <li>Malware Analysis Notes - 7</li>
 
 <li>Malware Analysis Notes - 8</li>
+
+<li>Memory Forensics Notes</li>
 
 <li>Microcorruption</li>
 
@@ -8703,7 +8707,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Identifying and Defeating Packing]]" title="$:/StoryList">
+<div list="[[HTB Notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8752,7 +8756,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
     }
 }</pre>
 </div>
-<div created="20190306161922594" modified="20190306161925087" title="$:/temp/search">
+<div created="20190306161922594" modified="20190401000109190" title="$:/temp/search">
 <pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.15">
@@ -9275,7 +9279,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20190102153538701" tags="" title="About">
+<div created="20180424234251670" modified="20190415234849689" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9300,6 +9304,8 @@ Notes:
 [[HTB Notes]]
 
 [[Elasticsearch Notes]]
+
+[[Memory Forensics Notes]]
 </pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
@@ -9507,6 +9513,20 @@ ihex example taken from wiki
 :00000001FF
 ```
 
+</pre>
+</div>
+<div created="20190401000225128" modified="20190406200419508" title="Detecting Malicious Traffic with Signature and Session Analysis">
+<pre>https://www.pluralsight.com/courses/set-detecting-malicious-traffic-signature-session-analysis
+
+in security onion, so-replay replays a pcap (date and time are current system date and time) so-import allows importing of pcaps (original timestamp). 
+
+signature analysis: relies on known patterns. 
+
+session analysis: analysis based on metadata and patterns as well.
+
+The Hive Project- tool for doing IR.
+
+ja3: uses data points from the ssl connection to create a hash. 
 </pre>
 </div>
 <div created="20180904160233769" modified="20180904172241626" title="Docker">
@@ -10665,7 +10685,7 @@ for i in range(8,33): #count from 8 to 32, since signkey length is randomly from
 
 ```</pre>
 </div>
-<div created="20181228151627892" modified="20181228165739289" title="HTB Notes">
+<div created="20181228151627892" modified="20190428175934076" title="HTB Notes">
 <pre>Hackthebox notes/things learned
 
 privesc:
@@ -10756,6 +10776,13 @@ masscan + nmap (learned from jerry writeup by egre55)
 masscan -p1-65535 10.10.10.95 --rate=1000 -e tun0 &gt; ports
 ports=$(cat ports | awk -F &quot; &quot; '{print $4}' | awk -F &quot;/&quot; '{print $1}' | sort -n | tr '\n' ',' | sed 's/,$//')
 nmap -Pn -sV -sC -p$ports 10.10.10.95
+```
+
+getting code exec with variable:
+
+```
+var = $(ls -l)
+echo $var
 ```</pre>
 </div>
 <div created="20190306174048371" modified="20190307173155688" title="Hunting for fileless malware">
@@ -10785,7 +10812,7 @@ DeepBlueCLI - find suspicious command execution.
 
 </pre>
 </div>
-<div created="20190325234021987" modified="20190326002706064" title="Identifying and Defeating Packing">
+<div created="20190325234021987" modified="20190331010620319" title="Identifying and Defeating Packing">
 <pre>https://www.pluralsight.com/courses/malware-analysis-identifying-defeating-packing
 
 Why Malware Authors pack code:
@@ -10847,7 +10874,24 @@ Imports: Imports code from DLL's/system libraries. Libraries are dynamically lin
 
 Tools: PackerAttacker (built with Detours lib from Microsoft), Cuckoo (process memory may contain unpacked version of the malware).
 
-Manual unpacking:</pre>
+Manual unpacking:
+
+PE file in memory: look for DOS Stub (this prog cannot be run in dos mode..) (not reliable)
+Using debugger: break on memory allocations (VirtualAlloc and VirtualAllocEx). 
+Windbag: x /D /f KERNEL32!v* (search funds)
+Monitor EAX/RAX registers to see return values from allocation. 
+Windbag: !vprot for looking into permissions.
+
+Use breakpoints for virtualalloc, step-out, check eax for the allocation address, examine memory, !vprot gives more info about the allocation. RWX memory allocation can be interesting to look at. 
+
+Windbg: Dd (dump dwords) db (dump bytes, similar to hex)
+s -a 0 -L?4ffffff “This program” - search for This program.
+
+Base of the allocation is important (can be found using vprot). 
+
+Process Hacker (sys internals) can be used to find the memory region and save the memory.
+
+Looking in a disassembler: lack of epilogue, (jmp instead of ret and etc.), look for push-ret</pre>
 </div>
 <div created="20180729155552850" modified="20180730010855868" title="ISITDTU CTF 2018 Quals">
 <pre>https://ctftime.org/event/642
@@ -11684,6 +11728,20 @@ Manual symbol resolution: shellcode must find kernel32.dll in memory, parse it a
 Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
+</div>
+<div created="20190415234951946" modified="20190416003034937" title="Memory Forensics Notes">
+<pre>Windows Memory Forensics - Black Hills infosec
+ https://www.youtube.com/watch?v=cYphLiySAC4
+
+rekall: dlllist gives command line invocation info. 
+
+check page files as well, if malware is in a page file and not in memory.
+
+Check network connections, check how the process started (CLI Invocation)
+
+metsrv.dll - meterpreter library.
+
+</pre>
 </div>
 <div created="20180808162525879" modified="20180809210140598" title="Microcorruption">
 <pre>https://microcorruption.com/
@@ -12758,7 +12816,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190325234011970" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190401000215194" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -12805,7 +12863,9 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[Endpoint log analysis]]
 
-[[Identifying and Defeating Packing]]</pre>
+[[Identifying and Defeating Packing]]
+
+[[Detecting Malicious Traffic with Signature and Session Analysis]]</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
