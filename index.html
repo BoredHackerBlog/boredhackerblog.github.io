@@ -226,6 +226,10 @@ Error message and password prompt
 
 <li>Exploitation Notes - 4</li>
 
+<li>Forensics</li>
+
+<li>Forensics Notes 1</li>
+
 <li>General Security stuff</li>
 
 <li>General Security stuff 2</li>
@@ -393,8 +397,8 @@ java bytecode: Instruction Set Architecture (ISA). bytecode has one byte opcode 
 
 Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 </div>
-<div created="20180519181419479" modified="20180529153808698" title="$:/config/RelinkOnRename">
-<pre>no</pre>
+<div created="20180519181419479" modified="20190514021746301" title="$:/config/RelinkOnRename">
+<pre>yes</pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="" description="TiddlyWiki5 core" list="readme" plugin-priority="0" plugin-type="plugin" title="$:/core" type="application/json" version="5.1.15">
 <pre>{
@@ -8707,7 +8711,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[HTB Notes]]" title="$:/StoryList">
+<div list="About" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9279,7 +9283,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20190415234849689" tags="" title="About">
+<div created="20180424234251670" modified="20190514021725540" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9305,7 +9309,7 @@ Notes:
 
 [[Elasticsearch Notes]]
 
-[[Memory Forensics Notes]]
+[[Forensics]]
 </pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
@@ -10064,6 +10068,167 @@ taint analysis: tracing user input and it's impact on execution
 symbolic execution + sat/smt solving: providing specific conditions can exist in execution to manifest diffcult bugs. z3, smt-lib
 
 cyber reasoning systems.</pre>
+</div>
+<div created="20190514021730056" modified="20190514021736887" title="Forensics">
+<pre>[[Memory Forensics Notes]]
+
+[[Forensics Notes 1]]</pre>
+</div>
+<div created="20190514003531537" modified="20190514021748516" title="Forensics Notes 1">
+<pre>Notes from Incident Response &amp; Computer Forensics, Third Edition (https://www.amazon.com/Incident-Response-Computer-Forensics-Third/dp/0071798684) Bunch of chapters and sections were skipped. 
+
+Windows Commands and data collected:
+
+```
+date/time - system date and time
+systeminfo - basic system info
+net user - user accounts
+net group - groups
+ipconfig /all - network interfaces
+route print - routing table
+arp -a - arp table
+ipconfig /displaydns - dns cache
+netstat -abn - network connections
+```
+
+Tools to collect more info:
+
+```
+diamondcs openports
+sysinternals tools
+nirsoft driverview, openedfilesview
+microsoft pslist
+microsoft logparser
+```
+
+Memory dump tools:
+
+```
+ftk imager lite
+mantech mdd
+mandiant memoryze
+moonsols windows memory toolkit
+for VMs: vmware: vmem files, virtualbox: vboxmange debugvm dumpvmcore.
+```
+
+NTFS uses master file table (MFT) to store file metadata (different from software metadata associated with files). This includes timestamps, size, attributes and perms, etc... 
+
+Each NTFS volume/partition has its own MFT. 
+
+MFT entry includes: 
+
+```
+record type - file or dir?
+record # - int # for the entry. #'s grow sequentially with new entries.
+parent record # - record # of parent dir (immediate parent dir, not full path)
+active/inactive flag - for deleted files or dirs, entry is marked inactive. The entry will eventually get replaced.
+attributes - file metadata
+```
+
+timestamps: MACE = Modified, Accessed, Created, Entry modified. 
+
+Two attributes contain the MACE timestamp. $SI or standard_information and $FN or file_name. $SI is accessable from Windows API (it can be easily modified)
+
+```
+modified - last time the contents were changed
+accessed - last time file was read
+created - when file was created
+entry modified - MFT entry modification time (not the file content)
+```
+
+Win vista, 7, server 2008, and later do not update accessed tiemstamp by default. Registry key that controls this is: `HKLM\CurrentControlSet\Control\FileSystem\NtfsDisableLastAcccessUpdate`. If this isn't set, ntfs still may delay updates for accessed timestamp. 
+
+Timestomping: modifying timestamps. setmace app can modify timestamps, so can malware.
+
+Indirectly modifying $FN and $SI: modify SI timestamps, move file to new directory (in the same volume), modify $SI of the file in the new location, move file back to original location, modify $SI again. This is sometimes called double-timestomping.
+
+If $FN and $SI don't match does not mean file was messed with. copying files from CD or extracting files can result in $SI matching the source. 
+
+ADS / alternate data streams: tools exist to find this. also, `dir /r` works too.
+
+MFT analysis tools:
+
+```
+sleuth kit
+mft2csv
+analyzemft
+plaso
+```
+
+INDX attributes ($I30): can be used to find files that existed and isn't tracked by MFT. It contains file name, parent dir MFT record #, MACE timestamps, physical/logical size.
+
+Volume Shadow Copy (VSC): snapshot of files. 
+
+Prefetch: introduced in win xp. for performance reasons. files stored in `systemroot\Prefetch` with .pf extension. 
+
+```
+NTOSBOOT-B00DFAAD.pf - system boot prefetch. Name wont change.
+Layout.ini - contains data used by disk defrag
+AppName-###..pf - each file represents an exe file that ran at least once. # are file path hashes. If same exe ran from two diff locations, two pf files will be made.
+```
+
+Analysis of pf files: proof that the app ran and when it ran. Examine $SI. File created - first ran. Last modified - most recent run time. prefetch file doesn't provide path info/where the file specifically ran from. pf files may refer to referenced files. Tool: winprefetchview by nirsoft.
+
+Event logs: contains a whole bunch of stuff. Located in `systemroot\system32\config\ or systemroot\system32\winevt\logs` For analysis, know the event log ids. They'll be different across OSes.
+
+Logon event:
+
+```
+user name: account used to log on
+domain: associated domain or system hostname
+login id: session id, unique
+logon type: code referencing type of logon. 
+logon types:
+interactive - login from console/physical computer.
+network - over the network (net use, IIS web server, etc..)
+batch - scheduled task
+service - service logged on using configured creds
+proxy - who knows...
+unlock - unlocked desktop
+networkcleartext - basic auth on web servers
+newcredentials - the user assumed new credentials for a remote connection 
+remoteinteractive - terminal services/RDP
+cacheinteractive - creds that were validated locally rather than contacting domain controller
+
+logon process - process that initiated logon event. 
+auth package: auth protocol (ntlm, kerberos, etc...)
+workstation name - source system from which logon originated
+source network address - source IP from which logon originated
+```
+
+```
+net use generates network logon type 
+psexec generates network logon type
+rdp generates remoteinteractive
+IIS login generates network logon
+```
+
+scheduled tasks: auto execute apps on specific date/time or recurringly. winapi can be used to create tasks. at or schtasks commands can also be used. .job files are stored in `systemroot\Tasks`. logs are in `systemroot\schedlgu.txt and systemroot\tasks\schedlgu.txt`.  analysis tools: hex editor. job file parser (gleeda.blogspot)
+
+Scheduled tasks are logged in event logs.
+
+Registry: location: `systemroot\system32\config` contains hives: SYSTEM, SECURITY, SOFTWARE, SAM, and DEFAULT. user-specific hives: NTUSER.DAT and USRCLASS.DAT.
+
+Registry timestamps: each key has lastwritetime when it's created and update whenever any values directly under a key are added, removed, or changed. lastwritetime will not change for parents key. 
+
+Registry contains bunch of stuff (Book page #320 for all the keys). It contains basic system info, network info, user and security info, and etc...
+
+Shim Cache: also known as Application Compatibility Cache. Used to track exes and scripts that require special compatibility settings to properly run. Information contains: file names and full paths, $SI last modified, size, file ran or not. 
+
+Autorun keys: For automatically loading exes, dlls. 
+
+Windows services: they're services and they run. Diff types of services run with diff privs. Service info is stored in the registry.
+
+Run and RunOnce keys: for running executables at boot or login.
+
+Active Setup: used for software installation purposes. 
+
+AppInit DLL's: dlls that will automatically be loaded when user-mode app linked to user32.dll is launched. 
+
+Browser Helper Objects: For add-ons/plugins for Internet Explorer. 
+
+Tool: Redline has Persistence analyzer. 
+</pre>
 </div>
 <div created="20180912150725066" modified="20190104155848964" title="General Security stuff">
 <pre>https://app.pluralsight.com/library/courses/set-detecting-network-anomalies-behavioral-analysis/table-of-contents
