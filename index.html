@@ -230,6 +230,8 @@ Error message and password prompt
 
 <li>Forensics Notes 1</li>
 
+<li>Forensics Notes 2</li>
+
 <li>General Security stuff</li>
 
 <li>General Security stuff 2</li>
@@ -8711,7 +8713,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="About" title="$:/StoryList">
+<div list="[[Forensics Notes 2]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -10069,10 +10071,12 @@ symbolic execution + sat/smt solving: providing specific conditions can exist in
 
 cyber reasoning systems.</pre>
 </div>
-<div created="20190514021730056" modified="20190514021736887" title="Forensics">
+<div created="20190514021730056" modified="20190514232036279" title="Forensics">
 <pre>[[Memory Forensics Notes]]
 
-[[Forensics Notes 1]]</pre>
+[[Forensics Notes 1]]
+
+[[Forensics Notes 2]]</pre>
 </div>
 <div created="20190514003531537" modified="20190514021748516" title="Forensics Notes 1">
 <pre>Notes from Incident Response &amp; Computer Forensics, Third Edition (https://www.amazon.com/Incident-Response-Computer-Forensics-Third/dp/0071798684) Bunch of chapters and sections were skipped. 
@@ -10229,6 +10233,79 @@ Browser Helper Objects: For add-ons/plugins for Internet Explorer.
 
 Tool: Redline has Persistence analyzer. 
 </pre>
+</div>
+<div created="20190514232100110" modified="20190515000701978" title="Forensics Notes 2">
+<pre>Shellbags: Related to Windows Explorer. keys are set each time a user browses to local or network folder in Explorer. The keys are still there even if directory is deleted. 
+
+```
+location: win7, server 2008: hkey_users\sid_classes\local settings\software\microsoft\windows\shell
+```
+
+Info gained: full directory paths accessed, date and time of access (last modified time), and modified, accessed, and created times of each path (access time).
+
+UserAssist: apps launched via Windows Explorer (or Run). This data is used to populate Start Menu. Info gained: full path to each exe, # of times prog ran, last execution time. Does not include info about programs launched via command line.
+
+MUICache: for programs that were launched. includes exes and batch scripted. 
+
+MRU/Most Recently Used: Stored by Windows and some apps. 
+
+Start Menu Run MRU: stuff executed via Run.
+
+RecentDocs: list of recently opened files. 
+
+Internet Explorer TypedURLs and TypedPaths: Used by IE to populate address bar and support auto-complete. 
+
+Remote Desktop MRU: History of recent RDP connections.
+
+Other artifacts: 
+
+LNK files: shortcut files. It may be useful to check recent files to see shortcuts to recently used files.
+
+Jump Lists: Added with Win7. Right clicking on a taskbar icon for an app can list recently opened files. Jump list data is stored with .automaticDestinations-ms and .customDestinations-ms extensions. 
+
+Recycle Bin: deleted files... Check \$Recycle.Bin subdirs for each account/SID exist. INFO2 file tracks file metadata including physical size, timestamp of deletion (UTC), and original file name and path.
+
+Memory forensics: 
+
+Pagefie: Part of Windows memory management. Pagefile is stored as systemdrive\pagefile.sys by default. This can be changed. 
+
+Crash dumps: 
+
+```
+Kernel Memory dump- contains kernel's read/write memory pages, process list, and loaded drivers at the time of the crash.
+minidump-contains loaded drivers, processor context, kernel call stack, and metadata for haulted process and thread. 
+complete memory dump - full image of physical memory.
+```
+
+Hibernation files: Full contents of physical memory are saved to the disk.
+
+Memory analysis: Tools will extract process info from EPROCESS block. Information includes PPID, PID, process name, process path, process command line args, start and exit times, # of threads and handles.
+
+Handles: access to Windows objects (files, reg, tokens, etc...) obtained through API. 
+
+Memory artifacts: network connections, loaded drivers, command history, strings, and credentials.
+
+In-memory attacks:
+
+process injection: malicious injecting process causes legitimate process (injected) to load and execute code. 
+
+Hooking: allows for interception, viewing, and modification of function calls and returned data. Often used by rootkits.
+
+Hooking examples: Import Address Table (IAT) hooking. Interrupt Descriptor Table (IDT) and System Service Dispatch Table (SSDT) hooking.  Volatility has apihoooks plugin which can be useful.
+
+Persistence methods: 
+
+Startup folders: startup folder where you can place files and have them launch at login.
+
+Recurring tasks: scheduled tasks. 
+
+System binary modification: modifying a system binary by injection code. 
+
+Sticky keys attack: replacing sethc or utilman with cmd.exe. Or setting cmd.exe as a debugger for sethc.exe via the registry. (doesn't have to be cmd.exe, could be anything)
+
+DLL load-order hijacking: KnownDLLs registry to store where to load dll from. Hijacking can occur when Windows uses a certain locating method when searching for DLL that isn't in KnownDLLs. Legitimate application ends up loading a malicious DLL at the end.
+
+Answering common investigative questions : Page 376-379.</pre>
 </div>
 <div created="20180912150725066" modified="20190104155848964" title="General Security stuff">
 <pre>https://app.pluralsight.com/library/courses/set-detecting-network-anomalies-behavioral-analysis/table-of-contents
