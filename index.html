@@ -336,6 +336,10 @@ Error message and password prompt
 
 <li>Webapp - 3</li>
 
+<li>Windows 10 Internals - Threads, Memory and Security</li>
+
+<li>Windows 10 Internals: Systems and Processes</li>
+
 <li>Windows Internals Notes</li>
 
 </ul>
@@ -8715,7 +8719,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Gray hat hacking Notes]]" title="$:/StoryList">
+<div list="[[Windows 10 Internals - Threads, Memory and Security]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8764,7 +8768,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
     }
 }</pre>
 </div>
-<div created="20190306161922594" modified="20190401000109190" title="$:/temp/search">
+<div created="20190306161922594" modified="20190519180926950" title="$:/temp/search">
 <pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.15">
@@ -13690,7 +13694,95 @@ reversing or concatenating strings.
 
 Tools: sqlinjectme, burp, havij, sqlmap.</pre>
 </div>
-<div created="20180516170408208" modified="20180907182611525" tags="" title="Windows Internals Notes">
+<div created="20190519181120081" modified="20190519220821206" title="Windows 10 Internals - Threads, Memory and Security">
+<pre>Address Space Load Randomization (ASLR): System DLL's loaded into pseudo-random addresses. Makes it harder for shellcode to locate API.
+
+Defeating ASLR: FS/GS register -&gt; TEB -&gt; PEB -&gt; List of Modules+address -&gt; Ntdll or KernelBase -&gt; Parse PE -&gt; locate GetProcAddress. Use GetProcAddress to access any other functions. 
+
+Security:
+
+Winlogon: auth/logging in. handles ctrl+alt+del. Uses logonUI.exe. 
+
+kernel executive - Security Reference Monitor. does security checks. used when some thread tries to access some resource.
+
+lsass - local security auth service. has services: AD, netlogon, LSA server, SAM server. msv1_0.dll &amp; kerberos.dll, used to communicate with AD.
+
+Event Logger: logs events. 
+
+Credential Providers: LogonUI shows the logon UI. Microsoft provides providers that handle smartcard, face scanner, etc..
+
+Logon sequence: Winlogon calls LoginUI to get security info (login, fingerprint, etc..), info is sent to Lsass. Lsass decides if it's local login or AD, etc.., If login successful, security info related to the user is loaded. Lsass creates a token for this session. Winlogon attaches the token to the first process in the session. 
+
+Windows object protection: objects are files, devices, pipes, jobs, processes, etc...
+
+Object is created with a security descriptor. If caller tries to access an object, the system checks if it's allowed or not.
+
+Security Identifier (SID): users, groups, computers, etc... SID is statistically unique. 
+
+There are well-known SIDs. SIDs that are common.
+
+Access Tokens - kernel object that has security context for a threat/process. 
+
+Every process has a Primary Token.
+
+Token is created with LogonUser function. CreateProcessAsUser can be used to create process as another user.
+
+Privileges: right of an account or token to perform system-level operation. 
+
+Security Descriptor: Owner SID, Discretionary Access Control List (DACL) specifies who has what access to the object. System Access Control List (SACL) specifies which operations by which users should be logged into security audit log. 
+
+Credential Guard - save creds in lsaiso Trustlet instead of lsass. This stops mimikatz. 
+
+Windows Defender Application Guard - allows browser (Edge) to run in a sandbox. 
+
+User Acess Control (UAC) : Goals - Running apps with standard user rights. Allow apps to elevate to admin rights when needed. 
+
+`C:\Users\USER\AppDatra\Local\VirtualStore` UAC virtualized process saves stuff here.
+
+Admin approval mode: when they login, two tokens are created. When process needs to run elevated, admin user is asked yes or no.
+
+Running elevated: right click file, run as admin. Use Shellexecuteex api with runas. Use manifest file for requesting admin rights. 
+
+Process Elevation: Explorer (standard user) -&gt; ShellExecute(app.exe) -&gt; AppInfoService -&gt; Consent.exe -&gt; CreateProcessAsUser -&gt; App.exe runs as admin. Reparenting happens, which means App.exe has Explorer as its parent. 
+
+Control Flow Guard (CFG): prevent arbitrary shellcode exec. </pre>
+</div>
+<div created="20190519181115512" modified="20190519203740301" title="Windows 10 Internals: Systems and Processes">
+<pre>app.manifest file embedded in .cs .net apps contains info about what OS the app can run on and other various things.
+
+Process: has private address space, private handle table to objects, threads.
+
+system arch: user process -&gt; subsystem dll -&gt; ntdll.dll -&gt; kernel executive -&gt; device drivers, kernel, win32k.sys -&gt; hardware abstraction layer.
+
+Kernel Patch Protection (PatchGuard) - guards against changing of critical kernel components. 
+
+Virtualization based security: Virtual trust levels. VTL 0 = &quot;normal&quot;, (usermode/kernel mode), VTL 1 = &quot;secure&quot;, (isolated user mode, secure kernel). Requires VT-x or AMD-V, Second Level Address Translation, IO MMU.
+
+VBS features: 
+
+Credential Guard - creds are saved in Trustlets (lsaiso.exe) instead of lsass.exe. 
+
+Device Guard - only allow trusted apps to execute.
+
+Secure drivers with the Secure Driver Framework - 3rd party drivers running in the secure kernel.
+
+New system processes: Secure kernel and memory compression. 
+
+Subsystems: Windows Subsystem for Linux. Ubuntu is running under the covers. 
+
+Bash.exe uses LXSS manager service, which communicates with LXCore / LXSS. /bin/bash also communicates with LXCore/LXSS. 
+
+console management: csrss is no longer involved. conhost.exe is spawned by console process (uses conhostv2.dll). functionality is provided by console driver (condrv.sys).
+
+cmd.exe spawns conhost.exe. conhost.exe has file handle to \Device\ConDrv.
+
+Protected process: can be opened with limited access (even for admins). Can load protected-signed DLLs. 
+
+Protected Processes Light: extend protected process feature. Allow third-party process to run protected. example: AV processes. Protection type info is stored in EPROCESS. These processes are not protected from kernel, only user mode (including admin).
+
+Windows Silos: basically containers.</pre>
+</div>
+<div created="20180516170408208" modified="20190519181109521" tags="" title="Windows Internals Notes">
 <pre>PluralSight has three Windows Internals courses presented by Pavel Yosifovich. 
 
 You can find them here: https://www.pluralsight.com/courses/windows-internals
@@ -13730,7 +13822,9 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 
 [[15. Device Drivers]]
 
-Viewing the course is recommended. </pre>
+[[Windows 10 Internals: Systems and Processes]]
+
+[[Windows 10 Internals - Threads, Memory and Security]]</pre>
 </div>
 
 </div>
