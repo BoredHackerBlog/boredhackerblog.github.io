@@ -310,6 +310,8 @@ Error message and password prompt
 
 <li>PluralSight Notes</li>
 
+<li>Practical Binary Analysis notes</li>
+
 <li>Programming notes</li>
 
 <li>Security for Hackers and Developers Notes</li>
@@ -8719,7 +8721,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Windows 10 Internals - Threads, Memory and Security]]" title="$:/StoryList">
+<div list="[[Practical Binary Analysis notes]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9291,7 +9293,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20190517000825472" tags="" title="About">
+<div created="20180424234251670" modified="20190525175702167" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9319,7 +9321,9 @@ Notes:
 
 [[Forensics]]
 
-[[Gray hat hacking Notes]]</pre>
+[[Gray hat hacking Notes]]
+
+[[Practical Binary Analysis notes]]</pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
 <pre>Tools: JS Detox, Cerbero Profiler, Bytecode viewer, JPEXS Free Flash Decompiler, FlashDevelop, Wepawet (UCSB), Firefox addon javascript deobfuscator.
@@ -13173,6 +13177,119 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 [[Identifying and Defeating Packing]]
 
 [[Detecting Malicious Traffic with Signature and Session Analysis]]</pre>
+</div>
+<div created="20190525175715809" modified="20190527221936710" title="Practical Binary Analysis notes">
+<pre>Book: https://nostarch.com/binaryanalysis
+
+C compile process: Source+header files -&gt; preprocessor -&gt; compiler -&gt; assembler -&gt; object files -&gt; linker -&gt; binary.
+
+`gcc -E -P file.c` -E stop after preprocessing, -P omit debugging info in the output.
+
+Output from compilation phase is assembly with symbolic info. To get assembly file `gcc -S -masm=intel file.c` -S tells gcc to store assembly file (.s extension) on disk. masm=intel formats assembly in intel syntax instead of att. 
+
+assembly phase: input is assembly file, output is object files/modules. (.o extension). `gcc -c file.c` can also be used to generate an object file.
+
+Object files &quot;relocatable&quot; they dont need to be placed at a specific address in the memory. They can be moved around without breaking the code. 
+
+linking phase: linker takes object files and creates a single executable, which needs to be loaded at a specific memory address.  
+
+Static libraries (.a extension) are merged into executable. Dynamic (shared) libraries are shared in memory/they're loaded into memory once. References to these libraries are resolved when the binary is loaded into memory and executed. 
+
+interpreter (/lib64/ld-linux...so.., can be see in output from file command) is the dynamic linker that will be used to resolve finaly dependencies on dynamic/shared libs. 
+
+Looking at symbols: `readelf --syms bin` Output shows type of symbol and code size. 
+
+stripping symbols: `strip --strip-all bin` Symbols for resolving dynamic libraries will be left. 
+
+Disassembly: `objdump -sj .rodata object` shows data from .rodata section. .rodata = read-only data, which stores constants. 
+
+`readelf --relocs object` shows relocation symbols. This information is for the linker to resolve things.
+
+.text section is where the main executable code is. Main function and other functions are in this section. 
+
+When a binary is ran. OS sets up a process and virtual address space. OS maps interpreter into process's virtual memory. On linux interpreter is typically a shared lib called ld-linux.so. ELF binaries come with section .interp which specifies path to the interpreter that's to be used. `readelf -p .interp a.out` to see the interpreter path.
+
+ELF files consist of 4 components: executable header, program headers(optional), sections, and section headers(optional). 
+
+Executable header contains info about the ELF file. ELF file header: /usr/include/elf.h. `readelf -h bin` to see executable header.  e_entry field shows execution entry point. e_shstndx contains index of the header associated with strings table called .shstrtab. 
+
+Section headers: code and data are divided into sections. no predetermined structure. structure varies depending on contents. 
+
+`readelf --sections --wide bin` show sections. Flags show more information about the sections properties, for example if it's executable or not. .init and .fini sections: both contain executable code. .init code runs before main code is executed. .fini runs after main program is done. 
+
+.text section is where the main code is located. This is where user defined code is located. 
+
+C program always contains a main function, however, entry point doesn't always point to the main function, instead it points to _start function. _start function moves address of main function to rdi then calls `__libc_start_main`, which calls main and user code starts executing.
+
+.rodata = read only data. It stores constants. Default values of initialized variables are stored in .data (writable section). 
+
+lazy binding: relocations are not done right away when binary is loaded. they're done when first reference to unresolved location is made, which is called lazy binding.  &quot;Lazy binding (also known as lazy linking or on-demand symbol resolution) is the process by which symbol resolution isn't done until a symbol is actually used. Functions can be bound on-demand, but data references can't.&quot; -(http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.prog%2Ftopic%2Fdevel_Lazy_binding.html)
+
+Lazy binding is implemented with .plt (procedure linkage table) and .got (global offset table). `objdump -M intel --section .plt -d bin` disassemble .plt section. 
+
+libbfd (Binary File Descriptor) allows parsing binary file formats. ELF and PE files are supported. Has 3 classes: Binary, Section, and Symbol. function: load_binary to load a file, unload_binary to unload a file.
+
+`ldd` used to find shared object dependencies. `man ascii` for looking up hex and ascii codes. `readelf -h file` too look at elf header. 
+
+size of the complete binary = e_shoff + (e_shnum x e_shentsize). e_shoff = Start of section headers, e_shnum = number of section headers, e_shentsize = size of section headers. 
+
+`nm file` to get symbols. `nm -D file` parse dynamic symbol table, for symbols. `--demangle` can be used to get demangled function names. 
+
+`c++filt mangled_func_name` will return demangled function name with args it takes.
+
+Use LD_LIBRARY_PATH to tell linker to search for shared object files in a certain path.
+
+`strace` lets you see system calls for an app. `ltrace` lets you see library calls for an app. `ltrace -i -C` -i will point instruction pointer for when the call is made. -C will demangle function names.
+
+Static disassembly: linear, recursive. 
+
+Dynamic analysis: logging with gdb: `set logging on` and `set logging redirect on`
+
+Symbolic execution: Basically executing an application with symbolic values. variables, registers, or memory states are represented using symbols.
+
+Function detection: Binary with symbol table containing function names and metadata can be used. Additionally, signature detection can be used to detect funtion prologues and epilogues. (push ebp; move ebp, esp.... leave;ret)
+
+Control-flow graph: Display execution flow within a function. It can display if/else, loops, and etc..
+
+Call graphs: Similar to CFG but display relationships between functions. 
+
+vtables: contains pointers to virtual functions of a particular class. Usually in read only memory. 
+
+Intermediate representation/language: Abstraction from low-level languages (x86, ARM, etc..) IL makes it simple to analyze what the machine code does. 
+
+Program slicing: extracting instructions for specific variables (slicing criterion). Useful for finding out what parts of the code led to a bug for example. Backwards slicing: searching backwards for a slicing criterion. forwarding slicing: searching forwards. 
+
+Position-independent code (PIC), Address-space layout randomization (ASLR). Binaries compiled with PIC are called position-independent executables (PIEs). PIE binaries don't use absolute addresses to reference code and data. References relative to the program counter are used instead. 
+
+Code injection: binaries can be modified with hexdump by replacing opcodes. (tools such as binary ninja can as well). LD_PRELOAD can be used to load a library and overwrite library function calls. dlfcn.h header can be included with LD_PRELOAD library. it provides dlsym, which can get pointers to shared library functions. `dlsym(RTLD_NEXT, &quot;malloc&quot;)` gets pointer to original malloc for example. https://linux.die.net/man/3/dlsym 
+
+for compiling application that uses LD_PRELOAD, `-fno-builtin` can be used so gcc does not statically link functions. 
+
+Binary instrumentation: inserting new code into existing binary to observe or modify behavor. This can be static (SBI) or dynamic(DBI). For static, code is injected into the binary on disk. For dynamic, code is injected during run time.
+
+DBI tools: DynamoRIO, Intel Pin. 
+
+https://blog.netspi.com/dynamic-binary-analysis-intel-pin/
+
+Dynamic taint analysis (DTA) also called data flow tracking or taint tracking. Allows you to determine the influence that a selected program state has on other parts of the program state. 
+
+https://www.cs.ucr.edu/~heng/teaching/cs260-winter2017/tainting.pdf
+
+http://shell-storm.org/blog/Taint-analysis-and-pattern-matching-with-Pin/
+
+Taint sources: locations where you select the data that's interesting to track. Example: recv, recvfrom. 
+
+Taint sinks: locations you check to see whether they can be influenced by tainted data. 
+
+Symbolic execution: 
+
+https://hitcon.org/2017/CMT/slide-files/d2_s1_r0.pdf
+
+http://shell-storm.org/talks/SSTIC2015_English_slide_detailed_version_Triton_Concolic_Execution_FrameWork_FSaudel_JSalwan.pdf
+
+
+
+</pre>
 </div>
 <div created="20180528171639192" modified="20180529153702785" tags="" title="Programming notes">
 <pre>Notes for programming or scripting
