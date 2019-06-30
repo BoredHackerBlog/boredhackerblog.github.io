@@ -344,6 +344,8 @@ Error message and password prompt
 
 <li>Windows Internals Notes</li>
 
+<li>Yara</li>
+
 </ul>
 </p>
 
@@ -8721,7 +8723,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Practical Binary Analysis notes]]" title="$:/StoryList">
+<div list="Yara" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -13127,7 +13129,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190401000215194" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190630012247562" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -13176,7 +13178,9 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[Identifying and Defeating Packing]]
 
-[[Detecting Malicious Traffic with Signature and Session Analysis]]</pre>
+[[Detecting Malicious Traffic with Signature and Session Analysis]]
+
+[[Yara]]</pre>
 </div>
 <div created="20190525175715809" modified="20190527221936710" title="Practical Binary Analysis notes">
 <pre>Book: https://nostarch.com/binaryanalysis
@@ -13942,6 +13946,62 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 [[Windows 10 Internals: Systems and Processes]]
 
 [[Windows 10 Internals - Threads, Memory and Security]]</pre>
+</div>
+<div created="20190630012304853" modified="20190630015410893" title="Yara">
+<pre>https://app.pluralsight.com/library/courses/threat-hunting-yara/table-of-contents
+
+```
+ rule rulename : tags
+{
+ meta: metadata about the rule
+ strings: strings(hex or regex too) you're looking for
+ condition: detection logic
+}
+```
+
+Modifiers:
+
+```
+nocase - case insensitive
+fullword - strings delim has to be non-alpha char
+wide - char represented with two bytes
+ascii - ascii chars...
+hex - {xx xx xx ?? xx} - hex code and ?? is a wildcard
+jumps {xx yy [1-3] zz} - lenth between yy and zz can be from 1 to 3
+alternatives {xx|yy zz zz zz} - first hex code can be either xx or yy. 
+```
+
+yara -v for version.
+
+yara rules/rule.yar dir2scan/
+
+`$mz at 0` looks for string assigned to mz at offset 0.
+
+yara allows importing of modules. `import &quot;pe&quot;`
+
+yarGen - yara rule generator
+
+Macro string: .Attribut. (doc), &quot;vbaProject.bin&quot; (docx).
+
+Macro autoopen: auto_open, workbook_open
+
+Logic in one rule can refer to another rule by rule name.
+
+Clamav can be used with yara. `clamscan -d rules/rule.yar files/` 
+
+Hybrid-analysis supports yara search.
+
+github.com/Yara-Rules/rules has bunch of useful rules.
+
+`include &quot;./folder/rule.yar&quot;` lets you include a rule or rules in one yar file.
+
+https://github.com/Neo23x0/Loki allows for scanning of bunch of files. 
+
+https://github.com/godaddy/procfilter &quot;ProcFilter is a process filtering system for Windows with built-in YARA integration. YARA rules can be instrumented with custom meta tags that tailor its response to rule matches. It runs as a Windows service and is integrated with Microsoft's ETW API, making results viewable in the Windows Event Log.&quot;
+
+Volatily uses yarascan for scanning memory with yara rules. `yarascan -y rule.yar`
+
+Zeek/broIDS and file carving can be used with yara scanning.</pre>
 </div>
 
 </div>
