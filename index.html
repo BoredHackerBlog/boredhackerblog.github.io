@@ -258,6 +258,8 @@ Error message and password prompt
 
 <li>ISITDTU CTF 2018 Quals</li>
 
+<li>Learning Malware Analysis</li>
+
 <li>Malicious document analysis</li>
 
 <li>Malware Analysis Notes</li>
@@ -310,9 +312,13 @@ Error message and password prompt
 
 <li>PluralSight Notes</li>
 
+<li>Post exploitation</li>
+
 <li>Practical Binary Analysis notes</li>
 
 <li>Programming notes</li>
+
+<li>Reading Notes</li>
 
 <li>Security for Hackers and Developers Notes</li>
 
@@ -8723,7 +8729,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="Yara" title="$:/StoryList">
+<div list="[[Learning Malware Analysis]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9295,7 +9301,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20190525175702167" tags="" title="About">
+<div created="20180424234251670" modified="20190707192514423" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9321,11 +9327,7 @@ Notes:
 
 [[Elasticsearch Notes]]
 
-[[Forensics]]
-
-[[Gray hat hacking Notes]]
-
-[[Practical Binary Analysis notes]]</pre>
+[[Reading Notes]]</pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
 <pre>Tools: JS Detox, Cerbero Profiler, Bytecode viewer, JPEXS Free Flash Decompiler, FlashDevelop, Wepawet (UCSB), Firefox addon javascript deobfuscator.
@@ -11289,6 +11291,89 @@ https://ctftime.org/task/6335 embedding - extracing exe file results in getting 
 https://github.com/kuqadk3/CTF-and-Learning/tree/master/ISITDTU%20CTF/Drill drill - involved IDing and fixing a zip file. printf HEADER| cat - file_that_needs_header &gt; complete file.. 
 </pre>
 </div>
+<div created="20190707192602331" modified="20190707200001596" title="Learning Malware Analysis">
+<pre>https://www.packtpub.com/networking-and-servers/learning-malware-analysis
+
+Flare FLOSS for decoding strings: https://github.com/fireeye/flare-floss
+
+TLS callbacks: this code is executed before the main part of the executable. 
+
+https://isc.sans.edu/diary/How+Malware+Defends+Itself+Using+TLS+Callback+Functions/6655
+
+https://www.hexblog.com/?p=9
+
+x64dbg tracing: 
+https://x64dbg.readthedocs.io/en/latest/introduction/ConditionalTracing.html
+
+Malware Peristence:
+
+```
+Run keys
+scheduled tasks
+startup folder
+winlogon reg keys - shell, userinit
+image file execution options
+appinit dlls
+dll order hijacking 
+com hijacking
+Windows services
+```
+
+https://www.fuzzysecurity.com/tutorials/19.html
+
+https://attack.mitre.org/techniques/T1183/
+
+https://wikileaks.org/ciav7p1/cms/page_2621770.html
+
+https://b3n7s.github.io/2018/10/27/AppInit-DLLs.html
+
+https://attack.mitre.org/techniques/T1103/
+
+https://attack.mitre.org/techniques/T1038/
+
+https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1493862085.pdf
+
+https://attack.mitre.org/techniques/T1122/
+
+https://www.cyberbit.com/blog/endpoint-security/com-hijacking-windows-overlooked-security-vulnerability/
+
+Code Injection - injecting code into another process via various methods. Malware first needs to find what process(es) are running. It can look at the running processes by using these functions: createtoolhelp32snapshot process32first process32next
+
+https://github.com/fdiskyou/injectAllTheThings
+
+https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process
+
+Remote DLL injection: force a process to load DLL. Open handle to process, allocate memory, write dll path, determine loadlibrarya's address, create remote thread to load the dll, and finally free allocated memory, close handle.
+
+APC injection: APC = Asynchronous procedure call. 
+
+https://blogs.microsoft.co.il/pavely/2017/03/14/injecting-a-dll-without-a-remote-thread/
+
+SetWindowsHookEx:
+
+https://resources.infosecinstitute.com/using-setwindowshookex-for-dll-injection-on-windows/
+
+https://wikileaks.org/ciav7p1/cms/page_3375332.html
+
+Application Compatibility Shim:
+
+https://attack.mitre.org/techniques/T1138/
+
+https://countercept.com/blog/hunting-for-application-shim-databases/
+
+https://www.blackhat.com/docs/eu-15/materials/eu-15-Pierce-Defending-Against-Malicious-Application-Compatibility-Shims-wp.pdf
+
+Remote execution/shellcode injection: 
+Open process handle, allocate memory with rwx, write malicious content, create remote thread to execute malicious content. 
+
+https://ired.team/offensive-security/code-injection-process-injection/process-injection
+
+Process hollowing: replacing executable section with malicious code. 
+
+https://github.com/m0n0ph1/Process-Hollowing
+
+https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/analyzing-malware-hollow-processes/</pre>
+</div>
 <div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
 <pre>Notes from viewing &quot;Performing Malware Analysis on Malicious Documents&quot; presented by Tyler Hudak. It's on PluralSight here: https://www.pluralsight.com/courses/malware-analysis-malicious-documents-performing
 
@@ -13129,7 +13214,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190630012247562" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190704163418144" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -13180,7 +13265,35 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[Detecting Malicious Traffic with Signature and Session Analysis]]
 
-[[Yara]]</pre>
+[[Yara]]
+
+[[Post exploitation]]</pre>
+</div>
+<div created="20190704163426915" modified="20190704193353198" title="Post exploitation">
+<pre>https://app.pluralsight.com/library/courses/post-exploitation-pillaging-data-exfiltration/table-of-contents
+
+Things to get: list of users/logged in users. Process lists. OS/software version, file permissions, network activity.
+
+Check ssh keys, bash history, cron jobs.
+
+```
+net users //list of users for the system
+
+net user username or net user username /domain //get more info re: account
+
+whoami /groups //check ad info
+
+net localgroup administrators //list of users in admin group
+```
+
+linuxprivchecker, windows-exploit-suggester for privesc assistance. 
+
+Data exfiltration: video upload/storage sites, email, scp/ftp, dns tunneling.
+
+zip file multiple times, use password. Files may get quaratined if its found out to be a zip bomb or password protected. 
+
+Polyglot files can be used for exfil as well for example, pdf with zip appended. 
+</pre>
 </div>
 <div created="20190525175715809" modified="20190527221936710" title="Practical Binary Analysis notes">
 <pre>Book: https://nostarch.com/binaryanalysis
@@ -13307,6 +13420,15 @@ http://shell-storm.org/talks/SSTIC2015_English_slide_detailed_version_Triton_Con
 [[Go Programming notes - 4]]
 
 [[Chrome Extension development]]</pre>
+</div>
+<div created="20190707192439299" modified="20190707192543744" title="Reading Notes">
+<pre>[[Forensics]]
+
+[[Gray hat hacking Notes]]
+
+[[Practical Binary Analysis notes]]
+
+[[Learning Malware Analysis]]</pre>
 </div>
 <div created="20180802192302525" modified="20180806133448096" title="Security for Hackers and Developers Notes">
 <pre>Going through 
