@@ -280,6 +280,8 @@ Error message and password prompt
 
 <li>Malware Analysis Notes - 8</li>
 
+<li>Malware Analysis: obfuscation</li>
+
 <li>Memory Forensics Notes</li>
 
 <li>Microcorruption</li>
@@ -8729,7 +8731,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Learning Malware Analysis]]" title="$:/StoryList">
+<div list="[[Malware Analysis: obfuscation]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8778,7 +8780,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
     }
 }</pre>
 </div>
-<div created="20190306161922594" modified="20190519180926950" title="$:/temp/search">
+<div created="20190306161922594" modified="20190721135346890" title="$:/temp/search">
 <pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.15">
@@ -12127,6 +12129,77 @@ Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
 </div>
+<div created="20190720233627820" modified="20190721150452322" title="Malware Analysis: obfuscation">
+<pre>course: https://app.pluralsight.com/library/courses/malware-analysis-identifying-defeating-obfuscation/table-of-contents
+
+obfuscation: making something unclear or unintelligible. Used by malware authors to slow down analysis...
+
+native code: ready for execution by cpu, compiled, etc...
+interpreter code: executable through runtime, byte code
+
+obfuscation techniques: nonsense variable and function names, junk instructions that don't really have impact on anything, string manipulation, unnecessary API calls, confusing logic, and junk strings.
+
+VBA: commonly used in Office macros. Macros can call Windows API.
+
+Tool: oledump - used for extracting macros
+
+oledump streams ending with f or o = it contains user form
+
+see if a variable is used throughout all the code, if it doesn't show up anywhere, it may be a junk variable
+
+CallByName https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/callbyname-function
+
+During analysis, find entry point to start analysis. VBA uses Auto* functions.
+
+Powershell: analysis with ISE allows setting of breakpoints. 
+
+Net.WebClient - used to make web requests
+
+Replacing iex (Invoke-Expression) with print may be helpful in some cases.
+
+string obfuscation techniques in native code: 
+
+stack strings - making strings on the stack. 
+
+pre-computed checksum values 
+
+encryption
+
+stack strings: mov can be used to build a string on the stack.
+
+checksum values - find source of string values, compute checksum for comparing. Used for building an import table. Can be used to find DLL's with PEB and find exports/function pointer.
+
+Encrypted strings: may look similar to stack strings. Tracing and monitoring for changes may help.
+
+FLOSS can be helpful when dealing with string obfuscation. 
+
+```
+Used to make a call to a function @ xyz
+push XYZ
+pop eax
+call eax
+```
+
+PEB process environment block. Can be located from TIB / thread information block.
+
+FS register points to PEB at an offset of 0x30. PEB can be used to locate loaded libraries. Process will include ntdll and kernel32 dlls.
+
+after finding the library, the program can look at the exports and find function pointers
+
+https://0xevilc0de.com/locating-dll-name-from-the-process-environment-block-peb/
+
+http://sandsprite.com/CodeStuff/Understanding_the_Peb_Loader_Data_List.html
+
+http://www.rohitab.com/discuss/topic/38717-quick-tutorial-finding-kernel32-base-and-walking-its-export-table/
+
+https://ired.team/miscellaneous-reversing-forensics/process-environment-block
+
+hex value repeated throughout the code may mean xor is happening. 
+
+recognizing use of crypto: libraries/strings. crypto constants, entropy, and manual analysis.
+
+Tool: Findcrypt2, IDAScope</pre>
+</div>
 <div created="20190415234951946" modified="20190416003034937" title="Memory Forensics Notes">
 <pre>Windows Memory Forensics - Black Hills infosec
  https://www.youtube.com/watch?v=cYphLiySAC4
@@ -13214,7 +13287,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190704163418144" title="PluralSight Notes">
+<div created="20180806183636309" modified="20190720233634025" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -13267,7 +13340,9 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[Yara]]
 
-[[Post exploitation]]</pre>
+[[Post exploitation]]
+
+[[Malware Analysis: obfuscation]]</pre>
 </div>
 <div created="20190704163426915" modified="20190704193353198" title="Post exploitation">
 <pre>https://app.pluralsight.com/library/courses/post-exploitation-pillaging-data-exfiltration/table-of-contents
