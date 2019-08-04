@@ -202,6 +202,8 @@ Error message and password prompt
 
 <li>Chrome Extension development</li>
 
+<li>ClamAV and Yara resources</li>
+
 <li>CSAW 2018 Quals</li>
 
 <li>CTF notes</li>
@@ -8731,7 +8733,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234616405" modified="20180517191701014" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div list="[[Malware Analysis: obfuscation]]" title="$:/StoryList">
+<div list="[[ClamAV and Yara resources]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9303,7 +9305,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20190707192514423" tags="" title="About">
+<div created="20180424234251670" modified="20190803234856925" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -9329,7 +9331,9 @@ Notes:
 
 [[Elasticsearch Notes]]
 
-[[Reading Notes]]</pre>
+[[Reading Notes]]
+
+[[ClamAV and Yara resources]]</pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
 <pre>Tools: JS Detox, Cerbero Profiler, Bytecode viewer, JPEXS Free Flash Decompiler, FlashDevelop, Wepawet (UCSB), Firefox addon javascript deobfuscator.
@@ -9467,6 +9471,22 @@ Debugging:
 Right clicking on the plugin/extension will bring up &quot;Inspect&quot; which can pop-up developer tool for the plugin/extension. In extensions list, inspect views link should provide dev tools. 
 
 In console, chrome.whatever allows chrome API access. </pre>
+</div>
+<div created="20190803235554828" modified="20190804000051685" title="ClamAV and Yara resources">
+<pre>Using yara with clamav: https://blog.nviso.be/2017/02/14/hunting-with-yara-rules-and-clamav/
+
+https://www.clamav.net/documents/using-yara-rules-in-clamav
+
+Creating clamav signatures: https://www.clamav.net/documents/creating-signatures-for-clamav
+
+https://www.clamav.net/documents/file-hash-signatures
+
+https://www.clamav.net/documents/extended-signature-format
+
+https://opensource.apple.com/source/clamav/clamav-158/clamav.Bin/clamav-0.98/docs/signatures.pdf
+
+http://www.pwnage.io/2013/06/fun-with-clamav.html
+</pre>
 </div>
 <div created="20180917220954506" modified="20180917221439445" title="CSAW 2018 Quals">
 <pre>Solved:
