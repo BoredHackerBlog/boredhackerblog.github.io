@@ -145,8 +145,6 @@ Error message and password prompt
 
 <li>$:/build</li>
 
-<li>$:/config/DefaultSidebarTab</li>
-
 <li>$:/config/RelinkOnRename</li>
 
 <li>$:/core</li>
@@ -162,12 +160,6 @@ Error message and password prompt
 <li>$:/SiteSubtitle</li>
 
 <li>$:/SiteTitle</li>
-
-<li>$:/state/tab--2112689675</li>
-
-<li>$:/state/tab-1749438307</li>
-
-<li>$:/state/tab/sidebar--595412856</li>
 
 <li>$:/StoryList</li>
 
@@ -276,8 +268,6 @@ Error message and password prompt
 <li>ISITDTU CTF 2018 Quals</li>
 
 <li>Learning Malware Analysis</li>
-
-<li>Maldoc analysis</li>
 
 <li>Malicious document analysis</li>
 
@@ -439,9 +429,6 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div commit="df85281420cccc06870e7dce2aafddf2327708a1" title="$:/build">
 <pre>Built from branch 'tiddlywiki-com' at commit df85281420cccc06870e7dce2aafddf2327708a1 of https://github.com/Jermolene/TiddlyWiki5.git at 2019-11-02 13:21:50 UTC
 </pre>
-</div>
-<div created="20191111140353427" modified="20191111140353427" title="$:/config/DefaultSidebarTab">
-<pre>$:/core/ui/SideBar/Recent</pre>
 </div>
 <div created="20180519181419479" modified="20190514021746301" title="$:/config/RelinkOnRename">
 <pre>yes</pre>
@@ -9764,16 +9751,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20180424234151841" modified="20180424234208261" title="$:/SiteTitle">
 <pre>BoredHackerBlog Notes</pre>
 </div>
-<div created="20191111140343612" modified="20191111140347193" title="$:/state/tab--2112689675">
-<pre>$:/core/ui/ControlPanel/Basics</pre>
-</div>
-<div created="20191111140348439" modified="20191111140402150" title="$:/state/tab-1749438307">
-<pre>$:/core/ui/ControlPanel/Info</pre>
-</div>
-<div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
-<pre>$:/core/ui/SideBar/Recent</pre>
-</div>
-<div created="20191111140437947" list="About" modified="20191111140455411" title="$:/StoryList">
+<div created="20191111135750879" list="About [[Malware Analysis Notes]]" modified="20191111135814666" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -12444,108 +12422,6 @@ Process hollowing: replacing executable section with malicious code.
 https://github.com/m0n0ph1/Process-Hollowing
 
 https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/analyzing-malware-hollow-processes/</pre>
-</div>
-<div created="20191111135931585" modified="20191111140553555" title="Maldoc analysis">
-<pre>PDF:
-
-```
-%PDF-VERSION number  header
-%%EOF footer
-```
-
-Data tree structure
-
-startxref - start of the cross reference table
-
-startxref
-XREF START BYTE LOCATION
-
-```
-&lt;&lt; 
-/KEY VALUE
-&gt;&gt; - dictionary
-```
-
-/Root object_number version reference
-
-```
-object:
-index version obj
-&lt;&lt;
-key value
-&gt;&gt;
-endobj
-```
-
-stream/endstream - data stream
-
-PDF can have compressed or encoded data objects/data. Filter command is used with econding type.  Multiple filters/data encoding methods are allowed.
-
-pdf-parser can decode data.
-
-Some filters/encoders:
-
-FlateDecode
-
-ASCIIHexDecode
-
-PDF can contain javascript as well. /JS and /Javascript are used.
-
-/OpenAction can be used to execute an object, like javascript object.
-
-In PDF, strings can be obfuscated by using #HEX value. For example, #41 = A.
-
-Javascript in PDF can also access different parts of the PDF, such as annotations. 
-
-ObjStm - object stream, can contain other objects. 
-
-PDF can also contain embedded files. EmbeddedFile and Filespec are used. 
-
-XML embedded in PDF can contain javascript, in that case pdfid wont show /JS or /Javascript.
-
-AcroForm - Allows you to have forms inside of PDF. This can be used with XML+JS.
-
-/Launch lets you start commands, for example, you can start cmd.
-
-PDF Encryption - only content gets encrypted but the data structure of the PDF is not encrypted at all. qpdf --decrypt can generated a decrypted pdf.
-
-Office:
-
-Oledump: 
-each index number is a stream number.
-
-oledump -s # lets you dump the stream.
--x can be used to get just the hex.
-
-oledump -M to get metadata.
-
-zipdump -e works on any zip file and provides metadata.
-
-oledump: lower case m indicator = stream contains compressed macro. default/automatically generated code.
-upper case M = contains macro that someone wrote.
-
-oledump -s 7 -v filename:  use stream 7, -v to decompress the code and display it. 
-
-AutoOpen() function runs when document is opened.
-
-oledump w/ SRP data implies that macros were executed and document was saved.
-
-VBA code can be password protected. Password matters only when opened in Office. oledump can still dump the code.
-
-docm - file contains ole file with macro. Stream name changes as well in oledump output.
-
-oledump output E = macro found but there was an error in decompressing. 
-
-ActiveDocument can be used to refer to the content in the document. 
-example: ActiveDocument.Content.Text is text data in the document.
-
-oledump -p plugin_name,plugin2_name - oledump allows the use of plugins. 
-
-oledump -s a to dump all streams.
-
-oledump -y rule.yara for using yara signatures. 
-
-https://www.youtube.com/watch?v=opdVFQEBCNU</pre>
 </div>
 <div created="20180527172202888" modified="20180527223843314" tags="" title="Malicious document analysis">
 <pre>Notes from viewing &quot;Performing Malware Analysis on Malicious Documents&quot; presented by Tyler Hudak. It's on PluralSight here: https://www.pluralsight.com/courses/malware-analysis-malicious-documents-performing

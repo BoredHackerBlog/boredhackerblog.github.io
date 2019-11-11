@@ -9767,13 +9767,13 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140343612" modified="20191111140347193" title="$:/state/tab--2112689675">
 <pre>$:/core/ui/ControlPanel/Basics</pre>
 </div>
-<div created="20191111140348439" modified="20191111140402150" title="$:/state/tab-1749438307">
-<pre>$:/core/ui/ControlPanel/Info</pre>
+<div created="20191111140348439" modified="20191111140349471" title="$:/state/tab-1749438307">
+<pre>$:/core/ui/ControlPanel/Settings</pre>
 </div>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191111140437947" list="About" modified="20191111140455411" title="$:/StoryList">
+<div created="20191111135750879" list="$:/ControlPanel About" modified="20191111140333413" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -12445,13 +12445,11 @@ https://github.com/m0n0ph1/Process-Hollowing
 
 https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/analyzing-malware-hollow-processes/</pre>
 </div>
-<div created="20191111135931585" modified="20191111140553555" title="Maldoc analysis">
+<div created="20191111135931585" modified="20191111140322985" title="Maldoc analysis">
 <pre>PDF:
 
-```
 %PDF-VERSION number  header
 %%EOF footer
-```
 
 Data tree structure
 
@@ -12460,22 +12458,18 @@ startxref - start of the cross reference table
 startxref
 XREF START BYTE LOCATION
 
-```
 &lt;&lt; 
 /KEY VALUE
 &gt;&gt; - dictionary
-```
 
 /Root object_number version reference
 
-```
 object:
 index version obj
 &lt;&lt;
 key value
 &gt;&gt;
 endobj
-```
 
 stream/endstream - data stream
 
@@ -12484,9 +12478,7 @@ PDF can have compressed or encoded data objects/data. Filter command is used wit
 pdf-parser can decode data.
 
 Some filters/encoders:
-
 FlateDecode
-
 ASCIIHexDecode
 
 PDF can contain javascript as well. /JS and /Javascript are used.
