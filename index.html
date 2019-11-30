@@ -303,6 +303,8 @@ Error message and password prompt
 
 <li>Malware Analysis: obfuscation</li>
 
+<li>Mastering Malware Analysis Notes</li>
+
 <li>Memory Forensics Notes</li>
 
 <li>Microcorruption</li>
@@ -447,8 +449,8 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140353427" modified="20191111140353427" title="$:/config/DefaultSidebarTab">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20180519181419479" modified="20190514021746301" title="$:/config/RelinkOnRename">
-<pre>yes</pre>
+<div created="20180519181419479" modified="20191129190119506" title="$:/config/RelinkOnRename">
+<pre>no</pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="" description="TiddlyWiki5 core" list="readme" plugin-priority="0" plugin-type="plugin" title="$:/core" type="application/json" version="5.1.21">
 <pre>{
@@ -9777,7 +9779,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191128202335856" list="[[HTB Notes]]" modified="20191128202335856" title="$:/StoryList">
+<div created="20191129185915023" list="[[Mastering Malware Analysis Notes]]" modified="20191129190127144" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -13386,6 +13388,63 @@ recognizing use of crypto: libraries/strings. crypto constants, entropy, and man
 
 Tool: Findcrypt2, IDAScope</pre>
 </div>
+<div created="20191129190018345" modified="20191129201148380" title="Mastering Malware Analysis Notes">
+<pre>Dynamic API loading functions: LoadLibraryA, GetProcAddress, GetModuleHandle
+
+Process- basically a container for the application/threads that are running.
+
+Threads in a single process share virtual memory, open files, dlls, mutex, and etc.. Each thread has it's own stack and instruction pointer. 
+
+Thread Information Block (TIB): contains information about thread and functions used for error handling.
+
+Thread Environment Block (TEB): contains information about thread and thread id and etc. 
+
+Process Environment Block (PEB): contains info about process. process id, name, modules, and etc...
+
+Unpacking tools: OllyScript, QuickUnpack, pySRDF (uses emulation), OllyDump, ImpRec
+
+
+DLL Injection can be done with AppInit_DLLs registry. 
+
+DLL Injection: OpenProcess to open process handle, VirtualAllocEx to allocate memory for the DLL, WriteProcessMemory to write path of malicious dll, CreateRemoteThread and LoadLibraryA to execute the DLL.
+
+CreateToolhelp32Snapshot: get information about running processes. Process32First to get first process from the list. Process32Next to get other processes.
+
+Code injection: Get process list, open handle to the process, allocate memory, writeprocessmemory to write code in the allocated memory space, createremotethread to execute.
+
+process hollowing: create process in suspended mode, virtualfreeex to unload legit memory image, allocate memory, inject malicious code, start thread for new entry point. 
+
+Debugger detection: IsDebuggerPresent, CheckRemoteDebuggerPresent, NTQueryInformationProcess with ProcessDebugPort (7) argument. 
+
+PEB has BeingDebugged flag which is set to true when debugging is conducted. 
+
+```
+mov     eax, dword ptr fs:[30h]  ; PEB location
+cmp     byte ptr [eax+2], 1 ; BeingDebugged flag
+jz      &lt;debugger_detected&gt;
+```
+
+NtGlobalFlag (in PEB) can be used to detect a debugger as well. Without debugger the flag is 0 with debugger it's either 0x10, 0x20, or 0x40.
+
+Looking at parent process can also help with detecting a debugger.
+
+int3 software breakpoint can also be used to detect debugger. This can be done by scanning memory and looking for int3(0xcc).
+
+time based detection: rdtsc instruction returns time in EDX:EAX registers. If time is longer than expected, maybe a debugger is present. Besides rdtsc instruction, there are other API calls that can be made to get time data as well.
+
+Debugger escape: injecting into another process.
+
+TLS (Thread-Local Storage) callbacks: TLS code runs before a thread starts. TLS code is stored in .tls section.
+
+Windows event callbacks: events that are triggered based on mouse/keyboard input or window movement. 
+
+Detection of analysis tools: typically done by looking for analysis tool process/window.
+
+Detection of virtualization: CPUID results, MMX registers (lack of), looking for processes related to virtualization, such as vmware tools or virtualbox tools. Registry entries can also contain names of VM software. Looking at mac address can also provide information about if malware is running in a VM or not.
+
+.NET malware deobfuscation tool: de4dot
+</pre>
+</div>
 <div created="20190415234951946" modified="20190416003034937" title="Memory Forensics Notes">
 <pre>Windows Memory Forensics - Black Hills infosec
  https://www.youtube.com/watch?v=cYphLiySAC4
@@ -14685,14 +14744,16 @@ http://shell-storm.org/talks/SSTIC2015_English_slide_detailed_version_Triton_Con
 
 [[Chrome Extension development]]</pre>
 </div>
-<div created="20190707192439299" modified="20190707192543744" title="Reading Notes">
+<div created="20190707192439299" modified="20191129190132957" title="Reading Notes">
 <pre>[[Forensics]]
 
 [[Gray hat hacking Notes]]
 
 [[Practical Binary Analysis notes]]
 
-[[Learning Malware Analysis]]</pre>
+[[Learning Malware Analysis]]
+
+[[Mastering Malware Analysis Notes]]</pre>
 </div>
 <div created="20180802192302525" modified="20180806133448096" title="Security for Hackers and Developers Notes">
 <pre>Going through 
