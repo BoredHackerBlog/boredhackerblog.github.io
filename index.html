@@ -9781,7 +9781,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191205005722103" list="[[Windows Offsec]] About" modified="20191205005722104" title="$:/StoryList">
+<div created="20191207141219331" list="[[Windows Offsec]]" modified="20191207141219331" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -15398,7 +15398,7 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 
 [[Windows 10 Internals - Threads, Memory and Security]]</pre>
 </div>
-<div created="20191203014208676" modified="20191205015109670" title="Windows Offsec">
+<div created="20191203014208676" modified="20191207151900341" title="Windows Offsec">
 <pre>Pentester Academy notes
 
 AD treats things as objects and objects have attributes.
@@ -15485,7 +15485,50 @@ Over-pass-the-hash can be used w/ ntlm hash
 
 Mimikatz can also run commands on other systems.
 
-Invoke-TokenManipulation / Incognito for token manipulation. </pre>
+Invoke-TokenManipulation / Incognito for token manipulation. 
+
+Kerberos: https://medium.com/@robert.broeckelmann/kerberos-and-windows-security-kerberos-v5-protocol-b9c804e06479
+
+https://en.wikipedia.org/wiki/Kerberos_(protocol)#Protocol
+
+Kerberoast: https://attack.mitre.org/techniques/T1208/
+
+TGS-REP TGS is encrypted using target service's hash. 
+
+Finding service accounts: Get-NetUser -SPN, GetUserSPNs, or GET-ADUser with filters.
+
+Requesting tickets: Request-SPNTicket or using System.IdentityModel function.
+
+Klist.exe to see if ticket was provided.
+
+Mimikatz for exporting the ticket.
+
+Kerberos Delegation allows service account to access other resources on behalf of the user. 
+
+https://blogs.msdn.microsoft.com/autz_auth_stuff/2011/05/03/kerberos-delegation/
+
+To look for unconstrained delegation: Get-NetComputer -UnConstrained using Get-ADComputer with filter will work too.
+
+If server with unconstrained delegation is compromised, mimikatz can extract tickets from it and ptt mimikatz module can be used for ticket reuse.
+
+Constrained delegation: only certain services are allowed to be accessed with delgation. Applies to users too. You can block accounts from using delegation.
+
+Persistence:
+
+golden ticket is signed and encrypted by hash of krbtgt account.  krbtgt user hash can be used to impersonate any user. Changing krbtgt password once doesn't do anything, the password has to be changed twice.
+
+Mimikatz kerberos golden module can help create tickets. 
+
+DCSync: mimikatz dcsync module can help get hashes too.
+
+silver ticket = valid TGS, golden ticket = valid TGT
+
+silver ticket is signed by hash of service account, golden is signed by hash of krbtgt.
+
+child domain to forest root: implicit two-way trust
+
+mimikatz has module for extracting trust keys.
+</pre>
 </div>
 <div created="20190630012304853" modified="20190630015410893" title="Yara">
 <pre>https://app.pluralsight.com/library/courses/threat-hunting-yara/table-of-contents
