@@ -9781,7 +9781,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191207141219331" list="[[Windows Offsec]]" modified="20191207141219331" title="$:/StoryList">
+<div created="20191208195511374" list="[[Windows Offsec]]" modified="20191208195511374" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -15398,7 +15398,7 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 
 [[Windows 10 Internals - Threads, Memory and Security]]</pre>
 </div>
-<div created="20191203014208676" modified="20191207151900341" title="Windows Offsec">
+<div created="20191203014208676" modified="20191208204339002" title="Windows Offsec">
 <pre>Pentester Academy notes
 
 AD treats things as objects and objects have attributes.
@@ -15528,6 +15528,34 @@ silver ticket is signed by hash of service account, golden is signed by hash of 
 child domain to forest root: implicit two-way trust
 
 mimikatz has module for extracting trust keys.
+
+
+WMI:
+
+Windows Management Instrumentation (WMI). MS implementation of Common Information Model (CIM) and Web-based Enterprise Management (WBEM)
+
+https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor-wp.pdf
+
+https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-windows-management-instrumentation.pdf
+
+MOF (Managed Object Format) files - stored in Windows\System32\Wbem w/ .mof extension. 
+
+WMI provider - associated with mof file. could be dll file in the same folder as wbem. 
+
+Namespaces are created by providers to divide. Example namespaces: root\cimv2, root\security.
+
+WMI Repository - location: windows\system32\wbem\repository - used to store static data of classes.
+
+WMI consumers - anything that interacts with wmi classes for diff operations
+
+wmi and cim cmdlets can do similar things.
+
+To get namespaces: Get-WmiObject -Namespace &quot;root&quot; -Class &quot;__NameSpace&quot;, returned names are namespaces in root namespace.
+
+Get-WmiObject -Class *searchterm* -List to get classes related to the search term.
+
+-Filter can be used with get-wmiobject to filter things. -Query supports sql-like queries that allows for filtering too.
+
 </pre>
 </div>
 <div created="20190630012304853" modified="20190630015410893" title="Yara">
