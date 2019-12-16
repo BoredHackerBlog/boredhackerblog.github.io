@@ -9781,7 +9781,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191208195511374" list="[[Windows Offsec]]" modified="20191208195511374" title="$:/StoryList">
+<div created="20191216215820052" list="[[Windows Offsec]] About" modified="20191216215820052" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -15398,7 +15398,7 @@ My notes will contain information from viewing the PluralSight course. I'll try 
 
 [[Windows 10 Internals - Threads, Memory and Security]]</pre>
 </div>
-<div created="20191203014208676" modified="20191208204339002" title="Windows Offsec">
+<div created="20191203014208676" modified="20191216215844658" title="Windows Offsec">
 <pre>Pentester Academy notes
 
 AD treats things as objects and objects have attributes.
@@ -15538,6 +15538,7 @@ https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Mana
 
 https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-windows-management-instrumentation.pdf
 
+```
 MOF (Managed Object Format) files - stored in Windows\System32\Wbem w/ .mof extension. 
 
 WMI provider - associated with mof file. could be dll file in the same folder as wbem. 
@@ -15556,6 +15557,78 @@ Get-WmiObject -Class *searchterm* -List to get classes related to the search ter
 
 -Filter can be used with get-wmiobject to filter things. -Query supports sql-like queries that allows for filtering too.
 
+WMI helper tools: WMI Explorer, WMI Code Creator, WMIGen, Wbemtest.exe, etc...
+
+Linux utils: wmic and wmis
+
+WMI cmdlets support -ComputerName which allows remote wmi. WMI uses port 135 by default. 
+
+CIM cmdlets supports -ComputerName as well. It can use 135/dcom and winrm/wsman (port 5385 or 5386)
+
+-Credential maybe required as well when doing remote wmi/cim.
+
+WMI class stdregprov can be used for registry interaction. 
+
+Tool: Posh-Secmod
+
+WMI can help gather info such as users, groups, applications installed, and etc...
+
+Tool: Session-Gopher - helps find session information related to putty, rdp, etc... -AllDomain option connects to all machines and gathers info.
+
+WMI AD namespace: root\directory\ldap
+
+Tools: Invoke-PowershellWmi, WMI_Backdoor
+
+For lateral movement, Win32_Service class can be used to create and start a service. 
+
+Tool: github rzander LocalAdmins (poc), EvilNetConnectionWMIProvider, EvilWMIProvider
+
+WMI events can be used for backdooring too. events are trigged based on actions that occur on the system.
+
+Event consumer - temporary/permanent. temp - receives notifications as long as client app is active. permenant - receives event notifications at all times.
+
+Tool: WMIBackdoor, Persistence.psm1 in PowerSploit.
+
+MOF files can be used for persistence and execution as well.
+
+Tools: PowerProvider, WheresmyImplant, PowerLurk, WMImplant
+
+To detect persistence: Get-WmiObject
+
+` __eventFilter -namespace root\subscription` - review queries
+
+`activeScriptEventConsumer -Namespace root\subscription` - review script files
+
+`CommandLineConsumer -Namespace root\subscription` -review command line template
+
+`__filtertoconsumerbinding -Namespace root\subscription` -review filter and consumer
+
+Monitoring for new event consumers can be helpful.
+
+WMI-Activity logs contain logs related to wmi.
+
+Tools: WMIMon, WMI_Monitor, Cimsweep, WMI-IDS, Invoke-IR/uproot, Kansa
+
+Bloodhound: data can be collected with invoke-bloodhound -collectionmethod all - there are other options to collect data differently. invoke-bloodhound is included in sharphound script.
+```
+
+AD lateral movement:
+
+New-PSSession, Enter-PSSession for powershell remoting. local admin/admin priv on target box required. You can login to one machine and interact with it.
+
+Invoke-Command allows for interacting with multiple machines.
+
+-Credential arg can be used to pass creds.
+
+Invoke-Mimikatz can be used to obtain creds. It uses powershell remoting if you want to run it on a remote machine.
+
+getting krbtgt hash: run lsadump::lsa /patch on DC with DA privs. golden ticket module can be used with the dumped hash.
+
+schtasks /create can be used to create a task and /run can be used to run it.
+
+Skeleton key: patching DC lsass to allow any user to access with single password. 
+
+SSP - Security Service Provider. Mimikatz has SSP dll which can log passwords.
 </pre>
 </div>
 <div created="20190630012304853" modified="20190630015410893" title="Yara">
