@@ -301,6 +301,8 @@ Error message and password prompt
 
 <li>Malware Analysis Notes - 8</li>
 
+<li>Malware analysis notes - 9</li>
+
 <li>Malware Analysis: obfuscation</li>
 
 <li>Mastering Malware Analysis Notes</li>
@@ -310,6 +312,8 @@ Error message and password prompt
 <li>Microcorruption</li>
 
 <li>Network Security Monitoring (NSM) with Security Onion</li>
+
+<li>Offsec</li>
 
 <li>OPSEC for Pentesters</li>
 
@@ -376,6 +380,8 @@ Error message and password prompt
 <li>Windows Internals Notes</li>
 
 <li>Windows Offsec</li>
+
+<li>Windows Offsec 2</li>
 
 <li>Yara</li>
 
@@ -9781,7 +9787,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20191216215820052" list="[[Windows Offsec]] About" modified="20191216215820052" title="$:/StoryList">
+<div created="20191228162614915" list="[[Windows Offsec 2]] About" modified="20191228162614915" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -10365,7 +10371,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20191203014200536" tags="" title="About">
+<div created="20180424234251670" modified="20191227142759738" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -10393,7 +10399,7 @@ Notes:
 
 [[Reading Notes]]
 
-[[Windows Offsec]]
+[[Offsec]]
 
 [[ClamAV and Yara resources]]</pre>
 </div>
@@ -12659,8 +12665,8 @@ Some functions to monitor: CreateFile, WriteFile, InternetCrackURL, HTTPCrackURL
 
 Tool: Lazy Office Analyzer</pre>
 </div>
-<div created="20180618141154608" modified="20191111135831538" tags="" title="Malware Analysis Notes">
-<pre>My notes for going through RPISec Malware Analysis course and the Practical Malware Analysis book. Notes from both of the resources are combined.
+<div created="20180618141154608" modified="20191224203117173" tags="" title="Malware Analysis Notes">
+<pre>My notes for going through RPISec Malware Analysis course and the Practical Malware Analysis book. Notes from both of the resources are combined. 
 
 [[Malware Analysis Notes - 1]]
 
@@ -12678,7 +12684,9 @@ Tool: Lazy Office Analyzer</pre>
 
 [[Malware Analysis Notes - 8]]
 
-[[Maldoc analysis]]</pre>
+[[Maldoc analysis]]
+
+[[Malware analysis notes - 9]]</pre>
 </div>
 <div created="20180618141540763" modified="20180618154056232" title="Malware Analysis Notes - 1">
 <pre>Basic Analysis
@@ -13321,6 +13329,62 @@ Online disassembler / ODA maybe useful for shellcode analysis.
 
 C++ analysis and 64-bit malware are skipped.</pre>
 </div>
+<div created="20191224203122986" modified="20191227142644486" title="Malware analysis notes - 9">
+<pre>Common keylogger API's: GetAsyncKeystate, SetWindowsHookEx, GetForegroundWindow
+Stealer-related function: CryptUnprotectData
+
+Getting unpacked payload: set break point at call to a memory address. when break point hits, the memory address may contain unpacked code.
+
+de4dot for unobfuscation for .net binaries.
+
+assembly: 
+stack: Last in First out (LIFO) EBP - base pointer (base of stack), ESP - stack pointer (top of stack)
+
+heap: dynamic memory. allows for alloc and free of the region. basically storage area.
+
+Trap flag - set if step by step debugging is enabled, malware can check this to see if it's beging debugged.
+
+API:
+WSAStartup/WSACleanup - Windows socket related
+
+StartServiceCtrlDispatcher - Windows service related
+
+CryptAcquireContext/CryptReleaseContext - crypto related
+
+IsDebuggerPresent - to check if debugger is present
+
+GetSystemInfo - to get system info, GlobalMemoryStatusEx - for memory info
+
+Assembly: cpuid, in to get information about the system it's running in (antivm usage)
+
+NtUnmapViewOfSection, QueueUserAPC can be used for injection.
+
+GetDC, Bitblt - for screenshotting
+
+Debugging - break on anti-debugger functions to find anti-debugger functions in unpacked code.
+
+If there may be encryption involved, check for crypto constants. 
+
+Windows crypto API's: Crypt*()
+
+CryptDeriveKey Alg_ID identifies encryption type.
+
+CryptCreateHash Alg_ID identifies hash type.
+
+RtlCompressBuffer / DecompressBuffer for compression/decompression.
+
+KANAL for detecting crypto usage.
+
+Unpacking:
+
+Look for jmps or calls to memory locations
+
+Tool: PE-Sieve, PE bear
+
+Push + ret does the same thing as call or jump.
+
+unmapping dumped file: match raw address and virtual address. change raw size to be the correct size.</pre>
+</div>
 <div created="20190720233627820" modified="20190721150452322" title="Malware Analysis: obfuscation">
 <pre>course: https://app.pluralsight.com/library/courses/malware-analysis-identifying-defeating-obfuscation/table-of-contents
 
@@ -13580,6 +13644,11 @@ pulledpork allows disabling rules. rule-update command can be used to update rul
 bro file extraction script: /opt/bro/share/bro/file-extraction.
 
 sosetup allows creating a conf file.</pre>
+</div>
+<div created="20191227142808387" modified="20191227142818099" title="Offsec">
+<pre>[[Windows Offsec]]
+
+[[Windows Offsec 2]]</pre>
 </div>
 <div created="20180806131720547" modified="20180806133325817" title="OPSEC for Pentesters">
 <pre>Notes from PluralSight course: https://www.pluralsight.com/courses/opsec-penetration-testers
@@ -15630,6 +15699,20 @@ Skeleton key: patching DC lsass to allow any user to access with single password
 
 SSP - Security Service Provider. Mimikatz has SSP dll which can log passwords.
 </pre>
+</div>
+<div created="20191227142850696" modified="20191228162909547" title="Windows Offsec 2">
+<pre>Pentester academy notes
+
+DLL export forwarding/DLL proxying: DLL's are allowed to forward request to functions in other DLL's. 
+DLL &quot;implements&quot; a function, when function is called, it loads code from other DLL.
+
+https://itm4n.github.io/dll-proxying/
+
+https://www.shysecurity.com/post/20130111-Dll%20Proxy
+
+.local redirection: https://docs.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-redirection
+
+http://www.hexacorn.com/blog/2015/01/09/beyond-good-ol-run-key-part-23/</pre>
 </div>
 <div created="20190630012304853" modified="20190630015410893" title="Yara">
 <pre>https://app.pluralsight.com/library/courses/threat-hunting-yara/table-of-contents
