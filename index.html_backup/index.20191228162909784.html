@@ -245,8 +245,6 @@ Error message and password prompt
 
 <li>Exploitation Notes - 4</li>
 
-<li>Exploitation Notes - 5</li>
-
 <li>Forensics</li>
 
 <li>Forensics Notes 1</li>
@@ -312,8 +310,6 @@ Error message and password prompt
 <li>Memory Forensics Notes</li>
 
 <li>Microcorruption</li>
-
-<li>Mitre CTI training notes</li>
 
 <li>Network Security Monitoring (NSM) with Security Onion</li>
 
@@ -9791,7 +9787,7 @@ Tool: Bytecode viewer by Konloch, javap (disassembler), javac (compiler).</pre>
 <div created="20191111140332771" modified="20191111140332771" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/Recent</pre>
 </div>
-<div created="20200418185445865" list="About" modified="20200418185445865" title="$:/StoryList">
+<div created="20191228162614915" list="[[Windows Offsec 2]] About" modified="20191228162614915" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -10375,7 +10371,7 @@ Heap manager manages small allocations 8 bytes minimum
 
 Default Process heap is always created when process is created. GetProcessHeap returns handle to this heap. HeapCreate can create more heap. Heap size can be fixed or grow. Default is growable. Low Fragmentation Heap (LFH) deals with memory fragmentation issues.</pre>
 </div>
-<div created="20180424234251670" modified="20200418185444115" tags="" title="About">
+<div created="20180424234251670" modified="20191227142759738" tags="" title="About">
 <pre>This page contains random notes.
 Blog: &lt;a href=&quot;http://boredhackerblog.info&quot;&gt;http://boredhackerblog.info&lt;/a&gt;
 
@@ -10405,9 +10401,7 @@ Notes:
 
 [[Offsec]]
 
-[[ClamAV and Yara resources]]
-
-[[Mitre CTI training notes]]</pre>
+[[ClamAV and Yara resources]]</pre>
 </div>
 <div created="20180806133453879" modified="20180806141733073" title="Advanced Malware Analysis: Combating Exploit Kits">
 <pre>Tools: JS Detox, Cerbero Profiler, Bytecode viewer, JPEXS Free Flash Decompiler, FlashDevelop, Wepawet (UCSB), Firefox addon javascript deobfuscator.
@@ -10489,7 +10483,7 @@ using files: shortcut files that start an exe or call cmd then call exe
 
 protection: detection, honeypots, patching, etc..</pre>
 </div>
-<div created="20180624224949924" modified="20191230144015800" title="Binary Exploitation Notes">
+<div created="20180624224949924" modified="20180904183504159" title="Binary Exploitation Notes">
 <pre>Notes for RPI Modern Binary Exploitation course (https://github.com/RPISEC/MBE).
 
 [[Exploitation Notes - 1]]
@@ -10499,10 +10493,7 @@ protection: detection, honeypots, patching, etc..</pre>
 [[Exploitation Notes - 3]]
 
 [[Exploitation Notes - 4]]
-
-Pentester academy courses
-
-[[Exploitation Notes - 5]]</pre>
+</pre>
 </div>
 <div created="20180529153708743" modified="20180730001111855" title="Chrome Extension development">
 <pre>Notes from the course &quot;Creating A Chrome Extension&quot; by John Sonmez on Pluralsight: https://www.pluralsight.com/courses/creating-chrome-extensions
@@ -11184,13 +11175,6 @@ taint analysis: tracing user input and it's impact on execution
 symbolic execution + sat/smt solving: providing specific conditions can exist in execution to manifest diffcult bugs. z3, smt-lib
 
 cyber reasoning systems.</pre>
-</div>
-<div created="20191230144023467" modified="20191230151313613" title="Exploitation Notes - 5">
-<pre>`gcc -m32` for compiling 32 bit bins. gcc-multilib package required
-
-ELF stands for executable and loadable format
-
-</pre>
 </div>
 <div created="20190514021730056" modified="20190514232036279" title="Forensics">
 <pre>[[Memory Forensics Notes]]
@@ -13623,175 +13607,6 @@ The address of 7e is at: 44c8.
 final input: &quot;c844&quot;*63 + &quot;41&quot; + &quot;256e&quot;(%n). 
 
 Algiers: </pre>
-</div>
-<div created="20200418185448624" modified="20200418185457951" title="Mitre CTI training notes">
-<pre>https://attack.mitre.org/resources/training/cti/
-
-Module 1:
-
-ATT&amp;CK - knowledge base of adversary behavior
-
-David Bianco's pyramid of pain - describes how hard it's to change different things for adversary.
-
-Hash changing - trivial
-IP addr - easy
-Domain names - simple
-Network/host artifacts - annonying
-tools - challenging
-TTPs - though!
-
-Attack matrix - Tactics - the technical goals (initial access, execution, exfil, etc...)
-techniques - ways the goals are achieved (phishing, remote service, etc..)
-procedures - specific technique implementation (phishing with office/pdf or rtf/excel &amp; etc...)
-
-Each technique has description of the activity, technique id, tactic or tactics, platform (OS, cloud platform), data sources (useful to see this technique/detection), mitigations (prevention), detection (for detection), procedure examples (links to reports linking activity with an actor).
-
-Group pages - describes group, has id, associated group descriptions (other names for the groups), techniques used, &amp; software.
-
-Attack use cases: Detection, Threat intel, assessment and engineering, adversary emulation
-
-threat intel - compare behaviors of groups overtim/each other/to defenses
-communicate in a common language
-
-Module 2:
-
-Mapping data to attack
-
-requires shift in thinking. Indicators -&gt; behaviors. 
-
-Mapping process:
-0. understand attack
-1. find the behavior
-2. research the behavior
-3. translate the behavior into a tactic
-4. figure out what techniques applies to the behavior
-5. compare your results to other analysts
-
-two key sources to get info:
-1. finished reporting
-2. raw data
-
-0. understand attack
-check attack presentation from sp4rkcon
-read philosophy paper and getting started pages
-read tactic descriptions
-skim techniques
-
-do weekly presentation on diff technique, detection, and mitigation for it. (?)
-
-1. find the behavior
-diff than looking for Indicators
-look for what adversary or software does
-focus on initial compromise &amp; post-compromise details
-
-2. research the behavior
-do more research
-
-3. translate behaviors into tactics
-what is the adversary trying to accomplish?
-only 12 options/options on the attack matrix
-
-4. figure out what techniques applies
-not every behavior is necessarily a technique
-1. look at the list of techniques for identified tactic
-2. search attack.mitire.org, try keywords, procedure, command strings, etc..
-
-Exercise 2: cybereason cobalt kitty reporting
-id behavior
-id tactice
-id technique
-
-Module 3:
-
-mapping from raw data
-
-data source for raw data could be from an incident response
-
-1. find behavior
-2. research behavior - may require expertieses in data type (network, forensics, mw analysis, understanding windows cli)
-3. translate behavior into a tactice
-4. concurrent techniques - think about what's happening and how it's happening. techniques could be bundled together. 
-example: data compression + encryption
-spearphishing attachment + user execution
-5. compare results w/ other analysts
-
-Exercise 3: working with raw data
-1. series of commands
-2. malware analysis incident
-
-Module 4:
-
-Storing and analyzing attack mapped data.
-
-Think about who's consuming the data
-how is context provided?
-how detailed will this intel be?
-how will you link it to other intel?
-how will the data be imported or exported?
-
-excel, wiki are options.
-misp galaxy
-
-techniques can be at end or begining of the reports, can have extra details
-
-sometimes indicators are included too.
-
-Tool: Attack Navigator
-
-Exercise 4: compare layers in attack Navigator
-APT39 &amp; Cobalt kitty - find overlapping techniques
-
-Module 5:
-
-Make defensive recommendations
-
-0. determine priority techniques
-1. research how techniques are being used
-2. research defensive options related to technique
-3. research org capability/constraints
-4. determine tradeoffs
-5. make recommendations
-
-0. determine priority techinques:
-data sources - what's already being collected?
-threat intel - what are the adversaries doing?
-tools - what do current tools cover?
-red team - can you see what red teamers are doing?
-
-1. research how techniques are used:
-what specific procedures are being used?
-
-2. research defensive options
-attack has data sources, detections, mitigations
-MITRE cyber analytics repository (CAR) - behavior analytics mapped to mitre attack
-ThreatHunter playbook
-Atomic Threat Coverage
-Malware Archaeology Windows attack logging cheatsheet
-
-example: user execution
-user training
-app whitelisting
-block unknown files
-network IPS
-file detonation
-cli monitoring
-AV
-endpoint sensing
-
-3. research org capabilities
-what data sources, defenses, mitigations are already collected?
-what products have additional capabilities?
-
-4. determine tradeoffs
-leverage existing tools/data sources
-very org specific
-
-5. recommendations
-could be technical, policy, or risk acceptance
-could be for management, soc, it, or everyone
-
-Exercise 5: making defensive recommendations
-</pre>
 </div>
 <div created="20180823153301808" modified="20180823161955742" title="Network Security Monitoring (NSM) with Security Onion">
 <pre>Course: https://app.pluralsight.com/library/courses/security-onion-network-security-monitoring/table-of-contents
